@@ -1,0 +1,10 @@
+{
+  "site": {
+    "name": "WS Energy",
+    "tagline": "ตัวแทนจำหน่าย Projoy อย่างเป็นทางการในประเทศไทย"
+  },
+  "actions": {
+    "switchToThai": "TH",
+    "switchToEnglish": "EN"
+  }
+}

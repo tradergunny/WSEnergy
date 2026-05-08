@@ -1,0 +1,10 @@
+{
+  "site": {
+    "name": "WS Energy",
+    "tagline": "Thailand's authorized Projoy distributor."
+  },
+  "actions": {
+    "switchToThai": "TH",
+    "switchToEnglish": "EN"
+  }
+}
