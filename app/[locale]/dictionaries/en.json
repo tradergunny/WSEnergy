@@ -237,6 +237,32 @@
       "ctaHeading": "Need rapid shutdown for your project?",
       "ctaBody": "We stock the full Projoy Rapid Shutdown range and can spec the right combination for your system size.",
       "authDocLabel": "View Projoy authorization document"
+    },
+    "firefighterSwitches": {
+      "eyebrow": "Firefighter Safety",
+      "headline": "Firefighter Safety Switches",
+      "subhead": "Dedicated disconnects that let first responders isolate a PV system from outside the building — reducing arc-flash exposure and giving emergency crews full control before they enter a structure.",
+      "whyHeading": "Why firefighter switches matter",
+      "whyBody": "Standard overcurrent protection was not designed for emergency scenarios. Firefighter Safety Switches provide a clearly marked, externally accessible point of disconnection rated for the fault currents found in commercial and industrial PV systems — a requirement increasingly cited in Thai fire safety and insurance frameworks.",
+      "productsHeading": "Firefighter Safety Switch products",
+      "diagramHeading": "How it works",
+      "diagramPlaceholder": "Firefighter switch installation diagram — coming in Week 7.",
+      "certsHeading": "Certifications & standards",
+      "ctaHeading": "Specify a firefighter switch for your project?",
+      "ctaBody": "Tell us your system size and installation type and we'll recommend the right disconnect and help with documentation."
+    },
+    "whySafety": {
+      "eyebrow": "Solar Safety",
+      "headline": "Why Solar Safety Matters",
+      "subhead": "An energized rooftop PV array presents real hazards — to installers, to building occupants, and to the first responders who arrive when something goes wrong.",
+      "riskHeading": "The risk: voltage that doesn't switch off",
+      "riskBody": "A solar array generates up to 1,000 V DC as long as light is present. Unlike AC mains, conventional breakers and fuses cannot interrupt DC arc faults. A 600 V DC arc can sustain at distances that would extinguish a 240 V AC arc — with temperatures exceeding 20,000 °C. Firefighters entering a burning building with an active rooftop PV system face electrocution, arc-flash, and arc-blast risks with no simple way to de-energize the system.",
+      "regulationHeading": "The regulation: NEC §690.12 and IEC 60947-3",
+      "regulationBody": "NEC 2017 Section 690.12 requires all conductors on a rooftop to be reduced to 30 V or less within 30 seconds of system shutdown. IEC 60947-3 sets isolation requirements for load-break switches used in PV disconnection applications. Thailand's EGAT and DOE guidelines are aligning with these international frameworks, and insurers are already demanding compliance documentation on commercial projects.",
+      "wsAnswerHeading": "The WS Energy answer: Projoy Rapid Shutdown (exclusive in Thailand)",
+      "wsAnswerBody": "WS Energy is the exclusive authorized distributor of the Projoy Rapid Shutdown family in Thailand. Projoy devices meet NEC §690.12 and IEC 60947-3, carry TIS and UL marks, and are engineered for the string voltages used in Thai C&I and utility-scale installations. Every product in the range ships with authorization documentation your insurer and AHJ will accept.",
+      "ctaHeading": "Ready to make your installation safe and compliant?",
+      "ctaBody": "Talk to a WS Energy sales engineer — we'll spec the right Rapid Shutdown or Firefighter Switch combination for your project and provide the compliance paperwork."
     }
   },
   "common": {

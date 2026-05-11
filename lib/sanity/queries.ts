@@ -304,3 +304,26 @@ export const projoyAuthorizationDocQuery = groq`
     }
   }
 `;
+
+export const firefighterProductsQuery = groq`
+  *[_type == "product" && category->slug.current == "firefighter-safety-switches"]
+    | order(orderRank asc) {
+    _id,
+    title,
+    sku,
+    "slug": slug.current,
+    authorized,
+    exclusive,
+    safetyCritical,
+    shortDescription_en,
+    shortDescription_th,
+    "image": gallery[0],
+    "brand": brand->{ name, "slug": slug.current },
+    "category": category->{
+      title_en,
+      title_th,
+      "slug": slug.current,
+      "parentSlug": parent->slug.current
+    }
+  }
+`;
