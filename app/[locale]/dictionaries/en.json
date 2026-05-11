@@ -5,6 +5,198 @@
   },
   "actions": {
     "switchToThai": "TH",
-    "switchToEnglish": "EN"
+    "switchToEnglish": "EN",
+    "requestQuote": "Request a Quote",
+    "callUs": "Call",
+    "lineOA": "LINE",
+    "viewAll": "View all",
+    "viewSpecs": "View specs",
+    "downloadPdf": "Download PDF",
+    "talkToEngineer": "Talk to a sales engineer",
+    "browseProducts": "Browse products",
+    "exploreRapidShutdown": "Explore Rapid Shutdown",
+    "exploreSafety": "Explore Safety",
+    "viewCategory": "View category",
+    "viewProject": "View project",
+    "readMore": "Read more"
+  },
+  "nav": {
+    "home": "Home",
+    "safety": "Safety",
+    "products": "Products",
+    "solutions": "Solutions",
+    "projects": "Projects",
+    "resources": "Resources",
+    "about": "About",
+    "contact": "Contact",
+    "rapidShutdown": "Rapid Shutdown (Projoy)",
+    "firefighterSwitches": "Firefighter Safety Switches",
+    "whySafety": "Why Solar Safety Matters",
+    "inverters": "Inverters",
+    "batteryStorage": "Battery Storage",
+    "optimizers": "Optimizers",
+    "microInverters": "Micro Inverters",
+    "evChargers": "EV Chargers",
+    "accessories": "Accessories",
+    "ci": "Commercial & Industrial Rooftop",
+    "residential": "Residential",
+    "solarFarm": "Solar Farm / Utility",
+    "scada": "SCADA & Monitoring",
+    "datasheets": "Datasheets",
+    "wiringDiagrams": "Wiring Diagrams & Manuals",
+    "standards": "Standards & Compliance",
+    "workshop": "Workshop & Training",
+    "articles": "Articles",
+    "company": "Company",
+    "projoyPartnership": "Projoy Partnership",
+    "certifications": "Certifications",
+    "news": "News & Events",
+    "careers": "Careers",
+    "exclusive": "Exclusive",
+    "authorized": "Authorized",
+    "safetyCritical": "Safety critical"
+  },
+  "footer": {
+    "address": "WS Energy Co., Ltd.\nSamut Prakan, Thailand",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "lineLabel": "LINE OA",
+    "newsletterTitle": "Stay in the loop",
+    "newsletterCopy": "Product launches, training dates, compliance updates.",
+    "newsletterPlaceholder": "you@company.com",
+    "newsletterSubmit": "Subscribe",
+    "registration": "Company Reg. — TBD",
+    "vat": "VAT — TBD",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "★ Authorized Projoy distributor · Exclusive: Rapid Shutdown",
+      "headline": "Thailand's authorized Projoy distributor — and your full-line partner for solar generation, storage, and EV.",
+      "subhead": "We supply EPCs, engineers, and C&I project owners with certified components, technical specification support, and on-the-ground service from Samut Prakan."
+    },
+    "trustStrip": {
+      "label": "Authorized Projoy Distributor · Exclusive: Rapid Shutdown"
+    },
+    "audience": {
+      "heading": "Where do you fit?",
+      "epcTitle": "I'm an EPC / installer",
+      "epcDesc": "Authorized stock, fast quotes, technical support for tender packages and site rollouts.",
+      "epcCta": "Browse products",
+      "engineerTitle": "I'm an engineer / specifier",
+      "engineerDesc": "Datasheets, wiring diagrams, compliance references, and spec comparisons.",
+      "engineerCta": "Open the resources hub",
+      "facilityTitle": "I'm a facility owner",
+      "facilityDesc": "Insurance-grade safety, code compliance, and named industrial references.",
+      "facilityCta": "Read the safety story"
+    },
+    "safety": {
+      "eyebrow": "★ Exclusive in Thailand",
+      "headline": "Projoy Rapid Shutdown — the safety layer required on every modern rooftop.",
+      "body": "Rapid Shutdown de-energizes PV strings at the panel within seconds — protecting firefighters, satisfying insurers, and meeting the codes that are arriving in Thailand now. WS Energy is the only authorized distributor of the Projoy Rapid Shutdown family in country.",
+      "cta": "Explore Rapid Shutdown"
+    },
+    "categories": {
+      "heading": "Full-line catalog",
+      "subhead": "Authorized inverters, storage, optimizers, micro inverters, EV chargers, and accessories for every project size."
+    },
+    "projects": {
+      "heading": "Recent projects",
+      "subhead": "C&I rooftops, solar farms, and named industrial customers across Thailand.",
+      "cta": "All projects"
+    },
+    "solutions": {
+      "heading": "Solutions for every project type",
+      "ci": "C&I rooftop",
+      "ciDesc": "Engineering support, safety-first BOMs, training for site teams.",
+      "residential": "Residential",
+      "residentialDesc": "Reliable kits with optional storage and EV.",
+      "solarFarm": "Solar farm",
+      "solarFarmDesc": "Utility-scale specifications and string design.",
+      "scada": "SCADA & monitoring",
+      "scadaDesc": "Plant-level visibility and alarm management."
+    },
+    "why": {
+      "heading": "Why WS Energy",
+      "authorizedTitle": "Authorized & certified",
+      "authorizedDesc": "Genuine stock, full manufacturer warranty, paperwork your insurer will accept.",
+      "engineeringTitle": "Engineering, not box-shifting",
+      "engineeringDesc": "Sales engineers who size systems, review BOMs, and answer compliance questions.",
+      "localTitle": "Local & accountable",
+      "localDesc": "Samut Prakan warehouse, Thai-speaking team, LINE OA, fast quote turnaround.",
+      "trainingTitle": "Training & enablement",
+      "trainingDesc": "Workshops for installers, refresher sessions, technical content in Thai."
+    },
+    "resources": {
+      "heading": "Technical resources",
+      "subhead": "Datasheets, wiring diagrams, articles, and upcoming workshops.",
+      "datasheetsCta": "Latest datasheets",
+      "articlesCta": "Latest article",
+      "workshopCta": "Upcoming workshop",
+      "empty": "Resources publishing soon."
+    },
+    "trustFooter": {
+      "heading": "Certifications & compliance",
+      "subhead": "Components carry TIS / IEC marks; distributor authorizations are on file."
+    },
+    "closing": {
+      "headline": "Have a project? Get a quote in 24 hours.",
+      "body": "Send us a BOM, a single line drawing, or just a rough size — we'll come back with a costed proposal and stock confirmation."
+    }
+  },
+  "products": {
+    "indexEyebrow": "Catalog",
+    "indexTitle": "Products",
+    "indexSubhead": "Authorized distribution for inverters, storage, optimizers, micro inverters, EV chargers, and accessories.",
+    "filters": {
+      "heading": "Filter",
+      "brand": "Brand",
+      "kwRange": "kW range",
+      "phase": "Phase",
+      "application": "Application",
+      "searchModel": "Search by model…",
+      "all": "All",
+      "comingSoon": "Filtering goes live next week"
+    },
+    "categoryHero": {
+      "breadcrumbHome": "Home",
+      "breadcrumbProducts": "Products"
+    },
+    "empty": {
+      "heading": "No SKUs published yet",
+      "body": "We're still populating this category. Send us the model you need and we'll source it."
+    },
+    "brandBand": {
+      "heading": "Brands we carry"
+    },
+    "relatedProjects": {
+      "heading": "Where this category shows up"
+    },
+    "categoryRfq": {
+      "heading": "Need help choosing?",
+      "body": "Tell us the project size and we'll spec the right combination."
+    }
+  },
+  "common": {
+    "exclusiveBadge": "Exclusive in Thailand",
+    "authorizedBadge": "Authorized",
+    "safetyBadge": "Safety critical",
+    "byBrand": "by",
+    "thailand": "Thailand"
+  },
+  "swatch": {
+    "title": "Design system swatch",
+    "intro": "Every Button and Badge variant rendered with token classes only. See BRIEF §7–§8.",
+    "buttonsHeading": "Buttons",
+    "badgesHeading": "Badges",
+    "sizesHeading": "Sizes",
+    "statesHeading": "States",
+    "primary": "Primary",
+    "secondary": "Secondary",
+    "tertiary": "Tertiary →",
+    "outlinePrimary": "Outline primary",
+    "disabled": "Disabled"
   }
 }

@@ -5,6 +5,198 @@
   },
   "actions": {
     "switchToThai": "TH",
-    "switchToEnglish": "EN"
+    "switchToEnglish": "EN",
+    "requestQuote": "ขอใบเสนอราคา",
+    "callUs": "โทร",
+    "lineOA": "LINE",
+    "viewAll": "ดูทั้งหมด",
+    "viewSpecs": "ดูสเปก",
+    "downloadPdf": "ดาวน์โหลด PDF",
+    "talkToEngineer": "พูดคุยกับวิศวกร",
+    "browseProducts": "ดูสินค้า",
+    "exploreRapidShutdown": "ดูข้อมูล Rapid Shutdown",
+    "exploreSafety": "ดูระบบความปลอดภัย",
+    "viewCategory": "ดูหมวดหมู่",
+    "viewProject": "ดูโครงการ",
+    "readMore": "อ่านเพิ่มเติม"
+  },
+  "nav": {
+    "home": "หน้าแรก",
+    "safety": "ระบบความปลอดภัย",
+    "products": "ผลิตภัณฑ์",
+    "solutions": "โซลูชัน",
+    "projects": "ผลงาน",
+    "resources": "ข้อมูลทางเทคนิค",
+    "about": "เกี่ยวกับเรา",
+    "contact": "ติดต่อ",
+    "rapidShutdown": "Rapid Shutdown (Projoy)",
+    "firefighterSwitches": "สวิตช์ตัดไฟสำหรับนักดับเพลิง",
+    "whySafety": "ทำไมความปลอดภัยจึงสำคัญ",
+    "inverters": "อินเวอร์เตอร์",
+    "batteryStorage": "ระบบกักเก็บพลังงาน",
+    "optimizers": "ออปติไมเซอร์",
+    "microInverters": "ไมโครอินเวอร์เตอร์",
+    "evChargers": "เครื่องชาร์จ EV",
+    "accessories": "อุปกรณ์เสริม",
+    "ci": "โรงงาน / อาคารพาณิชย์",
+    "residential": "บ้านที่อยู่อาศัย",
+    "solarFarm": "โซลาร์ฟาร์ม",
+    "scada": "SCADA & การมอนิเตอร์",
+    "datasheets": "Datasheets",
+    "wiringDiagrams": "ไดอะแกรมและคู่มือ",
+    "standards": "มาตรฐานและการรับรอง",
+    "workshop": "อบรมและสัมมนา",
+    "articles": "บทความ",
+    "company": "บริษัท",
+    "projoyPartnership": "ความร่วมมือกับ Projoy",
+    "certifications": "ใบรับรอง",
+    "news": "ข่าวสารและกิจกรรม",
+    "careers": "ร่วมงานกับเรา",
+    "exclusive": "Exclusive",
+    "authorized": "Authorized",
+    "safetyCritical": "Safety critical"
+  },
+  "footer": {
+    "address": "บริษัท ดับเบิลยูเอส เอ็นเนอร์ยี่ จำกัด\nสมุทรปราการ ประเทศไทย",
+    "phoneLabel": "โทรศัพท์",
+    "emailLabel": "อีเมล",
+    "lineLabel": "LINE OA",
+    "newsletterTitle": "สมัครรับข่าวสาร",
+    "newsletterCopy": "สินค้าใหม่ ตารางอบรม และข้อมูลมาตรฐานล่าสุด",
+    "newsletterPlaceholder": "you@company.com",
+    "newsletterSubmit": "สมัคร",
+    "registration": "เลขทะเบียนบริษัท — TBD",
+    "vat": "เลข VAT — TBD",
+    "rights": "สงวนลิขสิทธิ์",
+    "privacy": "นโยบายความเป็นส่วนตัว",
+    "terms": "ข้อกำหนด"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "★ ตัวแทนจำหน่าย Projoy อย่างเป็นทางการ · Exclusive: Rapid Shutdown",
+      "headline": "ตัวแทนจำหน่าย Projoy อย่างเป็นทางการในประเทศไทย — พร้อมเป็นพาร์ทเนอร์ครบวงจรสำหรับโซลาร์ ระบบกักเก็บพลังงาน และ EV",
+      "subhead": "เราจัดจำหน่ายอุปกรณ์ที่ได้รับการรับรองให้กับ EPC วิศวกร และเจ้าของโครงการ C&I พร้อมการสนับสนุนทางเทคนิคและบริการในไทย จากฐานสมุทรปราการ"
+    },
+    "trustStrip": {
+      "label": "ตัวแทนจำหน่าย Projoy อย่างเป็นทางการ · Exclusive: Rapid Shutdown"
+    },
+    "audience": {
+      "heading": "คุณอยู่ในกลุ่มไหน?",
+      "epcTitle": "EPC / ผู้รับเหมาติดตั้ง",
+      "epcDesc": "สต็อกของแท้ ใบเสนอราคารวดเร็ว และการสนับสนุนทางเทคนิคสำหรับงานประมูลและงานติดตั้ง",
+      "epcCta": "ดูสินค้า",
+      "engineerTitle": "วิศวกร / ผู้กำหนดสเปก",
+      "engineerDesc": "Datasheet ไดอะแกรม ข้อมูลมาตรฐาน และตารางเปรียบเทียบสเปก",
+      "engineerCta": "เปิดศูนย์ข้อมูลทางเทคนิค",
+      "facilityTitle": "เจ้าของโรงงาน / อาคาร",
+      "facilityDesc": "ความปลอดภัยระดับประกัน การปฏิบัติตามมาตรฐาน และเคสอ้างอิงระดับอุตสาหกรรม",
+      "facilityCta": "อ่านเรื่องระบบความปลอดภัย"
+    },
+    "safety": {
+      "eyebrow": "★ Exclusive ในประเทศไทย",
+      "headline": "Projoy Rapid Shutdown — ระบบความปลอดภัยที่จำเป็นบนหลังคาโซลาร์ทุกแห่ง",
+      "body": "Rapid Shutdown ตัดกระแสจากแผงโซลาร์ภายในไม่กี่วินาที — ปกป้องนักดับเพลิง ตอบโจทย์บริษัทประกัน และสอดคล้องกับมาตรฐานที่กำลังเข้ามาในประเทศไทย WS Energy เป็นตัวแทนจำหน่ายผลิตภัณฑ์ตระกูล Rapid Shutdown แต่เพียงผู้เดียวในประเทศ",
+      "cta": "ดูข้อมูล Rapid Shutdown"
+    },
+    "categories": {
+      "heading": "แค็ตตาล็อกครบวงจร",
+      "subhead": "อินเวอร์เตอร์ แบตเตอรี่ ออปติไมเซอร์ ไมโครอินเวอร์เตอร์ EV ชาร์จเจอร์ และอุปกรณ์เสริมจากแบรนด์ทางการ"
+    },
+    "projects": {
+      "heading": "โครงการล่าสุด",
+      "subhead": "หลังคา C&I โซลาร์ฟาร์ม และลูกค้าอุตสาหกรรมทั่วประเทศไทย",
+      "cta": "ดูทุกโครงการ"
+    },
+    "solutions": {
+      "heading": "โซลูชันสำหรับทุกประเภทโครงการ",
+      "ci": "หลังคา C&I",
+      "ciDesc": "การสนับสนุนทางวิศวกรรม BOM แบบเน้นความปลอดภัย และการอบรมทีมหน้างาน",
+      "residential": "ที่อยู่อาศัย",
+      "residentialDesc": "ชุดอุปกรณ์เชื่อถือได้ พร้อมตัวเลือกระบบกักเก็บพลังงานและ EV",
+      "solarFarm": "โซลาร์ฟาร์ม",
+      "solarFarmDesc": "สเปกระดับยูทิลิตี้และการออกแบบสตริง",
+      "scada": "SCADA & การมอนิเตอร์",
+      "scadaDesc": "การมองเห็นข้อมูลโรงงานและการจัดการสัญญาณเตือน"
+    },
+    "why": {
+      "heading": "ทำไมต้อง WS Energy",
+      "authorizedTitle": "ตัวแทนทางการและได้รับการรับรอง",
+      "authorizedDesc": "สินค้าของแท้ การรับประกันเต็มรูปแบบจากผู้ผลิต เอกสารที่บริษัทประกันรับรอง",
+      "engineeringTitle": "งานวิศวกรรม ไม่ใช่แค่ขายของ",
+      "engineeringDesc": "วิศวกรฝ่ายขายที่ช่วยออกแบบ ตรวจ BOM และตอบคำถามด้านมาตรฐาน",
+      "localTitle": "ทีมในประเทศ พร้อมรับผิดชอบ",
+      "localDesc": "คลังที่สมุทรปราการ ทีมพูดภาษาไทย LINE OA ตอบใบเสนอราคาเร็ว",
+      "trainingTitle": "อบรมและถ่ายทอดความรู้",
+      "trainingDesc": "เวิร์กช็อปสำหรับผู้ติดตั้ง คอร์สทบทวน และคอนเทนต์ภาษาไทย"
+    },
+    "resources": {
+      "heading": "ข้อมูลทางเทคนิค",
+      "subhead": "Datasheet ไดอะแกรม บทความ และเวิร์กช็อปที่กำลังจะมาถึง",
+      "datasheetsCta": "Datasheet ล่าสุด",
+      "articlesCta": "บทความล่าสุด",
+      "workshopCta": "เวิร์กช็อปครั้งถัดไป",
+      "empty": "เร็ว ๆ นี้ เรากำลังเตรียมเนื้อหา"
+    },
+    "trustFooter": {
+      "heading": "ใบรับรองและมาตรฐาน",
+      "subhead": "อุปกรณ์มีเครื่องหมาย TIS / IEC พร้อมเอกสารแต่งตั้งตัวแทนจำหน่าย"
+    },
+    "closing": {
+      "headline": "มีโครงการอยู่ในมือ? รับใบเสนอราคาภายใน 24 ชั่วโมง",
+      "body": "ส่ง BOM, ไดอะแกรม หรือเพียงขนาดงานคร่าว ๆ มาให้เรา แล้วเราจะกลับไปพร้อมข้อเสนอและสถานะสต็อก"
+    }
+  },
+  "products": {
+    "indexEyebrow": "แค็ตตาล็อก",
+    "indexTitle": "ผลิตภัณฑ์",
+    "indexSubhead": "ตัวแทนจำหน่ายอย่างเป็นทางการสำหรับอินเวอร์เตอร์ แบตเตอรี่ ออปติไมเซอร์ ไมโครอินเวอร์เตอร์ EV ชาร์จเจอร์ และอุปกรณ์เสริม",
+    "filters": {
+      "heading": "กรอง",
+      "brand": "แบรนด์",
+      "kwRange": "ช่วง kW",
+      "phase": "เฟส",
+      "application": "การใช้งาน",
+      "searchModel": "ค้นหารุ่น…",
+      "all": "ทั้งหมด",
+      "comingSoon": "ระบบกรองจะเปิดให้ใช้สัปดาห์หน้า"
+    },
+    "categoryHero": {
+      "breadcrumbHome": "หน้าแรก",
+      "breadcrumbProducts": "ผลิตภัณฑ์"
+    },
+    "empty": {
+      "heading": "ยังไม่มีรุ่นที่เผยแพร่",
+      "body": "เรากำลังเพิ่มข้อมูลในหมวดนี้ แจ้งรุ่นที่ต้องการมาได้เลย เราจะจัดหาให้"
+    },
+    "brandBand": {
+      "heading": "แบรนด์ที่เราจัดจำหน่าย"
+    },
+    "relatedProjects": {
+      "heading": "โครงการที่ใช้ผลิตภัณฑ์ในหมวดนี้"
+    },
+    "categoryRfq": {
+      "heading": "ต้องการคำแนะนำ?",
+      "body": "บอกขนาดโครงการมาแล้วเราจะออกแบบชุดที่เหมาะสม"
+    }
+  },
+  "common": {
+    "exclusiveBadge": "Exclusive ในประเทศไทย",
+    "authorizedBadge": "Authorized",
+    "safetyBadge": "Safety critical",
+    "byBrand": "โดย",
+    "thailand": "ประเทศไทย"
+  },
+  "swatch": {
+    "title": "ตัวอย่างดีไซน์ซิสเต็ม",
+    "intro": "Button และ Badge ทุก variant แสดงผลด้วย token classes เท่านั้น (BRIEF §7–§8)",
+    "buttonsHeading": "ปุ่ม",
+    "badgesHeading": "แบดจ์",
+    "sizesHeading": "ขนาด",
+    "statesHeading": "สถานะ",
+    "primary": "ปุ่มหลัก",
+    "secondary": "ปุ่มรอง",
+    "tertiary": "ปุ่มลิงก์ →",
+    "outlinePrimary": "เส้นขอบ",
+    "disabled": "ปิดใช้งาน"
   }
 }
