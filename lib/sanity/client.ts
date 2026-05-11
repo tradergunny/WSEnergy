@@ -1,15 +1,32 @@
-import { createClient } from "@sanity/client";
-import imageUrlBuilder from "@sanity/image-url";
+import { createClient } from "next-sanity";
+import { createImageUrlBuilder as imageUrlBuilder } from "@sanity/image-url";
+import { apiVersion, dataset, projectId, readToken } from "./env";
 
-export const sanityConfig = {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION ?? "2025-01-01",
+/**
+ * Public client — CDN-cached, used for read-only GROQ queries from server components.
+ * BRIEF §9.1 / §14.4.
+ */
+export const sanityClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
   useCdn: true,
-};
+  perspective: "published",
+});
 
-export const sanityClient = createClient(sanityConfig);
+/**
+ * Server-only client with a read token. Use this for previews or any fetch
+ * that should bypass the CDN. Do not import from a client component.
+ */
+export const sanityServerClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+  token: readToken,
+  perspective: "published",
+});
 
-const builder = imageUrlBuilder(sanityClient);
+const builder = imageUrlBuilder({ projectId, dataset });
 export const urlFor = (source: Parameters<typeof builder.image>[0]) =>
   builder.image(source);
