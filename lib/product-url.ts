@@ -1,22 +1,10 @@
 import { withLocale } from "@/lib/navigation";
 
-/**
- * Slugs that belong to the Safety section even when the seed data leaves
- * their `parent` reference empty. Keeps URLs canonical across BRIEF §5
- * before content authors finish wiring parent categories in Sanity.
- */
-const SAFETY_CATEGORY_SLUGS = new Set([
-  "rapid-shutdown",
-  "firefighter-safety-switches",
-]);
-
 export function isSafetyCategorySlug(
-  categorySlug?: string | null,
+  _categorySlug?: string | null,
   parentSlug?: string | null,
 ): boolean {
-  if (parentSlug === "safety") return true;
-  if (categorySlug && SAFETY_CATEGORY_SLUGS.has(categorySlug)) return true;
-  return false;
+  return parentSlug === "safety";
 }
 
 /**
