@@ -179,6 +179,66 @@
       "body": "Tell us the project size and we'll spec the right combination."
     }
   },
+  "productDetail": {
+    "breadcrumbHome": "Home",
+    "breadcrumbProducts": "Products",
+    "breadcrumbSafety": "Safety",
+    "tabs": {
+      "overview": "Overview",
+      "specs": "Specs",
+      "documents": "Documents",
+      "compliance": "Compliance"
+    },
+    "gallery": {
+      "alt": "Product photo"
+    },
+    "overview": {
+      "heading": "Overview"
+    },
+    "specs": {
+      "heading": "Technical specifications"
+    },
+    "documents": {
+      "heading": "Documents & downloads",
+      "datasheet": "Datasheet",
+      "wiringDiagram": "Wiring diagram",
+      "installManual": "Installation manual"
+    },
+    "compliance": {
+      "heading": "Compliance & certifications"
+    },
+    "pairsWellWith": {
+      "heading": "Pairs well with"
+    },
+    "relatedBrand": {
+      "heading": "Other from {brand}"
+    },
+    "projects": {
+      "heading": "Installed in the field"
+    },
+    "rfq": {
+      "heading": "Ready to spec this product?",
+      "body": "Send us a BOM or project size and we'll come back with pricing and stock confirmation."
+    }
+  },
+  "safety": {
+    "indexTitle": "Safety",
+    "indexSubhead": "Solar safety systems — rapid shutdown, firefighter switches, and compliance resources for modern PV installations.",
+    "rapidShutdown": {
+      "eyebrow": "★ Exclusive in Thailand",
+      "headline": "Projoy Rapid Shutdown",
+      "subhead": "The safety layer that de-energizes PV strings at the panel level within seconds — protecting firefighters, satisfying insurers, and meeting the codes arriving in Thailand now.",
+      "whyHeading": "Why rapid shutdown matters",
+      "whyBody": "NEC 2017 §690.12 and IEC 60947-3 require module-level shutdown on rooftop PV systems. Rapid Shutdown devices cut string voltage to safe levels within 30 seconds of activation, enabling first responders to work on a roof without risk of electrocution.",
+      "productsHeading": "Rapid Shutdown products",
+      "diagramHeading": "How it works",
+      "diagramPlaceholder": "Interactive rapid-shutdown diagram — coming in Week 7.",
+      "certsHeading": "Certifications & standards",
+      "ctaHeading": "Need rapid shutdown for your project?",
+      "ctaBody": "We stock the full Projoy Rapid Shutdown range and can spec the right combination for your system size.",
+      "authDocLabel": "View Projoy authorization document"
+    }
+  },
   "common": {
     "exclusiveBadge": "Exclusive in Thailand",
     "authorizedBadge": "Authorized",

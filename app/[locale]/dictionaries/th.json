@@ -179,6 +179,66 @@
       "body": "บอกขนาดโครงการมาแล้วเราจะออกแบบชุดที่เหมาะสม"
     }
   },
+  "productDetail": {
+    "breadcrumbHome": "หน้าแรก",
+    "breadcrumbProducts": "ผลิตภัณฑ์",
+    "breadcrumbSafety": "ระบบความปลอดภัย",
+    "tabs": {
+      "overview": "ภาพรวม",
+      "specs": "สเปก",
+      "documents": "เอกสาร",
+      "compliance": "มาตรฐาน"
+    },
+    "gallery": {
+      "alt": "รูปสินค้า"
+    },
+    "overview": {
+      "heading": "ภาพรวม"
+    },
+    "specs": {
+      "heading": "ข้อมูลจำเพาะทางเทคนิค"
+    },
+    "documents": {
+      "heading": "เอกสารและดาวน์โหลด",
+      "datasheet": "Datasheet",
+      "wiringDiagram": "ไดอะแกรมการเดินสาย",
+      "installManual": "คู่มือการติดตั้ง"
+    },
+    "compliance": {
+      "heading": "มาตรฐานและการรับรอง"
+    },
+    "pairsWellWith": {
+      "heading": "ใช้คู่กันได้ดี"
+    },
+    "relatedBrand": {
+      "heading": "สินค้าอื่นจาก {brand}"
+    },
+    "projects": {
+      "heading": "ติดตั้งจริงในโครงการ"
+    },
+    "rfq": {
+      "heading": "พร้อมสเปกสินค้านี้?",
+      "body": "ส่ง BOM หรือขนาดโครงการมาให้เรา แล้วเราจะตอบกลับพร้อมราคาและสถานะสต็อก"
+    }
+  },
+  "safety": {
+    "indexTitle": "ระบบความปลอดภัย",
+    "indexSubhead": "ระบบความปลอดภัยโซลาร์ — Rapid Shutdown สวิตช์ตัดไฟ และข้อมูลมาตรฐานสำหรับระบบ PV ยุคใหม่",
+    "rapidShutdown": {
+      "eyebrow": "★ Exclusive ในประเทศไทย",
+      "headline": "Projoy Rapid Shutdown",
+      "subhead": "ระบบความปลอดภัยที่ตัดกระแสจากแผงโซลาร์ภายในไม่กี่วินาที — ปกป้องนักดับเพลิง ตอบโจทย์บริษัทประกัน และสอดคล้องกับมาตรฐานที่กำลังเข้ามาในประเทศไทย",
+      "whyHeading": "ทำไม Rapid Shutdown จึงสำคัญ",
+      "whyBody": "NEC 2017 §690.12 และ IEC 60947-3 กำหนดให้ระบบ PV บนหลังคาต้องมีการตัดไฟระดับโมดูล Rapid Shutdown ลดแรงดันสตริงให้อยู่ในระดับปลอดภัยภายใน 30 วินาที ช่วยให้เจ้าหน้าที่กู้ภัยทำงานบนหลังคาได้โดยไม่เสี่ยงต่อไฟฟ้าช็อต",
+      "productsHeading": "ผลิตภัณฑ์ Rapid Shutdown",
+      "diagramHeading": "หลักการทำงาน",
+      "diagramPlaceholder": "ไดอะแกรม Rapid Shutdown แบบ interactive — จะเปิดใช้งานสัปดาห์ที่ 7",
+      "certsHeading": "ใบรับรองและมาตรฐาน",
+      "ctaHeading": "ต้องการ Rapid Shutdown สำหรับโครงการของคุณ?",
+      "ctaBody": "เรามีสต็อก Projoy Rapid Shutdown ครบทุกรุ่น พร้อมช่วยออกแบบให้เหมาะกับขนาดระบบ",
+      "authDocLabel": "ดูเอกสารแต่งตั้งตัวแทน Projoy"
+    }
+  },
   "common": {
     "exclusiveBadge": "Exclusive ในประเทศไทย",
     "authorizedBadge": "Authorized",
