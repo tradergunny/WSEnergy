@@ -21,6 +21,7 @@ export const docFile = defineType({
       },
     }),
     defineField({ name: "file", title: "File", type: "file" }),
+    defineField({ name: "thumbnail", title: "Thumbnail (preview image)", type: "image", options: { hotspot: true } }),
     defineField({ name: "version", title: "Version", type: "string" }),
     defineField({
       name: "fileSize",

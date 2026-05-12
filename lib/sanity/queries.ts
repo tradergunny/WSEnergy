@@ -305,6 +305,16 @@ export const projoyAuthorizationDocQuery = groq`
   }
 `;
 
+export const authorizationDocsQuery = groq`
+  *[_type == "docFile" && documentType == "authorization"] {
+    _id,
+    title_en,
+    title_th,
+    "url": file.asset->url,
+    thumbnail
+  }
+`;
+
 export const productsByCategoriesQuery = groq`
   *[_type == "product" && category->slug.current in $categories]
     | order(orderRank asc) [0...6] {
