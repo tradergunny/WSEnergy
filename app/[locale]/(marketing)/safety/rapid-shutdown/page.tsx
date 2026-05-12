@@ -13,6 +13,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { ProductCard } from "@/components/product/ProductCard";
+import { SystemDiagram } from "@/components/diagrams/SystemDiagram";
 import { withLocale } from "@/lib/navigation";
 import { productHref } from "@/lib/product-url";
 import type { urlFor } from "@/lib/sanity/client";
@@ -181,17 +182,33 @@ export default async function RapidShutdownPage({
         </Container>
       </section>
 
-      {/* ── Section 4 · Diagram stub (Week 7) ──────────────────── */}
+      {/* ── Section 4 · Interactive system diagram ──────────────── */}
       <section>
         <Container className="py-12">
           <h2 className="text-h2 text-graphite-900 mb-4 font-medium">
             {t.diagramHeading}
           </h2>
-          <div className="border-safety-200 bg-safety-50 flex items-center justify-center rounded-lg border p-12">
-            <p className="text-body text-safety-800 text-center">
-              {t.diagramPlaceholder}
-            </p>
-          </div>
+          <p className="text-body text-graphite-600 mb-6 max-w-3xl">
+            {t.diagramIntro}
+          </p>
+          <SystemDiagram
+            labels={{
+              triggerShutdown: t.diagram.triggerShutdown,
+              reset: t.diagram.reset,
+              statusLive: t.diagram.statusLive,
+              statusShutdown: t.diagram.statusShutdown,
+              statusPefs: t.diagram.statusPefs,
+              statusDeenergized: t.diagram.statusDeenergized,
+            }}
+            nodeLabels={{
+              pv: t.diagram.nodePv,
+              pefs: t.diagram.nodePefs,
+              dc: t.diagram.nodeDc,
+              control: t.diagram.nodeControl,
+              inverter: t.diagram.nodeInverter,
+              grid: t.diagram.nodeGrid,
+            }}
+          />
         </Container>
       </section>
 
