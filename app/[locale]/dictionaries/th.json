@@ -232,7 +232,21 @@
       "whyBody": "NEC 2017 §690.12 และ IEC 60947-3 กำหนดให้ระบบ PV บนหลังคาต้องมีการตัดไฟระดับโมดูล Rapid Shutdown ลดแรงดันสตริงให้อยู่ในระดับปลอดภัยภายใน 30 วินาที ช่วยให้เจ้าหน้าที่กู้ภัยทำงานบนหลังคาได้โดยไม่เสี่ยงต่อไฟฟ้าช็อต",
       "productsHeading": "ผลิตภัณฑ์ Rapid Shutdown",
       "diagramHeading": "หลักการทำงาน",
-      "diagramPlaceholder": "ไดอะแกรม Rapid Shutdown แบบ interactive — จะเปิดใช้งานสัปดาห์ที่ 7",
+      "diagramIntro": "[TH] Trigger a simulated shutdown to watch the signal travel from the Control Box to each PEFS unit and de-energize the array.",
+      "diagram": {
+        "triggerShutdown": "[TH] Trigger shutdown",
+        "reset": "[TH] Reset",
+        "statusLive": "[TH] Array live · Strings energized",
+        "statusShutdown": "[TH] Shutdown initiated · Signal sent to PEFS",
+        "statusPefs": "[TH] PEFS tripped · Modules isolated",
+        "statusDeenergized": "[TH] Array de-energized · Safe",
+        "nodePv": "[TH] PV Modules",
+        "nodePefs": "[TH] PEFS Units",
+        "nodeDc": "[TH] DC String",
+        "nodeControl": "[TH] Control Box",
+        "nodeInverter": "[TH] Inverter",
+        "nodeGrid": "[TH] Grid"
+      },
       "certsHeading": "ใบรับรองและมาตรฐาน",
       "ctaHeading": "ต้องการ Rapid Shutdown สำหรับโครงการของคุณ?",
       "ctaBody": "เรามีสต็อก Projoy Rapid Shutdown ครบทุกรุ่น พร้อมช่วยออกแบบให้เหมาะกับขนาดระบบ",
@@ -245,8 +259,15 @@
       "whyHeading": "ทำไมสวิตช์ตัดไฟสำหรับนักดับเพลิงจึงสำคัญ",
       "whyBody": "การป้องกันกระแสเกินมาตรฐานไม่ได้ออกแบบมาสำหรับสถานการณ์ฉุกเฉิน สวิตช์ตัดไฟสำหรับนักดับเพลิงมีจุดตัดการเชื่อมต่อที่ระบุชัดเจน เข้าถึงได้จากภายนอก และรองรับกระแสลัดวงจรในระบบ PV เชิงพาณิชย์และอุตสาหกรรม",
       "productsHeading": "ผลิตภัณฑ์สวิตช์ตัดไฟสำหรับนักดับเพลิง",
-      "diagramHeading": "หลักการทำงาน",
-      "diagramPlaceholder": "ไดอะแกรมการติดตั้งสวิตช์ตัดไฟ — จะเปิดใช้งานสัปดาห์ที่ 7",
+      "diagramHeading": "[TH] Installation overview",
+      "diagramIntro": "[TH] The disconnect lives outside the building envelope so emergency crews can isolate the array before entry — no need to reach the inverter or roof.",
+      "diagramLabels": {
+        "rooftopArray": "[TH] Rooftop PV array",
+        "building": "[TH] Building",
+        "disconnect": "[TH] Firefighter disconnect",
+        "disconnectMeta": "[TH] Externally accessible · Lockable",
+        "ground": "[TH] Ground level"
+      },
       "certsHeading": "ใบรับรองและมาตรฐาน",
       "ctaHeading": "ต้องการสเปกสวิตช์ตัดไฟสำหรับโครงการของคุณ?",
       "ctaBody": "แจ้งขนาดระบบและประเภทการติดตั้งมาแล้วเราจะแนะนำตัวตัดที่เหมาะสมพร้อมเอกสารประกอบ"
@@ -263,6 +284,76 @@
       "wsAnswerBody": "WS Energy เป็นตัวแทนจำหน่าย Projoy Rapid Shutdown แต่เพียงผู้เดียวในประเทศไทย ผลิตภัณฑ์ Projoy ผ่านมาตรฐาน NEC §690.12 และ IEC 60947-3 มีเครื่องหมาย TIS และ UL และออกแบบมาสำหรับแรงดันสตริงที่ใช้ในการติดตั้ง C&I และระดับยูทิลิตี้ของไทย",
       "ctaHeading": "พร้อมทำให้การติดตั้งของคุณปลอดภัยและสอดคล้องมาตรฐาน?",
       "ctaBody": "พูดคุยกับวิศวกรฝ่ายขาย WS Energy — เราจะออกแบบชุด Rapid Shutdown หรือ Firefighter Switch ที่เหมาะสมและจัดเตรียมเอกสารมาตรฐานให้คุณ"
+    }
+  },
+  "solutions": {
+    "commercialIndustrial": {
+      "breadcrumb": "[TH] Commercial & Industrial",
+      "eyebrow": "[TH] Solutions · C&I rooftop",
+      "headline": "[TH] Commercial & industrial rooftop",
+      "subhead": "[TH] Engineering-grade BOMs for factory roofs, logistics yards, and commercial portfolios — anchored on Projoy Rapid Shutdown, sized for the inverters and storage your insurer will accept.",
+      "benefitsHeading": "[TH] Why EPCs spec WS Energy on C&I",
+      "benefits": [
+        { "title": "[TH] Rapid Shutdown built in", "body": "[TH] Exclusive Projoy distribution in Thailand, matched to your string design and ready for AHJ review." },
+        { "title": "[TH] Authorized inverters at scale", "body": "[TH] Huawei, SolaX, and KUVO three-phase inverters with manufacturer warranty and dealer paperwork on file." },
+        { "title": "[TH] Storage where it makes sense", "body": "[TH] Battery sizing for peak-shaving and time-of-use tariffs — not a one-size-fits-all kit." },
+        { "title": "[TH] Documentation your insurer accepts", "body": "[TH] TIS, IEC, and authorization letters bundled with every quote." }
+      ],
+      "productsHeading": "[TH] Components we ship into C&I projects",
+      "projectsHeading": "[TH] Recent C&I installations",
+      "ctaHeading": "[TH] Quoting a C&I rooftop?",
+      "ctaBody": "[TH] Send us the array layout or rough kW and we'll come back with a Rapid-Shutdown-aware BOM."
+    },
+    "residential": {
+      "breadcrumb": "[TH] Residential",
+      "eyebrow": "[TH] Solutions · Residential",
+      "headline": "[TH] Residential & small commercial",
+      "subhead": "[TH] Authorized inverters, storage, and EV chargers for installers serving single homes, villages, and small business rooftops.",
+      "benefitsHeading": "[TH] Why installers choose WS Energy",
+      "benefits": [
+        { "title": "[TH] Genuine, authorized stock", "body": "[TH] Huawei, SolaX, KUVO, T-SUN — direct from authorized supply, full warranty intact." },
+        { "title": "[TH] Single-phase to three-phase", "body": "[TH] From a 5 kW villa kit to a 30 kW estate, the inverter and battery sizes are on the shelf." },
+        { "title": "[TH] EV-ready from day one", "body": "[TH] SCU, Sine Xcel, and SolaX chargers that pair cleanly with the inverter brands we carry." },
+        { "title": "[TH] LINE OA and Thai-speaking support", "body": "[TH] Quotes turn around fast; site questions get answered the same day." }
+      ],
+      "productsHeading": "[TH] Residential-ready products",
+      "projectsHeading": "[TH] Residential references",
+      "ctaHeading": "[TH] Pricing a residential install?",
+      "ctaBody": "[TH] Tell us the kW and whether the homeowner wants storage or EV — we'll come back with a tight kit."
+    },
+    "solarFarm": {
+      "breadcrumb": "[TH] Solar Farm",
+      "eyebrow": "[TH] Solutions · Utility scale",
+      "headline": "[TH] Solar farm & utility",
+      "subhead": "[TH] Component supply and specification support for MW-scale ground-mount and utility-scale PV projects — string inverters, accessories, and the Rapid Shutdown layer where the AHJ requires it.",
+      "benefitsHeading": "[TH] Built for utility-scale projects",
+      "benefits": [
+        { "title": "[TH] MW-scale inverter sourcing", "body": "[TH] Huawei SUN2000 and SolaX three-phase string inverters in volume, authorized supply." },
+        { "title": "[TH] String design support", "body": "[TH] Sales engineers who size strings, balance MPPTs, and reconcile the BOM against your single-line." },
+        { "title": "[TH] Rapid Shutdown where required", "body": "[TH] Projoy modules and control boxes specified to your string voltage and module count." },
+        { "title": "[TH] Logistics from Samut Prakan", "body": "[TH] Staged deliveries that match your install schedule." }
+      ],
+      "productsHeading": "[TH] Components we ship into solar farms",
+      "projectsHeading": "[TH] Utility-scale references",
+      "ctaHeading": "[TH] Spec'ing a solar farm?",
+      "ctaBody": "[TH] Share the single-line or capacity target — we'll come back with an inverter and accessories BOM."
+    },
+    "scadaMonitoring": {
+      "breadcrumb": "[TH] SCADA & Monitoring",
+      "eyebrow": "[TH] Solutions · SCADA",
+      "headline": "[TH] SCADA & monitoring",
+      "subhead": "[TH] Plant-level visibility, alarm management, and inverter-fleet monitoring built on the smart meters, dataloggers, and inverter platforms we already supply.",
+      "benefitsHeading": "[TH] Why operators wire in WS Energy",
+      "benefits": [
+        { "title": "[TH] Inverter-fleet visibility", "body": "[TH] Huawei FusionSolar and SolaX cloud monitoring configured per plant, with alerts that match your O&M SLA." },
+        { "title": "[TH] DTSU666 smart metering", "body": "[TH] Authorized DTSU666 stock for export limits, self-consumption metering, and revenue-grade reads." },
+        { "title": "[TH] Alarm routing that scales", "body": "[TH] Plant-by-plant rules, on-call rotations, and a clear escalation path." },
+        { "title": "[TH] Commissioning support", "body": "[TH] We help on the wire-up, the registration, and the first month of clean data." }
+      ],
+      "productsHeading": "[TH] SCADA & monitoring components",
+      "projectsHeading": "[TH] Where we run monitoring",
+      "ctaHeading": "[TH] Adding monitoring to a plant?",
+      "ctaBody": "[TH] Send us the inverter brand and plant count — we'll come back with a SCADA stack."
     }
   },
   "common": {

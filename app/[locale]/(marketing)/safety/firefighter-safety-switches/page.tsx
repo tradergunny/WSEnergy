@@ -171,16 +171,194 @@ export default async function FirefighterSwitchesPage({
         </Container>
       </section>
 
-      {/* ── Section 4 · Diagram stub (Week 7) ──────────────────── */}
+      {/* ── Section 4 · Disconnect installation diagram ─────────── */}
       <section>
         <Container className="py-12">
           <h2 className="text-h2 text-graphite-900 mb-4 font-medium">
             {t.diagramHeading}
           </h2>
-          <div className="border-safety-200 bg-safety-50 flex items-center justify-center rounded-lg border p-12">
-            <p className="text-body text-safety-800 text-center">
-              {t.diagramPlaceholder}
-            </p>
+          <p className="text-body text-graphite-600 mb-6 max-w-3xl">
+            {t.diagramIntro}
+          </p>
+          <div className="border-graphite-200 bg-graphite-50 rounded-lg border p-6">
+            <div className="w-full overflow-x-auto">
+              <svg
+                viewBox="0 0 820 320"
+                className="block min-w-[820px] w-full h-auto"
+                role="img"
+                aria-label={t.diagramHeading}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Ground line */}
+                <line
+                  x1={40}
+                  y1={280}
+                  x2={780}
+                  y2={280}
+                  stroke="#5f5e5a"
+                  strokeWidth={1}
+                />
+
+                {/* Building outline */}
+                <rect
+                  x={120}
+                  y={110}
+                  width={360}
+                  height={170}
+                  fill="#f8f8f7"
+                  stroke="#d3d1c7"
+                  strokeWidth={1}
+                />
+                {/* Roof / array */}
+                <polygon
+                  points="120,110 300,40 480,110"
+                  fill="#f1efe8"
+                  stroke="#d3d1c7"
+                  strokeWidth={1}
+                />
+                {/* PV array tiles on the roof */}
+                <g stroke="#888780" strokeWidth={1} fill="#e6f1fb">
+                  <polygon points="180,98 240,68 290,68 240,98" />
+                  <polygon points="300,98 360,68 410,68 360,98" />
+                </g>
+
+                {/* DC line from roof into building */}
+                <line
+                  x1={300}
+                  y1={110}
+                  x2={300}
+                  y2={200}
+                  stroke="#5f5e5a"
+                  strokeWidth={2}
+                />
+                {/* Bend toward exterior switch */}
+                <line
+                  x1={300}
+                  y1={200}
+                  x2={540}
+                  y2={200}
+                  stroke="#5f5e5a"
+                  strokeWidth={2}
+                />
+
+                {/* Disconnect switch (outside the building) */}
+                <rect
+                  x={540}
+                  y={170}
+                  width={76}
+                  height={64}
+                  rx={6}
+                  fill="#fcebeb"
+                  stroke="#a32d2d"
+                  strokeWidth={2}
+                />
+                <text
+                  x={578}
+                  y={196}
+                  textAnchor="middle"
+                  fontFamily="JetBrains Mono, monospace"
+                  fontSize={10}
+                  fontWeight={500}
+                  fill="#a32d2d"
+                >
+                  DISCONNECT
+                </text>
+                <text
+                  x={578}
+                  y={214}
+                  textAnchor="middle"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontSize={10}
+                  fill="#791f1f"
+                >
+                  PEFS-EL
+                </text>
+
+                {/* Line continues to inverter/grid */}
+                <line
+                  x1={616}
+                  y1={202}
+                  x2={720}
+                  y2={202}
+                  stroke="#5f5e5a"
+                  strokeWidth={2}
+                />
+                <rect
+                  x={720}
+                  y={180}
+                  width={56}
+                  height={44}
+                  rx={4}
+                  fill="#f8f8f7"
+                  stroke="#d3d1c7"
+                  strokeWidth={1}
+                />
+                <text
+                  x={748}
+                  y={206}
+                  textAnchor="middle"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontSize={10}
+                  fontWeight={500}
+                  fill="#1a1a19"
+                >
+                  Inverter
+                </text>
+
+                {/* Callouts */}
+                <text
+                  x={300}
+                  y={30}
+                  textAnchor="middle"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontSize={11}
+                  fontWeight={500}
+                  fill="#1a1a19"
+                >
+                  {t.diagramLabels.rooftopArray}
+                </text>
+                <text
+                  x={300}
+                  y={170}
+                  textAnchor="middle"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontSize={11}
+                  fill="#5f5e5a"
+                >
+                  {t.diagramLabels.building}
+                </text>
+                <text
+                  x={578}
+                  y={258}
+                  textAnchor="middle"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontSize={11}
+                  fontWeight={500}
+                  fill="#a32d2d"
+                >
+                  {t.diagramLabels.disconnect}
+                </text>
+                <text
+                  x={578}
+                  y={274}
+                  textAnchor="middle"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontSize={10}
+                  fill="#5f5e5a"
+                >
+                  {t.diagramLabels.disconnectMeta}
+                </text>
+                <text
+                  x={40}
+                  y={300}
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontSize={10}
+                  fill="#888780"
+                >
+                  {t.diagramLabels.ground}
+                </text>
+              </svg>
+            </div>
           </div>
         </Container>
       </section>

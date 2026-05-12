@@ -305,6 +305,45 @@ export const projoyAuthorizationDocQuery = groq`
   }
 `;
 
+export const productsByCategoriesQuery = groq`
+  *[_type == "product" && category->slug.current in $categories]
+    | order(orderRank asc) [0...6] {
+    _id,
+    title,
+    sku,
+    "slug": slug.current,
+    authorized,
+    exclusive,
+    safetyCritical,
+    shortDescription_en,
+    shortDescription_th,
+    "image": gallery[0],
+    "brand": brand->{ name, "slug": slug.current },
+    "category": category->{
+      title_en,
+      title_th,
+      "slug": slug.current,
+      "parentSlug": parent->slug.current
+    }
+  }
+`;
+
+export const projectsBySectorsQuery = groq`
+  *[_type == "project" && sector in $sectors]
+    | order(year desc) [0...3] {
+    _id,
+    title_en,
+    title_th,
+    "slug": slug.current,
+    customer,
+    sector,
+    capacity,
+    location,
+    year,
+    heroImage
+  }
+`;
+
 export const firefighterProductsQuery = groq`
   *[_type == "product" && category->slug.current == "firefighter-safety-switches"]
     | order(orderRank asc) {
