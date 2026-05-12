@@ -20,9 +20,9 @@ type BaseProps = {
 };
 
 const fieldBase =
-  "block w-full rounded-md bg-white px-3 py-2 text-body text-graphite-900 placeholder:text-graphite-400 transition-colors duration-150 focus:outline-none focus:border-brand-600";
+  "block w-full rounded-md bg-white px-3 py-2 text-body text-graphite-900 placeholder:text-graphite-400 transition-colors duration-150 focus:outline-none focus:border-brand-600 dark:bg-graphite-800 dark:text-graphite-50 dark:placeholder:text-graphite-600";
 
-const borderDefault = "border border-graphite-600";
+const borderDefault = "border border-graphite-600 dark:border-graphite-400";
 const borderError =
   "border border-[var(--color-danger-text)] focus:border-[var(--color-danger-text)]";
 
@@ -45,7 +45,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     <div className={`flex flex-col gap-1 ${className}`.trim()}>
       <label
         htmlFor={fieldId}
-        className="text-caption text-graphite-800 font-medium"
+        className="text-caption text-graphite-800 font-medium dark:text-graphite-200"
       >
         {label}
         {required && <span className="text-safety-600 ml-1">*</span>}
@@ -94,7 +94,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className={`flex flex-col gap-1 ${className}`.trim()}>
         <label
           htmlFor={fieldId}
-          className="text-caption text-graphite-800 font-medium"
+          className="text-caption text-graphite-800 font-medium dark:text-graphite-200"
         >
           {label}
           {required && <span className="text-safety-600 ml-1">*</span>}

@@ -411,6 +411,151 @@
     "byBrand": "by",
     "thailand": "Thailand"
   },
+  "about": {
+    "breadcrumb": "About",
+    "projoyPartnership": {
+      "breadcrumb": "Projoy Partnership",
+      "hero": {
+        "badge": "★ Authorized · Exclusive: Rapid Shutdown",
+        "headline": "The Projoy partnership",
+        "body": "WS Energy is the exclusive authorized distributor of Projoy Rapid Shutdown solutions in Thailand — and an authorized distributor for the full Projoy product range including Firefighter Safety Switches and Optimizers."
+      },
+      "benefits": {
+        "heading": "What the partnership means for you",
+        "genuine": { "title": "Genuine stock", "body": "Every unit ships from authorized supply with full traceability — no grey-market risk." },
+        "warranty": { "title": "Full manufacturer warranty", "body": "Projoy honors the warranty on every product sold through WS Energy. We handle claims locally." },
+        "technical": { "title": "Technical support", "body": "Our sales engineers are trained by Projoy on system design, string sizing, and compliance documentation." },
+        "training": { "title": "Training & certification", "body": "Access to Projoy installer workshops, product updates, and certification programs through WS Energy." }
+      },
+      "authorization": {
+        "heading": "Authorization documents",
+        "body": "Projoy has issued WS Energy formal authorization letters confirming exclusive distribution rights for Rapid Shutdown and authorized distribution for the full product line in Thailand.",
+        "viewPdf": "View authorization document",
+        "verifyLink": "Verify with Projoy"
+      },
+      "aboutProjoy": {
+        "heading": "About Projoy",
+        "body": "Projoy Electric is a specialist manufacturer of PV safety and optimization devices, headquartered in Xiamen, China. The company focuses exclusively on module-level power electronics for solar — Rapid Shutdown devices, firefighter safety switches, and DC optimizers.",
+        "facts": {
+          "specialization": "100% focused on PV safety and MLPE",
+          "certifications": "TIS · IEC 60947-3 · UL · TÜV certified",
+          "presence": "Distributed in 30+ countries worldwide"
+        }
+      },
+      "products": {
+        "heading": "Projoy product range at WS Energy",
+        "rapidShutdown": { "title": "Rapid Shutdown", "badge": "★ Exclusive", "body": "Module-level shutdown devices meeting NEC §690.12 and IEC 60947-3." },
+        "ffSwitches": { "title": "Firefighter Safety Switches", "body": "External disconnects for emergency PV isolation rated for commercial fault currents." },
+        "optimizers": { "title": "Optimizers", "body": "Module-level DC optimization for mismatch mitigation and monitoring." }
+      },
+      "cta": {
+        "heading": "Spec'ing Projoy in your next project?",
+        "body": "Talk to a WS Energy sales engineer — we'll help you choose the right Projoy products and provide the authorization paperwork your client needs."
+      }
+    }
+  },
+  "contact": {
+    "breadcrumb": "Contact",
+    "hero": {
+      "headline": "Get in touch",
+      "body": "Start with a quote request — or call, LINE, or email us directly."
+    },
+    "quickContact": {
+      "phoneTitle": "Call us",
+      "phoneValue": "087-053-8668",
+      "lineTitle": "LINE OA",
+      "lineValue": "@ws-energy",
+      "emailTitle": "Email",
+      "emailValue": "ws.energy.co.ltd@gmail.com"
+    },
+    "formHeading": "Send us your project details",
+    "directLines": {
+      "heading": "Direct lines",
+      "sales": { "name": "Sales team", "role": "Quotes, pricing, stock" },
+      "technical": { "name": "Technical team", "role": "Spec support, wiring, compliance" },
+      "training": { "name": "Training", "role": "Workshops, installer certification" },
+      "partner": { "name": "Partner channel", "role": "Dealer program, Projoy inquiries" }
+    },
+    "office": {
+      "heading": "Our office",
+      "address": "51/17 Moo 3 Bangpla, Bangplee,\nSamut Prakan 10540, Thailand",
+      "hours": "Mon–Fri 8:30–17:30",
+      "hoursSat": "Sat 9:00–12:00",
+      "directions": "Get directions"
+    }
+  },
+  "rfq": {
+    "breadcrumb": "Request a Quote",
+    "heading": "Request a Quote",
+    "subhead": "Tell us about your project and we'll come back within 24 hours with a proposal.",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Submit request",
+    "submitting": "Submitting…",
+    "stepOf": "Step {current} of {total}",
+    "step1": {
+      "heading": "Project type",
+      "subhead": "What kind of installation is this? Skip if you're not sure yet.",
+      "ciRooftop": "C&I rooftop",
+      "solarFarm": "Solar farm",
+      "residential": "Residential",
+      "other": "Other"
+    },
+    "step2": {
+      "heading": "Project size",
+      "subhead": "Approximate system capacity. Skip if you're still scoping.",
+      "under10": "<10 kW",
+      "from10to100": "10–100 kW",
+      "from100to1mw": "100 kW–1 MW",
+      "from1to5mw": "1–5 MW",
+      "over5mw": "5 MW+"
+    },
+    "step3": {
+      "heading": "Products of interest",
+      "subhead": "Select all that apply. Skip if you'd like us to recommend.",
+      "rapidShutdown": "Rapid shutdown",
+      "inverters": "Inverters",
+      "ffSwitches": "FF switches",
+      "batteryStorage": "Battery storage",
+      "optimizers": "Optimizers",
+      "microInverters": "Micro inverters",
+      "evChargers": "EV chargers",
+      "accessories": "Accessories",
+      "scada": "SCADA",
+      "notSure": "Not sure"
+    },
+    "step4": {
+      "heading": "Timeline",
+      "subhead": "When do you expect to procure?",
+      "thisMonth": "This month",
+      "oneToThree": "1–3 months",
+      "threeToSix": "3–6 months",
+      "justScoping": "Just scoping"
+    },
+    "step5": {
+      "heading": "Contact details",
+      "subhead": "We need a few details to get back to you.",
+      "nameLabel": "Name",
+      "companyLabel": "Company",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "roleLabel": "Role (optional)",
+      "notesLabel": "Project notes (optional)",
+      "fileLabel": "Attach file (optional)",
+      "fileHint": ".pdf, .dwg, or .xlsx — max 10 MB",
+      "errorName": "Please enter your name.",
+      "errorCompany": "Please enter your company.",
+      "errorEmail": "Please enter a valid email.",
+      "errorPhone": "Please enter your phone number.",
+      "errorSubmit": "Something went wrong. Please try again."
+    },
+    "confirmation": {
+      "heading": "Quote request received",
+      "body": "We'll be in touch within 24 hours with a proposal and stock confirmation.",
+      "fastTrackHeading": "Need it faster? Call or LINE us.",
+      "browseCta": "Browse products"
+    }
+  },
   "swatch": {
     "title": "Design system swatch",
     "intro": "Every Button and Badge variant rendered with token classes only. See BRIEF §7–§8.",

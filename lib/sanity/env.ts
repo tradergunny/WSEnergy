@@ -28,3 +28,6 @@ export const apiVersion =
 
 /** Server-only — never expose to the client bundle. */
 export const readToken = process.env.SANITY_API_READ_TOKEN;
+
+/** Server-only — used for writing RFQ submissions to Sanity. */
+export const writeToken = process.env.SANITY_API_WRITE_TOKEN;
