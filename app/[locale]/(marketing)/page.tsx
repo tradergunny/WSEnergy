@@ -309,13 +309,22 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   </div>
                 </div>
 
-                {/* Product visual panel */}
+                {/* Product visual panel — uses Sanity image when present */}
                 <div className="relative bg-card-100 lg:col-span-6">
                   <div className="bg-grid-forest absolute inset-0 opacity-60" />
                   <div className="relative flex aspect-[5/4] items-center justify-center p-10 lg:aspect-auto lg:h-full">
-                    <div className="flex h-44 w-44 items-center justify-center rounded-full bg-forest-900 text-gold-500">
-                      <IconShieldCheckered size={72} stroke={1.25} />
-                    </div>
+                    {featured.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={urlFor(featured.image).width(720).url()}
+                        alt={featured.title ?? ""}
+                        className="max-h-[320px] w-auto object-contain"
+                      />
+                    ) : (
+                      <div className="flex h-44 w-44 items-center justify-center rounded-full bg-forest-900 text-gold-500">
+                        <IconShieldCheckered size={72} stroke={1.25} />
+                      </div>
+                    )}
                     <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-caption font-mono uppercase tracking-wider text-forest-900/70">
                       <span>· Rapid Shutdown</span>
                       <span>· IEC 60947-3</span>
