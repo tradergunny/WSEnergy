@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { IconPhone, IconBrandLine, IconChevronDown, IconArrowRight } from "@tabler/icons-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -52,9 +53,17 @@ export function Header({
         <div className="flex items-center justify-between py-4">
           <Link
             href={withLocale(locale, "/")}
-            className="text-h3 font-medium tracking-tight text-mist-50"
+            aria-label="WS Energy — home"
+            className="inline-flex items-center"
           >
-            WS Energy
+            <Image
+              src="/WSLogo.png"
+              alt="WS Energy"
+              width={160}
+              height={40}
+              priority
+              className="h-9 w-auto"
+            />
           </Link>
 
           <nav className="hidden md:block">
