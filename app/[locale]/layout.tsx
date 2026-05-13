@@ -5,6 +5,7 @@ import { hasLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import "../globals.css";
 
 const inter = Inter({
@@ -48,7 +49,8 @@ export default async function RootLayout({
       lang={locale}
       className={`${inter.variable} ${notoSansThai.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="flex min-h-dvh flex-col">
+      <body className="flex min-h-dvh flex-col bg-forest-900 text-mist-50">
+        <SmoothScroll />
         <Header locale={locale} dict={dict} />
         <main className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />

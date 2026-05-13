@@ -354,56 +354,60 @@ Same content sections as desktop, with these adjustments:
 
 ## 7. Design System
 
-### 7.1 Color tokens (Tailwind config)
+> **Brand refresh (2026-05).** WS Energy moved from the Projoy Blue light-theme system to a dark evergreen + electric gold identity. Marketing surfaces lead with deep forest backgrounds, photo-forward hero compositions, and editorial typography. Catalog / spec surfaces inherit the same tokens; safety pages retain the signal-red accent.
 
-```js
-// tailwind.config.js — colors
-colors: {
-  // Brand primary — Projoy Blue
-  brand: {
-    50:  '#E6F1FB',
-    100: '#B5D4F4',
-    200: '#85B7EB',
-    400: '#378ADD',
-    600: '#185FA5', // ★ primary action
-    800: '#0C447C',
-    900: '#042C53',
-  },
-  // Neutral spine — Graphite
-  graphite: {
-    50:  '#F8F8F7', // page surface
-    100: '#F1EFE8', // secondary surface
-    200: '#D3D1C7', // borders
-    400: '#888780',
-    600: '#5F5E5A', // secondary text
-    800: '#444441',
-    900: '#1A1A19', // ★ primary text
-  },
-  // Safety accent — Signal Red (USE ONLY for Safety category + system warnings)
-  safety: {
-    50:  '#FCEBEB',
-    100: '#F7C1C1',
-    200: '#F09595',
-    400: '#E24B4A',
-    600: '#A32D2D', // ★ safety
-    800: '#791F1F',
-    900: '#501313',
-  },
-  // Semantic — feedback only
-  success: { bg: '#EAF3DE', border: '#C0DD97', text: '#3B6D11', dark: '#173404' },
-  warning: { bg: '#FAEEDA', border: '#FAC775', text: '#854F0B', dark: '#412402' },
-  danger:  { bg: '#FCEBEB', border: '#F09595', text: '#A32D2D', dark: '#501313' },
-}
+### 7.1 Color tokens (Tailwind v4 `@theme`)
+
+```css
+/* Forest — primary surface ramp (the canvas) */
+--color-forest-950: #001a0f; /* deepest panel / well */
+--color-forest-900: #002616; /* ★ page surface */
+--color-forest-800: #00321d;
+--color-forest-700: #064329;
+--color-forest-600: #0e5436;
+--color-forest-500: #1f6a48;
+--color-forest-400: #3a8862;
+
+/* Gold — accent / action ramp */
+--color-gold-50:  #fef7d9;
+--color-gold-200: #f9e189;
+--color-gold-400: #f6cc44;
+--color-gold-500: #F4C21B; /* ★ accent / primary CTA fill */
+--color-gold-600: #c9a015;
+--color-gold-800: #7d6309;
+
+/* Mist — text and muted surfaces on dark */
+--color-mist-50:  #FFFFFF; /* ★ primary text */
+--color-mist-200: #e0e6e2;
+--color-mist-400: #B8C4BD; /* ★ muted text */
+--color-mist-600: #7a8a82;
+--color-mist-800: #3a4a42; /* hairline borders on dark */
+
+/* Card — light cards that sit on the forest canvas (Taayo-style) */
+--color-card-50:  #F6F4EC; /* warm bone */
+--color-card-100: #ECE9DA;
+--color-card-200: #D6D2BD;
+--color-card-ink: #002616; /* text inside light cards = forest-900 */
+
+/* Safety — retained for Rapid Shutdown / Firefighter pages only */
+--color-safety-400: #E24B4A;
+--color-safety-600: #A32D2D;
+
+/* Semantic — feedback only (unchanged intent) */
+--color-success: #5FA84C;
+--color-warning: #F0B33A;
+--color-danger:  #E24B4A;
 ```
 
 ### 7.2 Color usage rules
 
-- **Brand 600** is the only color used for actions (CTAs, links, focus rings, badges). Never decorative.
-- **Graphite ramp** carries 85%+ of pixels.
-- **Safety 600** appears ONLY on Rapid Shutdown / Firefighter Safety category pages or in system-state diagrams indicating live circuits / danger states. Never decorative.
+- **Forest 900** is the default page surface. The marketing site is dark-first; light cards sit on top of it.
+- **Gold 500** is the only color used for actions (primary CTAs, key links, focus rings, accent strokes). Never decorative filler.
+- **Mist ramp** carries body text and hairline dividers on dark surfaces.
+- **Card ramp** is used for the "warm bone" cards (project tiles, stat cards) — text inside them is forest-900.
+- **Safety 600** appears ONLY on Rapid Shutdown / Firefighter Safety category pages, or in system-state diagrams indicating live circuits.
 - **Semantic colors** are for feedback only (success/warning/error), never for marketing emphasis.
-- **No green-as-eco.** Resist the temptation.
-- **Dark mode** must ship from day one. Ramp inverts: Graphite 900 → surface, Graphite 50 → text, Brand 200 → action.
+- **Dark theme is the default.** There is no separate light mode — every page uses the forest canvas with light card overlays for contrast.
 
 ### 7.3 Typography tokens
 
@@ -446,21 +450,18 @@ JetBrains Mono is used ONLY for:
 
 ### 7.6 Spacing & radius
 
-```js
-// Tailwind spacing scale uses defaults (0.25rem base)
-// Custom tokens:
-borderRadius: {
-  'sm': '4px',
-  'md': '8px',   // ★ default
-  'lg': '12px',  // cards
-  'xl': '16px',  // featured cards
-  'full': '9999px',
-},
-boxShadow: {
-  // NO drop shadows on UI elements.
-  // Focus only:
-  'focus': '0 0 0 2px #B5D4F4',
-},
+```css
+/* Generous radii — the Taayo "soft pill" language */
+--radius-sm:   6px;
+--radius-md:   12px;  /* inputs, small cards */
+--radius-lg:   20px;  /* ★ default for cards */
+--radius-xl:   28px;  /* featured / hero cards */
+--radius-pill: 9999px; /* buttons, eyebrow chips */
+
+/* Soft elevation — used sparingly on light cards over forest canvas */
+--shadow-card: 0 1px 0 rgba(0, 0, 0, 0.04), 0 12px 32px -16px rgba(0, 0, 0, 0.45);
+--shadow-card-hover: 0 1px 0 rgba(0, 0, 0, 0.04), 0 24px 48px -20px rgba(0, 0, 0, 0.55);
+--shadow-focus: 0 0 0 2px #F4C21B;
 ```
 
 ### 7.7 Photography direction
@@ -482,12 +483,16 @@ The site should feel photographed by an engineering documentation team, not a br
 
 ### 7.9 Motion principles
 
-- Hover state: color darken 10%, no transform
-- Focus state: 2px Brand 200 ring
-- Accordion: 180ms ease-out
-- **No scroll animations. No parallax. No fade-in-on-scroll.**
-- Page transitions: instant
-- The interactive Safety system diagram is the single rich-motion exception. State changes feel like equipment, not animation: discrete on/off transitions.
+The brand refresh introduces **medium-intensity motion** — subtle but present on every page, never gratuitous.
+
+- **Smooth scroll site-wide** via Lenis (lerp 0.1).
+- **Scroll reveal** on every major section: 24px upward translate + opacity fade, 600ms ease-out, triggered once when 20% of the element enters the viewport. Implemented via `<ScrollReveal>` (Framer Motion `whileInView`).
+- **Card hover**: lift -2px translate-y + shadow swap to `--shadow-card-hover`, 220ms ease-out.
+- **Button hover**: fill darken 8% (gold-500 → gold-600) + 1px translate-x on the trailing arrow icon.
+- **Hero entrance**: staggered headline reveal (50ms between lines) + slow zoom-out on the hero photo (1.05 → 1.0 over 1.2s).
+- **Focus**: 2px gold-500 ring, no shadow.
+- **Reduced motion**: when `prefers-reduced-motion: reduce`, all of the above collapse to instant opacity transitions only.
+- The interactive Safety system diagram remains the rich-motion exception: discrete on/off equipment transitions, not eased animation.
 
 ---
 
@@ -499,20 +504,21 @@ The site should feel photographed by an engineering documentation team, not a br
 
 ```tsx
 // Variant API
-<Button variant="primary">Request a Quote</Button>      // solid Brand 600
-<Button variant="secondary">View specs</Button>         // outlined Graphite 600
-<Button variant="tertiary">Download PDF →</Button>      // text-only Brand 600
-<Button variant="outline-primary">Talk to engineer</Button> // outlined Brand 600
+<Button variant="primary">Request a Quote</Button>       // solid gold-500 fill, forest-900 ink
+<Button variant="secondary">View specs</Button>          // hairline mist-400 border, mist-50 ink (on dark)
+<Button variant="tertiary">Download PDF →</Button>       // text-only gold-500, no border
+<Button variant="outline-primary">Talk to engineer</Button> // gold-500 border + ink, transparent fill
+<Button variant="on-card">Learn more →</Button>          // forest-900 fill, gold-500 ink (used on light cards)
 
 // Sizes
-size: 'sm' | 'md' | 'lg'  // padding 8/12/14 vertical, 14/22/26 horizontal
+size: 'sm' | 'md' | 'lg'  // py 10/12/14, px 18/22/26 — all pills
 
 // Rules
 - Max one primary per viewport
-- 8px border-radius
-- No drop shadows
-- Hover: darken 10%
-- Focus: 2px Brand 200 ring
+- Border-radius: `--radius-pill` (full)
+- Trailing arrow icon on every CTA except `tertiary` text links
+- Hover: fill darkens 8%, trailing arrow nudges 1px right
+- Focus: 2px gold-500 ring
 ```
 
 ### 8.2 Badges

@@ -7,18 +7,17 @@ import type {
 
 /**
  * Button — BRIEF §8.1
- * Variants: primary | secondary | tertiary | outline-primary
+ * Pill-shaped, gold-on-forest brand refresh.
+ * Variants: primary | secondary | tertiary | outline-primary | on-card
  * Sizes:    sm | md | lg
- *
- * Rules: max one primary per viewport, 8px radius, no drop shadows,
- * hover darkens ~10%, focus shows 2px Brand 200 ring (handled globally).
  */
 
 export type ButtonVariant =
   | "primary"
   | "secondary"
   | "tertiary"
-  | "outline-primary";
+  | "outline-primary"
+  | "on-card";
 
 export type ButtonSize = "sm" | "md" | "lg";
 
@@ -42,23 +41,25 @@ type ButtonAsLink = CommonProps &
 type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50";
+  "group/btn inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-50";
 
 const sizeMap: Record<ButtonSize, string> = {
-  sm: "px-[14px] py-[8px] text-caption",
+  sm: "px-[18px] py-[10px] text-caption",
   md: "px-[22px] py-[12px] text-body",
   lg: "px-[26px] py-[14px] text-body-lg",
 };
 
 const variantMap: Record<ButtonVariant, string> = {
   primary:
-    "bg-brand-600 text-white hover:bg-brand-800",
+    "bg-gold-500 text-forest-900 hover:bg-gold-600",
   secondary:
-    "border border-graphite-600 text-graphite-900 bg-transparent hover:bg-graphite-100",
+    "border border-mist-400/40 text-mist-50 bg-transparent hover:bg-mist-50/5 hover:border-mist-400/70",
   tertiary:
-    "text-brand-600 bg-transparent hover:text-brand-800 px-0 py-0",
+    "text-gold-500 bg-transparent hover:text-gold-400 px-0 py-0 underline-offset-4 hover:underline",
   "outline-primary":
-    "border border-brand-600 text-brand-600 bg-transparent hover:bg-brand-50",
+    "border border-gold-500 text-gold-500 bg-transparent hover:bg-gold-500/10",
+  "on-card":
+    "bg-forest-900 text-mist-50 hover:bg-forest-800",
 };
 
 export function Button(props: ButtonProps) {
