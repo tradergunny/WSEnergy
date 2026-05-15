@@ -9,6 +9,7 @@ import { teamMember } from "./teamMember";
 import { certification } from "./certification";
 import { event } from "./event";
 import { rfqSubmission } from "./rfqSubmission";
+import { trainingSession } from "./trainingSession";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   product,
@@ -21,4 +22,5 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   certification,
   event,
   rfqSubmission,
+  trainingSession,
 ];
