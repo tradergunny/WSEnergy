@@ -20,6 +20,11 @@ import {
   latestArticlesQuery,
   homepageCertificationsQuery,
 } from "@/lib/sanity/queries";
+import {
+  getNextUpcomingTrainingSessions,
+  type TrainingFormat,
+  type TrainingSessionRow,
+} from "@/lib/sanity/training";
 import { withLocale } from "@/lib/navigation";
 import { productHref } from "@/lib/product-url";
 import { Button } from "@/components/ui/Button";
@@ -84,12 +89,13 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const dict = await getDictionary(locale);
   const t = dict.home;
 
-  const [featuredProducts, projects, articles, certifications] =
+  const [featuredProducts, projects, articles, certifications, trainingSessions] =
     await Promise.all([
       sanityClient.fetch<FeaturedProduct[]>(featuredProductsQuery),
       sanityClient.fetch<ProjectRow[]>(featuredProjectsQuery),
       sanityClient.fetch<ArticleRow[]>(latestArticlesQuery),
       sanityClient.fetch<CertificationRow[]>(homepageCertificationsQuery),
+      getNextUpcomingTrainingSessions(),
     ]);
 
   const localized = (en?: string, th?: string) =>
@@ -541,6 +547,56 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
+      {/* ── 6.5 · Upcoming training ─────────────────────────────── */}
+      {trainingSessions.length > 0 ? (
+        <section className="bg-forest-950">
+          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+            <ScrollReveal className="mb-10 flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <MonoLabel tone="gold">
+                  {locale === "th" ? "อบรมที่กำลังจะมาถึง" : "Upcoming training"}
+                </MonoLabel>
+                <h2
+                  className="mt-3 max-w-2xl font-medium tracking-tight text-mist-50"
+                  style={{
+                    fontSize: "clamp(28px, 4vw, 44px)",
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.015em",
+                  }}
+                >
+                  {locale === "th"
+                    ? "เรียนรู้กับช่างผู้ติดตั้งและพันธมิตรของเรา"
+                    : "Train with our installers & partners."}
+                </h2>
+              </div>
+              <Link
+                href={withLocale(locale, "/training")}
+                className="group/btn inline-flex items-center gap-1.5 rounded-full border border-mist-400/30 px-4 py-2 text-body font-medium text-mist-50 hover:bg-mist-50/5 hover:border-mist-400/60"
+              >
+                {locale === "th" ? "ดูตารางทั้งหมด" : "View full calendar"}
+                <IconArrowRight
+                  size={16}
+                  stroke={2}
+                  className="transition-transform duration-200 group-hover/btn:translate-x-0.5"
+                />
+              </Link>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              {trainingSessions.map((s, i) => (
+                <ScrollReveal key={s._id} delay={i * 0.05}>
+                  <TrainingCard
+                    session={s}
+                    locale={locale}
+                    href={withLocale(locale, "/training")}
+                  />
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* ── 7 · Testimonial ─────────────────────────────────────── */}
       <section className="bg-forest-950">
         <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
@@ -712,6 +768,112 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       </section>
     </>
   );
+}
+
+function TrainingCard({
+  session,
+  locale,
+  href,
+}: {
+  session: TrainingSessionRow;
+  locale: "en" | "th";
+  href: string;
+}) {
+  const title =
+    locale === "th"
+      ? (session.title_th ?? session.title_en)
+      : (session.title_en ?? session.title_th ?? "");
+  const dateLabel = formatTrainingDateRange(
+    session.startDate,
+    session.endDate,
+    locale,
+  );
+  const formatLabel = formatTrainingFormat(session.format, locale);
+  const isFull = session.seatsRemaining === 0;
+
+  return (
+    <Link
+      href={href}
+      className="group/train flex h-full flex-col rounded-2xl bg-card-50 p-7 text-card-ink transition-all duration-300 hover:-translate-y-0.5"
+      style={{ boxShadow: "var(--shadow-card)" }}
+    >
+      <span className="text-caption font-mono uppercase tracking-wider text-forest-900/55">
+        {dateLabel}
+      </span>
+      <h3
+        className="mt-3 font-medium tracking-tight"
+        style={{ fontSize: 20, lineHeight: 1.3 }}
+      >
+        {title}
+      </h3>
+      {session.host ? (
+        <p className="mt-1 text-body text-forest-900/65">{session.host}</p>
+      ) : null}
+      <div className="mt-auto flex flex-wrap items-center gap-2 pt-6">
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-1 text-caption font-mono uppercase tracking-wider ${
+            session.format === "in-person"
+              ? "bg-forest-900 text-mist-50"
+              : session.format === "online"
+                ? "bg-gold-500/15 text-forest-900"
+                : "border border-forest-900/25 text-forest-900"
+          }`}
+        >
+          {formatLabel}
+        </span>
+        {session.province ? (
+          <span className="inline-flex items-center gap-1 text-caption text-forest-900/65">
+            <IconMapPin size={12} stroke={1.75} />
+            {session.province}
+          </span>
+        ) : null}
+        {isFull ? (
+          <span className="inline-flex items-center rounded-full bg-forest-900/10 px-2.5 py-1 text-caption font-mono uppercase tracking-wider text-forest-900/55">
+            {locale === "th" ? "เต็ม" : "Full"}
+          </span>
+        ) : null}
+      </div>
+    </Link>
+  );
+}
+
+function formatTrainingDateRange(
+  start: string,
+  end: string,
+  locale: "en" | "th",
+): string {
+  const s = new Date(`${start}T00:00:00`);
+  const e = new Date(`${end}T00:00:00`);
+  const intlLocale = locale === "th" ? "th-TH" : "en-GB";
+  const fmt = (d: Date, opts: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(intlLocale, opts).format(d);
+  if (start === end) {
+    return fmt(s, { day: "numeric", month: "short", year: "numeric" });
+  }
+  const sameMonth =
+    s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
+  if (sameMonth) {
+    return `${fmt(s, { day: "numeric" })}–${fmt(e, { day: "numeric", month: "short", year: "numeric" })}`;
+  }
+  return `${fmt(s, { day: "numeric", month: "short" })} – ${fmt(e, { day: "numeric", month: "short", year: "numeric" })}`;
+}
+
+function formatTrainingFormat(
+  format: TrainingFormat,
+  locale: "en" | "th",
+): string {
+  if (locale === "th") {
+    return format === "in-person"
+      ? "ในสถานที่"
+      : format === "online"
+        ? "ออนไลน์"
+        : "ผสมผสาน";
+  }
+  return format === "in-person"
+    ? "In person"
+    : format === "online"
+      ? "Online"
+      : "Hybrid";
 }
 
 function WhyTile({

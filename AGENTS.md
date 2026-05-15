@@ -30,3 +30,11 @@ WS Energy went through a brand refresh in May 2026. The design system is **fores
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 
 <!-- END:nextjs-agent-rules -->
+
+<!-- BEGIN:roadmap -->
+
+# Planned features beyond the brand refresh
+
+See `ROADMAP.md` for in-progress and upcoming features (Training Calendar, Certified Installer Directory). Each feature has a step plan with a verification gate per step — check the roadmap before starting work on either.
+
+<!-- END:roadmap -->

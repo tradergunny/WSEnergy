@@ -354,6 +354,42 @@ export const projectsBySectorsQuery = groq`
   }
 `;
 
+export const upcomingTrainingSessionsQuery = groq`
+  *[_type == "trainingSession" && endDate >= $today]
+    | order(startDate asc) {
+    _id,
+    title_en,
+    title_th,
+    startDate,
+    endDate,
+    format,
+    province,
+    host,
+    capacity,
+    seatsRemaining,
+    registrationUrl,
+    language
+  }
+`;
+
+export const nextUpcomingTrainingSessionsQuery = groq`
+  *[_type == "trainingSession" && endDate >= $today]
+    | order(startDate asc) [0...3] {
+    _id,
+    title_en,
+    title_th,
+    startDate,
+    endDate,
+    format,
+    province,
+    host,
+    capacity,
+    seatsRemaining,
+    registrationUrl,
+    language
+  }
+`;
+
 export const firefighterProductsQuery = groq`
   *[_type == "product" && category->slug.current == "firefighter-safety-switches"]
     | order(orderRank asc) {
