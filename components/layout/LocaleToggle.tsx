@@ -29,8 +29,8 @@ export function LocaleToggle({ current }: { current: Locale }) {
           aria-current={l === current ? "true" : undefined}
           className={
             l === current
-              ? "bg-brand-600 rounded-md px-2 py-1 text-white"
-              : "text-graphite-600 hover:text-brand-600 rounded-md px-2 py-1"
+              ? "bg-gold-500 rounded-md px-2 py-1 text-forest-900"
+              : "text-mist-400 hover:text-gold-500 rounded-md px-2 py-1"
           }
         >
           {l.toUpperCase()}

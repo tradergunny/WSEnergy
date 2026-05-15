@@ -41,19 +41,19 @@ export default async function ConfirmationPage({
           </svg>
         </div>
 
-        <h1 className="text-h1 font-medium text-graphite-900 dark:text-graphite-50">{t.heading}</h1>
+        <h1 className="text-h1 font-medium text-mist-50">{t.heading}</h1>
 
         {ref && (
-          <p className="rounded-md bg-graphite-100 px-6 py-3 font-mono text-h3 text-graphite-900 dark:bg-graphite-800 dark:text-graphite-50">
+          <p className="rounded-md bg-forest-800 px-6 py-3 font-mono text-h3 text-mist-50">
             {ref}
           </p>
         )}
 
-        <p className="text-body-lg text-graphite-600 dark:text-graphite-400">{t.body}</p>
+        <p className="text-body-lg text-mist-400">{t.body}</p>
 
         {/* Fast-track strip */}
-        <div className="flex w-full flex-col gap-3 rounded-lg border border-graphite-200 p-5 text-left dark:border-graphite-600">
-          <p className="text-h4 font-medium text-graphite-900 dark:text-graphite-50">
+        <div className="flex w-full flex-col gap-3 rounded-xl border border-mist-800 p-5 text-left">
+          <p className="text-h4 font-medium text-mist-50">
             {t.fastTrackHeading}
           </p>
           <div className="flex flex-wrap gap-3">

@@ -29,12 +29,12 @@ const base =
   "inline-flex items-center gap-1 rounded-sm px-2 py-[2px] text-eyebrow whitespace-nowrap";
 
 const variantMap: Record<BadgeVariant, string> = {
-  authorized: "bg-brand-50 text-brand-800",
-  exclusive: "bg-brand-50 text-brand-800",
-  brand: "border border-graphite-200 text-graphite-800 bg-transparent",
-  "safety-critical": "bg-safety-50 text-safety-800",
+  authorized: "bg-gold-500/15 text-gold-500 border border-gold-500/30",
+  exclusive: "bg-gold-500 text-forest-900",
+  brand: "border border-mist-400/40 text-mist-200 bg-transparent",
+  "safety-critical": "bg-safety-600/20 text-safety-400 border border-safety-600/40",
   "in-stock":
-    "bg-[var(--color-success-bg)] text-[var(--color-success-text)] border border-[var(--color-success-border)]",
+    "bg-forest-700 text-mist-50 border border-forest-500",
 };
 
 export function Badge({

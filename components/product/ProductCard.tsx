@@ -57,18 +57,18 @@ export function ProductCard({
   safetyLabel = "Safety critical",
 }: ProductCardProps) {
   const border = exclusive
-    ? "border-2 border-brand-600"
-    : "border border-graphite-200";
+    ? "border-2 border-gold-500"
+    : "border border-mist-800";
 
   const displayTitle = title ?? sku ?? "";
 
   return (
     <article
-      className={`group flex flex-col overflow-hidden rounded-lg bg-white ${border}`}
+      className={`group bg-forest-800 text-mist-50 flex flex-col overflow-hidden rounded-xl ${border}`}
     >
       <Link
         href={href}
-        className="bg-graphite-50 relative block aspect-[4/3] w-full overflow-hidden"
+        className="bg-forest-950 relative block aspect-[4/3] w-full overflow-hidden"
       >
         {image ? (
           <Image
@@ -79,7 +79,7 @@ export function ProductCard({
             className="object-cover"
           />
         ) : (
-          <div className="text-graphite-400 text-eyebrow flex h-full w-full items-center justify-center">
+          <div className="text-mist-400 text-eyebrow flex h-full w-full items-center justify-center">
             {brand ?? "WS Energy"}
           </div>
         )}
@@ -101,16 +101,16 @@ export function ProductCard({
 
         <div className="flex flex-1 flex-col gap-1">
           {sku && (
-            <p className="text-caption text-graphite-600 font-mono">{sku}</p>
+            <p className="text-caption text-mist-400 font-mono">{sku}</p>
           )}
           <Link
             href={href}
-            className="text-h4 text-graphite-900 hover:text-brand-600 font-medium"
+            className="text-h4 text-mist-50 hover:text-gold-500 font-medium"
           >
             {displayTitle}
           </Link>
           {description && (
-            <p className="text-body text-graphite-600 mt-1">{description}</p>
+            <p className="text-body text-mist-400 mt-1">{description}</p>
           )}
         </div>
 

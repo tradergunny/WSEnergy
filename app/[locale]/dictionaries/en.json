@@ -47,6 +47,7 @@
     "standards": "Standards & Compliance",
     "workshop": "Workshop & Training",
     "articles": "Articles",
+    "team": "Team",
     "company": "Company",
     "projoyPartnership": "Projoy Partnership",
     "certifications": "Certifications",
@@ -555,6 +556,100 @@
       "fastTrackHeading": "Need it faster? Call or LINE us.",
       "browseCta": "Browse products"
     }
+  },
+  "teamPage": {
+    "eyebrow": "About · Team",
+    "headline": "Our team",
+    "subhead": "The people behind WS Energy — sales engineers, technical specialists, and training coordinators serving EPCs and project owners across Thailand.",
+    "empty": "Team profiles are being prepared.",
+    "breadcrumbHome": "Home",
+    "breadcrumbAbout": "About",
+    "breadcrumbTeam": "Team",
+    "departments": {
+      "sales": "Sales",
+      "technical": "Technical",
+      "training": "Training",
+      "partner": "Partner channel"
+    }
+  },
+  "projectPages": {
+    "eyebrow": "Projects",
+    "headline": "Case studies",
+    "subhead": "C&I rooftops, solar farms, and named industrial references across Thailand — real installations using the components we distribute.",
+    "empty": "Projects will be published here as case studies are completed.",
+    "breadcrumbHome": "Home",
+    "breadcrumbProjects": "Projects",
+    "detail": {
+      "challenge": "The challenge",
+      "solution": "The solution",
+      "results": "Results",
+      "testimonial": "What the customer said",
+      "productsUsed": "Products used in this project",
+      "location": "Location",
+      "sector": "Sector",
+      "capacity": "System size",
+      "year": "Year",
+      "backToProjects": "All projects",
+      "ctaHeading": "Planning a similar project?",
+      "ctaBody": "Send us your requirements and we'll come back with a BOM and stock confirmation."
+    }
+  },
+  "resourcePages": {
+    "hub": {
+      "eyebrow": "Resources",
+      "headline": "Technical resources",
+      "subhead": "Datasheets, wiring diagrams, installation manuals, compliance documents, articles, and training schedules — everything your engineering and procurement teams need.",
+      "datasheetsTitle": "Datasheets",
+      "datasheetsDesc": "Product specifications and performance data for every SKU we carry.",
+      "wiringTitle": "Wiring Diagrams & Manuals",
+      "wiringDesc": "Installation guides, string diagrams, and commissioning procedures.",
+      "standardsTitle": "Standards & Compliance",
+      "standardsDesc": "Authorization letters, TIS/IEC certifications, and compliance references.",
+      "workshopTitle": "Workshop & Training",
+      "workshopDesc": "Installer workshops, refresher sessions, and certification programs.",
+      "articlesTitle": "Articles",
+      "articlesDesc": "Technical articles on safety, compliance, installation best practices, and product news."
+    },
+    "datasheets": {
+      "eyebrow": "Resources · Datasheets",
+      "headline": "Datasheets",
+      "subhead": "Product specifications and performance data. Download the PDF you need or request a custom spec sheet.",
+      "empty": "Datasheets will be published here as products are added to the catalog."
+    },
+    "wiring": {
+      "eyebrow": "Resources · Wiring Diagrams",
+      "headline": "Wiring Diagrams & Manuals",
+      "subhead": "Installation guides, string wiring diagrams, and commissioning procedures for the products we distribute.",
+      "empty": "Wiring diagrams and manuals will be published here shortly."
+    },
+    "standards": {
+      "eyebrow": "Resources · Standards",
+      "headline": "Standards & Compliance",
+      "subhead": "Authorization letters, TIS/IEC certifications, and compliance documentation — the paperwork your insurer and AHJ will ask for.",
+      "empty": "Compliance documents are being prepared for upload."
+    },
+    "workshop": {
+      "eyebrow": "Resources · Training",
+      "headline": "Workshop & Training",
+      "subhead": "Hands-on installer workshops, product training sessions, and certification programs run by WS Energy and our manufacturer partners.",
+      "comingSoon": "Training schedule coming soon.",
+      "comingSoonBody": "We're finalizing dates for our next round of installer workshops. Check back soon or contact us to register your interest."
+    },
+    "articles": {
+      "eyebrow": "Resources · Articles",
+      "headline": "Articles",
+      "subhead": "Technical articles on solar safety, compliance, installation practices, and product news from the WS Energy engineering team.",
+      "empty": "Articles are being written — check back soon.",
+      "publishedAt": "Published",
+      "readMore": "Read article",
+      "backToArticles": "All articles"
+    },
+    "breadcrumbHome": "Home",
+    "breadcrumbResources": "Resources",
+    "download": "Download",
+    "viewAll": "View all",
+    "documents": "documents",
+    "noDocuments": "No documents published yet."
   },
   "swatch": {
     "title": "Design system swatch",

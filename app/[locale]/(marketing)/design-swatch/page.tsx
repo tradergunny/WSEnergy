@@ -21,15 +21,15 @@ export default async function DesignSwatchPage({
   return (
     <Container as="section" className="py-12">
       <header className="mb-10">
-        <p className="text-eyebrow text-graphite-600 mb-2">WS Energy · QA</p>
-        <h1 className="text-h1 text-graphite-900 font-medium">{t.title}</h1>
-        <p className="text-body-lg text-graphite-600 mt-3 max-w-2xl">
+        <p className="text-eyebrow text-mist-400 mb-2">WS Energy · QA</p>
+        <h1 className="text-h1 text-mist-50 font-medium">{t.title}</h1>
+        <p className="text-body-lg text-mist-400 mt-3 max-w-2xl">
           {t.intro}
         </p>
       </header>
 
       <section className="mb-12">
-        <h2 className="text-h2 text-graphite-900 mb-4 font-medium">
+        <h2 className="text-h2 text-mist-50 mb-4 font-medium">
           {t.buttonsHeading}
         </h2>
         <div className="flex flex-wrap items-center gap-3">
@@ -39,7 +39,7 @@ export default async function DesignSwatchPage({
           <Button variant="tertiary">{t.tertiary}</Button>
         </div>
 
-        <h3 className="text-h3 text-graphite-800 mt-8 mb-3 font-medium">
+        <h3 className="text-h3 text-mist-200 mt-8 mb-3 font-medium">
           {t.sizesHeading}
         </h3>
         <div className="flex flex-wrap items-center gap-3">
@@ -54,7 +54,7 @@ export default async function DesignSwatchPage({
           </Button>
         </div>
 
-        <h3 className="text-h3 text-graphite-800 mt-8 mb-3 font-medium">
+        <h3 className="text-h3 text-mist-200 mt-8 mb-3 font-medium">
           {t.statesHeading}
         </h3>
         <div className="flex flex-wrap items-center gap-3">
@@ -72,7 +72,7 @@ export default async function DesignSwatchPage({
       </section>
 
       <section className="mb-12">
-        <h2 className="text-h2 text-graphite-900 mb-4 font-medium">
+        <h2 className="text-h2 text-mist-50 mb-4 font-medium">
           {t.badgesHeading}
         </h2>
         <div className="flex flex-wrap items-center gap-3">
@@ -86,7 +86,7 @@ export default async function DesignSwatchPage({
       </section>
 
       <section>
-        <h2 className="text-h2 text-graphite-900 mb-4 font-medium">Inputs</h2>
+        <h2 className="text-h2 text-mist-50 mb-4 font-medium">Inputs</h2>
         <div className="grid max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
           <Input label="Email" type="email" placeholder="you@company.com" />
           <Input

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { IconChevronRight } from "@tabler/icons-react";
@@ -14,6 +15,7 @@ import { Badge } from "@/components/ui/Badge";
 import { ProductCard } from "@/components/product/ProductCard";
 import { withLocale } from "@/lib/navigation";
 import { productHref } from "@/lib/product-url";
+import { alternates } from "@/lib/seo";
 import type { urlFor } from "@/lib/sanity/client";
 
 type SanityImageRef = Parameters<typeof urlFor>[0] | undefined | null;
@@ -48,6 +50,13 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+export async function generateMetadata({ params }: PageProps<"/[locale]/safety/firefighter-safety-switches">): Promise<Metadata> {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
+  const t = dict.safety.firefighterSwitches;
+  return { title: t.headline, description: t.subhead, alternates: alternates("/safety/firefighter-safety-switches") };
+}
+
 export default async function FirefighterSwitchesPage({
   params,
 }: PageProps<"/[locale]/safety/firefighter-safety-switches">) {
@@ -71,7 +80,7 @@ export default async function FirefighterSwitchesPage({
     <>
       {/* ── Breadcrumb ──────────────────────────────────────────── */}
       <Container as="nav" aria-label="Breadcrumb" className="pt-6">
-        <ol className="text-caption text-graphite-600 flex flex-wrap items-center gap-1">
+        <ol className="text-caption text-mist-400 flex flex-wrap items-center gap-1">
           <li>
             <Link
               href={withLocale(locale, "/")}
@@ -90,18 +99,18 @@ export default async function FirefighterSwitchesPage({
             </Link>
           </li>
           <IconChevronRight size={12} stroke={1.5} aria-hidden />
-          <li className="text-graphite-800">{t.headline}</li>
+          <li className="text-mist-50">{t.headline}</li>
         </ol>
       </Container>
 
       {/* ── Section 1 · Hero ────────────────────────────────────── */}
-      <section className="border-safety-200 border-b">
+      <section className="border-mist-800 border-b">
         <Container className="py-12">
           <p className="text-eyebrow text-safety-600 mb-3">{t.eyebrow}</p>
-          <h1 className="text-display text-graphite-900 font-medium">
+          <h1 className="text-display text-mist-50 font-medium">
             {t.headline}
           </h1>
-          <p className="text-body-lg text-graphite-600 mt-4 max-w-3xl">
+          <p className="text-body-lg text-mist-400 mt-4 max-w-3xl">
             {t.subhead}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -118,19 +127,19 @@ export default async function FirefighterSwitchesPage({
       {/* ── Section 2 · Why firefighter switches ────────────────── */}
       <section>
         <Container className="py-12">
-          <h2 className="text-h2 text-graphite-900 mb-4 font-medium">
+          <h2 className="text-h2 text-mist-50 mb-4 font-medium">
             {t.whyHeading}
           </h2>
-          <p className="text-body-lg text-graphite-600 max-w-3xl">
+          <p className="text-body-lg text-mist-400 max-w-3xl">
             {t.whyBody}
           </p>
         </Container>
       </section>
 
       {/* ── Section 3 · Products ────────────────────────────────── */}
-      <section className="bg-graphite-50">
+      <section className="bg-forest-950">
         <Container className="py-12">
-          <h2 className="text-h2 text-graphite-900 mb-6 font-medium">
+          <h2 className="text-h2 text-mist-50 mb-6 font-medium">
             {t.productsHeading}
           </h2>
           {products.length > 0 ? (
@@ -166,7 +175,7 @@ export default async function FirefighterSwitchesPage({
               ))}
             </ul>
           ) : (
-            <p className="text-body text-graphite-600">—</p>
+            <p className="text-body text-mist-400">—</p>
           )}
         </Container>
       </section>
@@ -174,13 +183,13 @@ export default async function FirefighterSwitchesPage({
       {/* ── Section 4 · Disconnect installation diagram ─────────── */}
       <section>
         <Container className="py-12">
-          <h2 className="text-h2 text-graphite-900 mb-4 font-medium">
+          <h2 className="text-h2 text-mist-50 mb-4 font-medium">
             {t.diagramHeading}
           </h2>
-          <p className="text-body text-graphite-600 mb-6 max-w-3xl">
+          <p className="text-body text-mist-400 mb-6 max-w-3xl">
             {t.diagramIntro}
           </p>
-          <div className="border-graphite-200 bg-graphite-50 rounded-lg border p-6">
+          <div className="border-mist-800 bg-forest-950 rounded-xl border p-6">
             <div className="w-full overflow-x-auto">
               <svg
                 viewBox="0 0 820 320"
@@ -195,7 +204,7 @@ export default async function FirefighterSwitchesPage({
                   y1={280}
                   x2={780}
                   y2={280}
-                  stroke="#5f5e5a"
+                  stroke="#b8c4bd"
                   strokeWidth={1}
                 />
 
@@ -205,19 +214,19 @@ export default async function FirefighterSwitchesPage({
                   y={110}
                   width={360}
                   height={170}
-                  fill="#f8f8f7"
-                  stroke="#d3d1c7"
+                  fill="#00321d"
+                  stroke="#3a4a42"
                   strokeWidth={1}
                 />
                 {/* Roof / array */}
                 <polygon
                   points="120,110 300,40 480,110"
-                  fill="#f1efe8"
-                  stroke="#d3d1c7"
+                  fill="#064329"
+                  stroke="#3a4a42"
                   strokeWidth={1}
                 />
                 {/* PV array tiles on the roof */}
-                <g stroke="#888780" strokeWidth={1} fill="#e6f1fb">
+                <g stroke="#7a8a82" strokeWidth={1} fill="#f4c21b">
                   <polygon points="180,98 240,68 290,68 240,98" />
                   <polygon points="300,98 360,68 410,68 360,98" />
                 </g>
@@ -228,7 +237,7 @@ export default async function FirefighterSwitchesPage({
                   y1={110}
                   x2={300}
                   y2={200}
-                  stroke="#5f5e5a"
+                  stroke="#b8c4bd"
                   strokeWidth={2}
                 />
                 {/* Bend toward exterior switch */}
@@ -237,7 +246,7 @@ export default async function FirefighterSwitchesPage({
                   y1={200}
                   x2={540}
                   y2={200}
-                  stroke="#5f5e5a"
+                  stroke="#b8c4bd"
                   strokeWidth={2}
                 />
 
@@ -248,7 +257,7 @@ export default async function FirefighterSwitchesPage({
                   width={76}
                   height={64}
                   rx={6}
-                  fill="#fcebeb"
+                  fill="#3a1818"
                   stroke="#a32d2d"
                   strokeWidth={2}
                 />
@@ -269,7 +278,7 @@ export default async function FirefighterSwitchesPage({
                   textAnchor="middle"
                   fontFamily="Inter, system-ui, sans-serif"
                   fontSize={10}
-                  fill="#791f1f"
+                  fill="#e24b4a"
                 >
                   PEFS-EL
                 </text>
@@ -280,7 +289,7 @@ export default async function FirefighterSwitchesPage({
                   y1={202}
                   x2={720}
                   y2={202}
-                  stroke="#5f5e5a"
+                  stroke="#b8c4bd"
                   strokeWidth={2}
                 />
                 <rect
@@ -289,8 +298,8 @@ export default async function FirefighterSwitchesPage({
                   width={56}
                   height={44}
                   rx={4}
-                  fill="#f8f8f7"
-                  stroke="#d3d1c7"
+                  fill="#00321d"
+                  stroke="#3a4a42"
                   strokeWidth={1}
                 />
                 <text
@@ -300,7 +309,7 @@ export default async function FirefighterSwitchesPage({
                   fontFamily="Inter, system-ui, sans-serif"
                   fontSize={10}
                   fontWeight={500}
-                  fill="#1a1a19"
+                  fill="#ffffff"
                 >
                   Inverter
                 </text>
@@ -313,7 +322,7 @@ export default async function FirefighterSwitchesPage({
                   fontFamily="Inter, system-ui, sans-serif"
                   fontSize={11}
                   fontWeight={500}
-                  fill="#1a1a19"
+                  fill="#ffffff"
                 >
                   {t.diagramLabels.rooftopArray}
                 </text>
@@ -323,7 +332,7 @@ export default async function FirefighterSwitchesPage({
                   textAnchor="middle"
                   fontFamily="Inter, system-ui, sans-serif"
                   fontSize={11}
-                  fill="#5f5e5a"
+                  fill="#b8c4bd"
                 >
                   {t.diagramLabels.building}
                 </text>
@@ -344,7 +353,7 @@ export default async function FirefighterSwitchesPage({
                   textAnchor="middle"
                   fontFamily="Inter, system-ui, sans-serif"
                   fontSize={10}
-                  fill="#5f5e5a"
+                  fill="#b8c4bd"
                 >
                   {t.diagramLabels.disconnectMeta}
                 </text>
@@ -353,7 +362,7 @@ export default async function FirefighterSwitchesPage({
                   y={300}
                   fontFamily="Inter, system-ui, sans-serif"
                   fontSize={10}
-                  fill="#888780"
+                  fill="#7a8a82"
                 >
                   {t.diagramLabels.ground}
                 </text>
@@ -365,9 +374,9 @@ export default async function FirefighterSwitchesPage({
 
       {/* ── Section 5 · Certifications ──────────────────────────── */}
       {certifications.length > 0 && (
-        <section className="bg-graphite-50">
+        <section className="bg-forest-950">
           <Container className="py-12">
-            <h2 className="text-h2 text-graphite-900 mb-6 font-medium">
+            <h2 className="text-h2 text-mist-50 mb-6 font-medium">
               {t.certsHeading}
             </h2>
             <ul className="flex flex-wrap gap-2">
@@ -382,14 +391,14 @@ export default async function FirefighterSwitchesPage({
       )}
 
       {/* ── Section 6 · CTA ─────────────────────────────────────── */}
-      <section className="bg-white">
+      <section className="bg-forest-900">
         <Container className="py-12">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-xl">
-              <h2 className="text-h2 text-graphite-900 font-medium">
+              <h2 className="text-h2 text-mist-50 font-medium">
                 {t.ctaHeading}
               </h2>
-              <p className="text-body-lg text-graphite-600 mt-2">
+              <p className="text-body-lg text-mist-400 mt-2">
                 {t.ctaBody}
               </p>
             </div>

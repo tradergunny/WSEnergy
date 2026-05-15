@@ -15,5 +15,5 @@ const loaders: Record<Locale, () => Promise<Dictionary>> = {
     ),
 };
 
-export const getDictionary = (locale: Locale): Promise<Dictionary> =>
-  loaders[locale]();
+export const getDictionary = (locale: Locale | string): Promise<Dictionary> =>
+  (loaders[locale as Locale] ?? loaders.en)();

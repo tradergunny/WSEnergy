@@ -79,11 +79,11 @@ export function SolutionPage({
     <>
       {/* ── Breadcrumb ──────────────────────────────────────────── */}
       <Container as="nav" aria-label="Breadcrumb" className="pt-6">
-        <ol className="text-caption text-graphite-600 flex flex-wrap items-center gap-1">
+        <ol className="text-caption text-mist-400 flex flex-wrap items-center gap-1">
           <li>
             <Link
               href={withLocale(locale, "/")}
-              className="hover:text-brand-600"
+              className="hover:text-gold-500"
             >
               {dict.productDetail.breadcrumbHome}
             </Link>
@@ -92,24 +92,24 @@ export function SolutionPage({
           <li>
             <Link
               href={withLocale(locale, "/solutions")}
-              className="hover:text-brand-600"
+              className="hover:text-gold-500"
             >
               {dict.nav.solutions}
             </Link>
           </li>
           <IconChevronRight size={12} stroke={1.5} aria-hidden />
-          <li className="text-graphite-800">{copy.breadcrumb}</li>
+          <li className="text-mist-50">{copy.breadcrumb}</li>
         </ol>
       </Container>
 
       {/* ── Hero ────────────────────────────────────────────────── */}
-      <section className="border-graphite-200 border-b">
+      <section className="border-mist-800 border-b">
         <Container className="py-12">
-          <p className="text-eyebrow text-graphite-600 mb-3">{copy.eyebrow}</p>
-          <h1 className="text-display text-graphite-900 font-medium">
+          <p className="text-eyebrow text-mist-400 mb-3">{copy.eyebrow}</p>
+          <h1 className="text-display text-mist-50 font-medium">
             {copy.headline}
           </h1>
-          <p className="text-body-lg text-graphite-600 mt-4 max-w-3xl">
+          <p className="text-body-lg text-mist-400 mt-4 max-w-3xl">
             {copy.subhead}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -124,21 +124,19 @@ export function SolutionPage({
       </section>
 
       {/* ── Benefits ────────────────────────────────────────────── */}
-      <section>
+      <section className="bg-forest-900">
         <Container className="py-12">
-          <h2 className="text-h2 text-graphite-900 mb-6 font-medium">
+          <h2 className="text-h2 text-mist-50 mb-6 font-medium">
             {copy.benefitsHeading}
           </h2>
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {copy.benefits.map((b) => (
               <li
                 key={b.title}
-                className="border-graphite-200 flex flex-col gap-2 rounded-lg border bg-white p-5"
+                className="bg-card-50 text-card-ink flex flex-col gap-2 rounded-xl p-5"
               >
-                <h3 className="text-h4 text-graphite-900 font-medium">
-                  {b.title}
-                </h3>
-                <p className="text-body text-graphite-600">{b.body}</p>
+                <h3 className="text-h4 font-medium">{b.title}</h3>
+                <p className="text-body opacity-80">{b.body}</p>
               </li>
             ))}
           </ul>
@@ -147,9 +145,9 @@ export function SolutionPage({
 
       {/* ── Featured products ──────────────────────────────────── */}
       {products.length > 0 && (
-        <section className="bg-graphite-50">
+        <section className="bg-forest-950">
           <Container className="py-12">
-            <h2 className="text-h2 text-graphite-900 mb-6 font-medium">
+            <h2 className="text-h2 text-mist-50 mb-6 font-medium">
               {copy.productsHeading}
             </h2>
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -189,15 +187,15 @@ export function SolutionPage({
 
       {/* ── Featured projects ───────────────────────────────────── */}
       {projects.length > 0 && (
-        <section>
+        <section className="bg-forest-900">
           <Container className="py-12">
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-              <h2 className="text-h2 text-graphite-900 font-medium">
+              <h2 className="text-h2 text-mist-50 font-medium">
                 {copy.projectsHeading}
               </h2>
               <Link
                 href={withLocale(locale, "/projects")}
-                className="text-brand-600 hover:text-brand-800 inline-flex items-center gap-1 font-medium"
+                className="text-gold-500 hover:text-gold-400 inline-flex items-center gap-1 font-medium"
               >
                 {dict.actions.viewAll}
                 <IconArrowRight size={16} stroke={1.5} />
@@ -222,14 +220,14 @@ export function SolutionPage({
       )}
 
       {/* ── Closing CTA ─────────────────────────────────────────── */}
-      <section className="bg-graphite-50">
+      <section className="bg-forest-950">
         <Container className="py-12">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-xl">
-              <h2 className="text-h2 text-graphite-900 font-medium">
+              <h2 className="text-h2 text-mist-50 font-medium">
                 {copy.ctaHeading}
               </h2>
-              <p className="text-body-lg text-graphite-600 mt-2">
+              <p className="text-body-lg text-mist-400 mt-2">
                 {copy.ctaBody}
               </p>
             </div>

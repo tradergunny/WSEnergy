@@ -354,6 +354,144 @@ export const projectsBySectorsQuery = groq`
   }
 `;
 
+export const allTeamMembersQuery = groq`
+  *[_type == "teamMember"] | order(department asc, name asc) {
+    _id,
+    name,
+    role_en,
+    role_th,
+    department,
+    photo,
+    email,
+    phone,
+    lineId
+  }
+`;
+
+export const allProjectsQuery = groq`
+  *[_type == "project"] | order(year desc, capacityKw desc) {
+    _id,
+    title_en,
+    title_th,
+    "slug": slug.current,
+    customer,
+    sector,
+    capacity,
+    location,
+    year,
+    heroImage
+  }
+`;
+
+export const projectBySlugQuery = groq`
+  *[_type == "project" && slug.current == $slug][0] {
+    _id,
+    title_en,
+    title_th,
+    "slug": slug.current,
+    customer,
+    sector,
+    capacity,
+    capacityKw,
+    location,
+    year,
+    heroImage,
+    gallery,
+    challenge_en,
+    challenge_th,
+    solution_en,
+    solution_th,
+    results_en,
+    results_th,
+    testimonial_en,
+    testimonial_th,
+    "productsUsed": productsUsed[]->{
+      _id,
+      title,
+      sku,
+      "slug": slug.current,
+      shortDescription_en,
+      shortDescription_th,
+      "image": gallery[0],
+      "brand": brand->{ name, "slug": slug.current },
+      "category": category->{
+        title_en,
+        title_th,
+        "slug": slug.current,
+        "parentSlug": parent->slug.current
+      }
+    }
+  }
+`;
+
+export const projectSlugsQuery = groq`
+  *[_type == "project" && defined(slug.current) && !(_id in path("drafts.**"))]
+    { "slug": slug.current }
+`;
+
+export const allArticlesQuery = groq`
+  *[_type == "article"] | order(publishedAt desc) {
+    _id,
+    title_en,
+    title_th,
+    "slug": slug.current,
+    excerpt_en,
+    excerpt_th,
+    heroImage,
+    category,
+    publishedAt
+  }
+`;
+
+export const articleBySlugQuery = groq`
+  *[_type == "article" && slug.current == $slug][0] {
+    _id,
+    title_en,
+    title_th,
+    "slug": slug.current,
+    excerpt_en,
+    excerpt_th,
+    body_en,
+    body_th,
+    heroImage,
+    category,
+    publishedAt,
+    "author": author->{ name, role, photo }
+  }
+`;
+
+export const articleSlugsQuery = groq`
+  *[_type == "article" && defined(slug.current) && !(_id in path("drafts.**"))]
+    { "slug": slug.current }
+`;
+
+export const docsByTypeQuery = groq`
+  *[_type == "docFile" && documentType == $docType] | order(title_en asc) {
+    _id,
+    title_en,
+    title_th,
+    documentType,
+    "url": file.asset->url,
+    fileSize,
+    version,
+    thumbnail,
+    "relatedProducts": relatedProducts[]->{ _id, title, "slug": slug.current }
+  }
+`;
+
+export const allDocsQuery = groq`
+  *[_type == "docFile"] | order(documentType asc, title_en asc) {
+    _id,
+    title_en,
+    title_th,
+    documentType,
+    "url": file.asset->url,
+    fileSize,
+    version,
+    thumbnail
+  }
+`;
+
 export const firefighterProductsQuery = groq`
   *[_type == "product" && category->slug.current == "firefighter-safety-switches"]
     | order(orderRank asc) {
