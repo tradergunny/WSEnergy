@@ -133,11 +133,11 @@ export default async function CategoryPage({
     <>
       {/* ── Section 1 · Breadcrumb ──────────────────────────────── */}
       <Container as="nav" aria-label="Breadcrumb" className="pt-6">
-        <ol className="text-caption text-graphite-600 flex flex-wrap items-center gap-1">
+        <ol className="text-caption text-mist-400 flex flex-wrap items-center gap-1">
           <li>
             <Link
               href={withLocale(locale, "/")}
-              className="hover:text-brand-600"
+              className="hover:text-gold-500"
             >
               {t.categoryHero.breadcrumbHome}
             </Link>
@@ -146,22 +146,22 @@ export default async function CategoryPage({
           <li>
             <Link
               href={withLocale(locale, "/products")}
-              className="hover:text-brand-600"
+              className="hover:text-gold-500"
             >
               {t.categoryHero.breadcrumbProducts}
             </Link>
           </li>
           <IconChevronRight size={12} stroke={1.5} aria-hidden />
-          <li className="text-graphite-800">{title}</li>
+          <li className="text-mist-50">{title}</li>
         </ol>
       </Container>
 
       {/* ── Section 2 · Category hero ───────────────────────────── */}
       <section>
         <Container className="py-10">
-          <h1 className="text-h1 text-graphite-900 font-medium">{title}</h1>
+          <h1 className="text-h1 text-mist-50 font-medium">{title}</h1>
           {description && (
-            <p className="text-body-lg text-graphite-600 mt-3 max-w-2xl">
+            <p className="text-body-lg text-mist-400 mt-3 max-w-2xl">
               {description}
             </p>
           )}
@@ -178,17 +178,17 @@ export default async function CategoryPage({
       </section>
 
       {/* ── Section 3 · Filter bar (UI only this week) ──────────── */}
-      <section className="border-graphite-200 border-y bg-white">
+      <section className="border-mist-800 border-y bg-forest-950">
         <Container className="py-4">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-eyebrow text-graphite-600">
+            <span className="text-eyebrow text-mist-400">
               {t.filters.heading}
             </span>
             <InertFilterChip>{t.filters.brand}</InertFilterChip>
             <InertFilterChip>{t.filters.kwRange}</InertFilterChip>
             <InertFilterChip>{t.filters.phase}</InertFilterChip>
             <InertFilterChip>{t.filters.application}</InertFilterChip>
-            <span className="text-caption text-graphite-400 ml-auto">
+            <span className="text-caption text-mist-400 ml-auto">
               {t.filters.comingSoon}
             </span>
           </div>
@@ -199,11 +199,11 @@ export default async function CategoryPage({
       <section>
         <Container className="py-12">
           {products.length === 0 ? (
-            <div className="border-graphite-200 rounded-lg border bg-white p-8">
-              <h2 className="text-h3 text-graphite-900 font-medium">
+            <div className="border-mist-800 rounded-xl border bg-forest-800 p-8">
+              <h2 className="text-h3 text-mist-50 font-medium">
                 {t.empty.heading}
               </h2>
-              <p className="text-body text-graphite-600 mt-2 max-w-xl">
+              <p className="text-body text-mist-400 mt-2 max-w-xl">
                 {t.empty.body}
               </p>
               <div className="mt-4">
@@ -250,19 +250,19 @@ export default async function CategoryPage({
 
       {/* ── Section 5 · Brand band ──────────────────────────────── */}
       {brands.length > 0 && (
-        <section className="bg-graphite-50">
+        <section className="bg-forest-950">
           <Container className="py-12">
-            <h2 className="text-h2 text-graphite-900 mb-6 font-medium">
+            <h2 className="text-h2 text-mist-50 mb-6 font-medium">
               {t.brandBand.heading}
             </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {brands.slice(0, 3).map((b) => (
                 <article
                   key={b._id}
-                  className="border-graphite-200 flex flex-col gap-3 rounded-lg border bg-white p-6"
+                  className="border-mist-800 flex flex-col gap-3 rounded-xl border bg-forest-800 p-6"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-h4 text-graphite-900 font-medium">
+                    <span className="text-h4 text-mist-50 font-medium">
                       {b.name}
                     </span>
                     {b.authorizedDistributor && (
@@ -271,7 +271,7 @@ export default async function CategoryPage({
                       </Badge>
                     )}
                   </div>
-                  <p className="text-body text-graphite-600">
+                  <p className="text-body text-mist-400">
                     {localized(b.whyWeCarryIt_en, b.whyWeCarryIt_th) ||
                       (locale === "th"
                         ? "พาร์ทเนอร์ระดับโลกที่เราเลือกใช้"
@@ -289,12 +289,12 @@ export default async function CategoryPage({
         <section>
           <Container className="py-12">
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-              <h2 className="text-h2 text-graphite-900 font-medium">
+              <h2 className="text-h2 text-mist-50 font-medium">
                 {t.relatedProjects.heading}
               </h2>
               <Link
                 href={withLocale(locale, "/projects")}
-                className="text-brand-600 hover:text-brand-800 inline-flex items-center gap-1 font-medium"
+                className="text-gold-500 hover:text-gold-400 inline-flex items-center gap-1 font-medium"
               >
                 {dict.actions.viewAll}
                 <IconArrowRight size={16} stroke={1.5} />
@@ -319,14 +319,14 @@ export default async function CategoryPage({
       )}
 
       {/* ── Section 7 · Category RFQ block ──────────────────────── */}
-      <section className="bg-graphite-50">
+      <section className="bg-forest-950">
         <Container className="py-12">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-xl">
-              <h2 className="text-h2 text-graphite-900 font-medium">
+              <h2 className="text-h2 text-mist-50 font-medium">
                 {t.categoryRfq.heading}
               </h2>
-              <p className="text-body-lg text-graphite-600 mt-2">
+              <p className="text-body-lg text-mist-400 mt-2">
                 {t.categoryRfq.body}
               </p>
             </div>
@@ -347,7 +347,7 @@ export default async function CategoryPage({
 
 function InertFilterChip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-caption border-graphite-200 text-graphite-600 inline-flex cursor-not-allowed items-center gap-1 rounded-md border bg-white px-3 py-1.5">
+    <span className="text-caption border-mist-800 text-mist-400 inline-flex cursor-not-allowed items-center gap-1 rounded-md border bg-forest-800 px-3 py-1.5">
       {children}
     </span>
   );

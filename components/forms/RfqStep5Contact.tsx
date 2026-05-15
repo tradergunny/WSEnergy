@@ -65,8 +65,8 @@ export function RfqStep5Contact({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-h2 font-medium text-graphite-900 dark:text-graphite-50">{t.heading}</h2>
-        <p className="mt-1 text-body text-graphite-600 dark:text-graphite-400">{t.subhead}</p>
+        <h2 className="text-h2 font-medium text-mist-50">{t.heading}</h2>
+        <p className="mt-1 text-body text-mist-400">{t.subhead}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -115,7 +115,7 @@ export function RfqStep5Contact({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-caption text-graphite-800 font-medium dark:text-graphite-200">
+        <label className="text-caption text-mist-200 font-medium">
           {t.fileLabel}
         </label>
         <input
@@ -123,20 +123,20 @@ export function RfqStep5Contact({
           type="file"
           accept=".pdf,.dwg,.xlsx"
           onChange={handleFile}
-          className="text-body text-graphite-600 file:mr-3 file:rounded-md file:border file:border-graphite-200 file:bg-graphite-50 file:px-3 file:py-1.5 file:text-caption file:font-medium file:text-graphite-900"
+          className="text-body text-mist-400 file:mr-3 file:rounded-md file:border file:border-mist-800 file:bg-forest-800 file:px-3 file:py-1.5 file:text-caption file:font-medium file:text-mist-50"
         />
-        <p className="text-caption text-graphite-400">{t.fileHint}</p>
+        <p className="text-caption text-mist-400">{t.fileHint}</p>
       </div>
 
       {errors._form && (
-        <p className="text-body text-[var(--color-danger-text)]">{errors._form}</p>
+        <p className="text-body text-[var(--color-safety-400)]">{errors._form}</p>
       )}
 
       <div className="flex justify-between">
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex items-center gap-2 rounded-md border border-graphite-600 bg-transparent px-[22px] py-[12px] text-body font-medium text-graphite-900 transition-colors duration-150 hover:bg-graphite-100 dark:border-graphite-400 dark:text-graphite-50 dark:hover:bg-graphite-800"
+          className="inline-flex items-center gap-2 rounded-full border border-mist-400/40 bg-transparent px-[22px] py-[12px] text-body font-medium text-mist-50 transition-colors duration-150 hover:border-mist-400/70 hover:bg-mist-50/5"
         >
           {dict.rfq.back}
         </button>
@@ -144,7 +144,7 @@ export function RfqStep5Contact({
           type="button"
           onClick={onSubmit}
           disabled={submitting}
-          className="inline-flex items-center gap-2 rounded-md bg-brand-600 px-[22px] py-[12px] text-body font-medium text-white transition-colors duration-150 hover:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-[22px] py-[12px] text-body font-medium text-forest-900 transition-colors duration-150 hover:bg-gold-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? dict.rfq.submitting : dict.rfq.submit}
         </button>

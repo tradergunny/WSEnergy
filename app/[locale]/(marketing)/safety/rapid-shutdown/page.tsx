@@ -1,6 +1,7 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { IconChevronRight, IconArrowRight } from "@tabler/icons-react";
+import { IconChevronRight } from "@tabler/icons-react";
 import { hasLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { sanityClient } from "@/lib/sanity/client";
@@ -16,6 +17,7 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { SystemDiagram } from "@/components/diagrams/SystemDiagram";
 import { withLocale } from "@/lib/navigation";
 import { productHref } from "@/lib/product-url";
+import { alternates } from "@/lib/seo";
 import type { urlFor } from "@/lib/sanity/client";
 
 type SanityImageRef = Parameters<typeof urlFor>[0] | undefined | null;
@@ -50,6 +52,13 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+export async function generateMetadata({ params }: PageProps<"/[locale]/safety/rapid-shutdown">): Promise<Metadata> {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
+  const t = dict.safety.rapidShutdown;
+  return { title: t.headline, description: t.subhead, alternates: alternates("/safety/rapid-shutdown") };
+}
+
 export default async function RapidShutdownPage({
   params,
 }: PageProps<"/[locale]/safety/rapid-shutdown">) {
@@ -76,11 +85,11 @@ export default async function RapidShutdownPage({
     <>
       {/* ── Breadcrumb ──────────────────────────────────────────── */}
       <Container as="nav" aria-label="Breadcrumb" className="pt-6">
-        <ol className="text-caption text-graphite-600 flex flex-wrap items-center gap-1">
+        <ol className="text-caption text-mist-400 flex flex-wrap items-center gap-1">
           <li>
             <Link
               href={withLocale(locale, "/")}
-              className="hover:text-brand-600"
+              className="hover:text-gold-500"
             >
               {dict.productDetail.breadcrumbHome}
             </Link>
@@ -89,24 +98,24 @@ export default async function RapidShutdownPage({
           <li>
             <Link
               href={withLocale(locale, "/safety")}
-              className="hover:text-brand-600"
+              className="hover:text-gold-500"
             >
               {dict.productDetail.breadcrumbSafety}
             </Link>
           </li>
           <IconChevronRight size={12} stroke={1.5} aria-hidden />
-          <li className="text-graphite-800">{t.headline}</li>
+          <li className="text-mist-50">{t.headline}</li>
         </ol>
       </Container>
 
       {/* ── Section 1 · Hero ────────────────────────────────────── */}
-      <section className="border-safety-200 border-b">
+      <section className="border-mist-800 border-b">
         <Container className="py-12">
           <p className="text-eyebrow text-safety-600 mb-3">{t.eyebrow}</p>
-          <h1 className="text-display text-graphite-900 font-medium">
+          <h1 className="text-display text-mist-50 font-medium">
             {t.headline}
           </h1>
-          <p className="text-body-lg text-graphite-600 mt-4 max-w-3xl">
+          <p className="text-body-lg text-mist-400 mt-4 max-w-3xl">
             {t.subhead}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -129,19 +138,19 @@ export default async function RapidShutdownPage({
       {/* ── Section 2 · Why rapid shutdown ──────────────────────── */}
       <section>
         <Container className="py-12">
-          <h2 className="text-h2 text-graphite-900 mb-4 font-medium">
+          <h2 className="text-h2 text-mist-50 mb-4 font-medium">
             {t.whyHeading}
           </h2>
-          <p className="text-body-lg text-graphite-600 max-w-3xl">
+          <p className="text-body-lg text-mist-400 max-w-3xl">
             {t.whyBody}
           </p>
         </Container>
       </section>
 
       {/* ── Section 3 · Products ────────────────────────────────── */}
-      <section className="bg-graphite-50">
+      <section className="bg-forest-950">
         <Container className="py-12">
-          <h2 className="text-h2 text-graphite-900 mb-6 font-medium">
+          <h2 className="text-h2 text-mist-50 mb-6 font-medium">
             {t.productsHeading}
           </h2>
           {products.length > 0 ? (
@@ -177,7 +186,7 @@ export default async function RapidShutdownPage({
               ))}
             </ul>
           ) : (
-            <p className="text-body text-graphite-600">—</p>
+            <p className="text-body text-mist-400">—</p>
           )}
         </Container>
       </section>
@@ -185,10 +194,10 @@ export default async function RapidShutdownPage({
       {/* ── Section 4 · Interactive system diagram ──────────────── */}
       <section>
         <Container className="py-12">
-          <h2 className="text-h2 text-graphite-900 mb-4 font-medium">
+          <h2 className="text-h2 text-mist-50 mb-4 font-medium">
             {t.diagramHeading}
           </h2>
-          <p className="text-body text-graphite-600 mb-6 max-w-3xl">
+          <p className="text-body text-mist-400 mb-6 max-w-3xl">
             {t.diagramIntro}
           </p>
           <SystemDiagram
@@ -214,9 +223,9 @@ export default async function RapidShutdownPage({
 
       {/* ── Section 5 · Certifications ──────────────────────────── */}
       {certifications.length > 0 && (
-        <section className="bg-graphite-50">
+        <section className="bg-forest-950">
           <Container className="py-12">
-            <h2 className="text-h2 text-graphite-900 mb-6 font-medium">
+            <h2 className="text-h2 text-mist-50 mb-6 font-medium">
               {t.certsHeading}
             </h2>
             <ul className="flex flex-wrap gap-2">
@@ -231,14 +240,14 @@ export default async function RapidShutdownPage({
       )}
 
       {/* ── Section 6 · CTA ─────────────────────────────────────── */}
-      <section className="bg-white">
+      <section className="bg-forest-900">
         <Container className="py-12">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-xl">
-              <h2 className="text-h2 text-graphite-900 font-medium">
+              <h2 className="text-h2 text-mist-50 font-medium">
                 {t.ctaHeading}
               </h2>
-              <p className="text-body-lg text-graphite-600 mt-2">
+              <p className="text-body-lg text-mist-400 mt-2">
                 {t.ctaBody}
               </p>
             </div>

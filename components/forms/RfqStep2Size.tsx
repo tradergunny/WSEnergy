@@ -24,8 +24,8 @@ export function RfqStep2Size({ dict, value, onChange, onNext, onBack }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-h2 font-medium text-graphite-900 dark:text-graphite-50">{t.heading}</h2>
-        <p className="mt-1 text-body text-graphite-600 dark:text-graphite-400">{t.subhead}</p>
+        <h2 className="text-h2 font-medium text-mist-50">{t.heading}</h2>
+        <p className="mt-1 text-body text-mist-400">{t.subhead}</p>
       </div>
       <div className="flex flex-wrap gap-3">
         {OPTIONS.map((opt) => {
@@ -37,8 +37,8 @@ export function RfqStep2Size({ dict, value, onChange, onNext, onBack }: Props) {
               onClick={() => onChange(opt.value)}
               className={`rounded-full border px-5 py-2.5 text-body font-medium transition-colors duration-150 ${
                 selected
-                  ? "border-brand-600 bg-brand-50 text-brand-600 dark:bg-brand-900 dark:text-brand-200"
-                  : "border-graphite-200 text-graphite-900 hover:border-graphite-400 dark:border-graphite-600 dark:text-graphite-50 dark:hover:border-graphite-400"
+                  ? "border-gold-500 bg-gold-500/10 text-gold-500"
+                  : "border-mist-800 text-mist-50 hover:border-mist-400"
               }`}
             >
               {t[opt.labelKey as keyof typeof t]}
@@ -50,14 +50,14 @@ export function RfqStep2Size({ dict, value, onChange, onNext, onBack }: Props) {
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex items-center gap-2 rounded-md border border-graphite-600 bg-transparent px-[22px] py-[12px] text-body font-medium text-graphite-900 transition-colors duration-150 hover:bg-graphite-100 dark:border-graphite-400 dark:text-graphite-50 dark:hover:bg-graphite-800"
+          className="inline-flex items-center gap-2 rounded-full border border-mist-400/40 bg-transparent px-[22px] py-[12px] text-body font-medium text-mist-50 transition-colors duration-150 hover:border-mist-400/70 hover:bg-mist-50/5"
         >
           {dict.rfq.back}
         </button>
         <button
           type="button"
           onClick={onNext}
-          className="inline-flex items-center gap-2 rounded-md bg-brand-600 px-[22px] py-[12px] text-body font-medium text-white transition-colors duration-150 hover:bg-brand-800"
+          className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-[22px] py-[12px] text-body font-medium text-forest-900 transition-colors duration-150 hover:bg-gold-600"
         >
           {dict.rfq.next}
         </button>

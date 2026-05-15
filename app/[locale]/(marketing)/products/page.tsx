@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
@@ -16,6 +17,7 @@ import { sanityClient } from "@/lib/sanity/client";
 import { allCategoriesQuery } from "@/lib/sanity/queries";
 import { Container } from "@/components/ui/Container";
 import { categoryHref, isSafetyCategorySlug } from "@/lib/product-url";
+import { alternates } from "@/lib/seo";
 
 type CategoryRow = {
   _id: string;
@@ -34,6 +36,12 @@ const iconFor: Record<string, typeof IconBolt> = {
   accessories: IconPlug,
   "rapid-shutdown": IconShieldCheckered,
 };
+
+export async function generateMetadata({ params }: PageProps<"/[locale]/products">): Promise<Metadata> {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
+  return { title: dict.products.indexTitle, description: dict.products.indexSubhead, alternates: alternates("/products") };
+}
 
 export default async function ProductsIndexPage({
   params,
@@ -55,9 +63,9 @@ export default async function ProductsIndexPage({
 
   return (
     <Container as="section" className="py-16">
-      <p className="text-eyebrow text-graphite-600 mb-2">{t.indexEyebrow}</p>
-      <h1 className="text-h1 text-graphite-900 font-medium">{t.indexTitle}</h1>
-      <p className="text-body-lg text-graphite-600 mt-3 max-w-2xl">
+      <p className="text-eyebrow text-mist-400 mb-2">{t.indexEyebrow}</p>
+      <h1 className="text-h1 text-mist-50 font-medium">{t.indexTitle}</h1>
+      <p className="text-body-lg text-mist-400 mt-3 max-w-2xl">
         {t.indexSubhead}
       </p>
 
@@ -71,15 +79,15 @@ export default async function ProductsIndexPage({
                   categorySlug: c.slug,
                   parentSlug: c.parentSlug,
                 })}
-                className="border-graphite-200 hover:border-brand-600 group flex h-full flex-col gap-3 rounded-lg border bg-white p-6"
+                className="border-mist-800 hover:border-gold-500 group flex h-full flex-col gap-3 rounded-xl border bg-forest-800 p-6"
               >
-                <span className="text-brand-600">
+                <span className="text-gold-500">
                   <Icon size={28} stroke={1.5} />
                 </span>
-                <h2 className="text-h3 text-graphite-900 font-medium">
+                <h2 className="text-h3 text-mist-50 font-medium">
                   {localized(c.title_en, c.title_th)}
                 </h2>
-                <span className="text-brand-600 mt-auto inline-flex items-center gap-1 text-sm font-medium">
+                <span className="text-gold-500 mt-auto inline-flex items-center gap-1 text-sm font-medium">
                   {dict.actions.viewCategory}
                   <IconArrowRight
                     size={14}

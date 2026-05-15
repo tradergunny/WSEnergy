@@ -20,11 +20,11 @@ type BaseProps = {
 };
 
 const fieldBase =
-  "block w-full rounded-md bg-white px-3 py-2 text-body text-graphite-900 placeholder:text-graphite-400 transition-colors duration-150 focus:outline-none focus:border-brand-600 dark:bg-graphite-800 dark:text-graphite-50 dark:placeholder:text-graphite-600";
+  "block w-full rounded-md bg-forest-800 px-3 py-2 text-body text-mist-50 placeholder:text-mist-400 transition-colors duration-150 focus:outline-none focus:border-gold-500";
 
-const borderDefault = "border border-graphite-600 dark:border-graphite-400";
+const borderDefault = "border border-mist-800";
 const borderError =
-  "border border-[var(--color-danger-text)] focus:border-[var(--color-danger-text)]";
+  "border border-[var(--color-safety-400)] focus:border-[var(--color-safety-400)]";
 
 type InputProps = BaseProps &
   Omit<InputHTMLAttributes<HTMLInputElement>, "className">;
@@ -45,7 +45,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     <div className={`flex flex-col gap-1 ${className}`.trim()}>
       <label
         htmlFor={fieldId}
-        className="text-caption text-graphite-800 font-medium dark:text-graphite-200"
+        className="text-caption text-mist-200 font-medium"
       >
         {label}
         {required && <span className="text-safety-600 ml-1">*</span>}
@@ -62,12 +62,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {error ? (
         <p
           id={`${fieldId}-error`}
-          className="text-caption text-[var(--color-danger-text)]"
+          className="text-caption text-[var(--color-safety-400)]"
         >
           {error}
         </p>
       ) : hint ? (
-        <p id={`${fieldId}-hint`} className="text-caption text-graphite-600">
+        <p id={`${fieldId}-hint`} className="text-caption text-mist-400">
           {hint}
         </p>
       ) : null}
@@ -94,7 +94,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className={`flex flex-col gap-1 ${className}`.trim()}>
         <label
           htmlFor={fieldId}
-          className="text-caption text-graphite-800 font-medium dark:text-graphite-200"
+          className="text-caption text-mist-200 font-medium"
         >
           {label}
           {required && <span className="text-safety-600 ml-1">*</span>}
@@ -111,12 +111,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {error ? (
           <p
             id={`${fieldId}-error`}
-            className="text-caption text-[var(--color-danger-text)]"
+            className="text-caption text-[var(--color-safety-400)]"
           >
             {error}
           </p>
         ) : hint ? (
-          <p id={`${fieldId}-hint`} className="text-caption text-graphite-600">
+          <p id={`${fieldId}-hint`} className="text-caption text-mist-400">
             {hint}
           </p>
         ) : null}

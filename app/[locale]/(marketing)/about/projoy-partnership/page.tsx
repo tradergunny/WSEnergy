@@ -62,14 +62,14 @@ export default async function ProjoyPartnershipPage({
   return (
     <>
       {/* Hero */}
-      <section className="border-b border-graphite-200 dark:border-graphite-600">
+      <section className="border-b border-mist-800">
         <Container className="py-16 lg:py-20">
           <nav aria-label="Breadcrumb" className="mb-8">
-            <ol className="flex gap-2 text-caption text-graphite-400">
+            <ol className="flex gap-2 text-caption text-mist-400">
               <li>
                 <a
                   href={`/${locale}`}
-                  className="text-brand-600 transition-colors duration-150 hover:text-brand-800 dark:text-brand-200"
+                  className="text-gold-500 transition-colors duration-150 hover:text-gold-400"
                 >
                   {dict.nav.home}
                 </a>
@@ -78,22 +78,22 @@ export default async function ProjoyPartnershipPage({
               <li>
                 <a
                   href={`/${locale}/about`}
-                  className="text-brand-600 transition-colors duration-150 hover:text-brand-800 dark:text-brand-200"
+                  className="text-gold-500 transition-colors duration-150 hover:text-gold-400"
                 >
                   {dict.about.breadcrumb}
                 </a>
               </li>
               <li aria-hidden="true">/</li>
-              <li className="text-graphite-600 dark:text-graphite-400">
+              <li className="text-mist-400">
                 {t.breadcrumb}
               </li>
             </ol>
           </nav>
           <Badge variant="exclusive">{t.hero.badge}</Badge>
-          <h1 className="mt-6 text-display font-medium text-graphite-900 dark:text-graphite-50">
+          <h1 className="mt-6 text-display font-medium text-mist-50">
             {t.hero.headline}
           </h1>
-          <p className="mt-4 max-w-2xl text-body-lg text-graphite-600 dark:text-graphite-400">
+          <p className="mt-4 max-w-2xl text-body-lg text-mist-400">
             {t.hero.body}
           </p>
         </Container>
@@ -102,24 +102,24 @@ export default async function ProjoyPartnershipPage({
       {/* Benefits */}
       <section>
         <Container className="py-16 lg:py-20">
-          <h2 className="mb-10 text-h2 font-medium text-graphite-900 dark:text-graphite-50">
+          <h2 className="mb-10 text-h2 font-medium text-mist-50">
             {t.benefits.heading}
           </h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {benefits.map((b) => (
               <div
                 key={b.title}
-                className="rounded-lg border border-graphite-200 p-7 dark:border-graphite-600"
+                className="rounded-lg border border-mist-800 p-7"
               >
                 <b.icon
                   size={22}
                   stroke={1.5}
-                  className="mb-4 text-brand-600 dark:text-brand-200"
+                  className="mb-4 text-gold-500"
                 />
-                <p className="text-h4 font-medium text-graphite-900 dark:text-graphite-50">
+                <p className="text-h4 font-medium text-mist-50">
                   {b.title}
                 </p>
-                <p className="mt-2 text-body text-graphite-600 dark:text-graphite-400">
+                <p className="mt-2 text-body text-mist-400">
                   {b.body}
                 </p>
               </div>
@@ -129,12 +129,12 @@ export default async function ProjoyPartnershipPage({
       </section>
 
       {/* Authorization documents — inline previews */}
-      <section className="border-t border-graphite-200 dark:border-graphite-600">
+      <section className="border-t border-mist-800">
         <Container className="py-16 lg:py-20">
-          <h2 className="mb-3 text-h2 font-medium text-graphite-900 dark:text-graphite-50">
+          <h2 className="mb-3 text-h2 font-medium text-mist-50">
             {t.authorization.heading}
           </h2>
-          <p className="mb-10 max-w-2xl text-body text-graphite-600 dark:text-graphite-400">
+          <p className="mb-10 max-w-2xl text-body text-mist-400">
             {t.authorization.body}
           </p>
 
@@ -143,30 +143,30 @@ export default async function ProjoyPartnershipPage({
               {authDocs.map((doc) => (
                 <div
                   key={doc._id}
-                  className="overflow-hidden rounded-lg border border-graphite-200 dark:border-graphite-600"
+                  className="overflow-hidden rounded-xl border border-mist-800"
                 >
                   {/* Document preview area */}
-                  <div className="flex min-h-[280px] flex-col items-center justify-center border-b border-graphite-200 bg-graphite-100 px-8 py-12 dark:border-graphite-600 dark:bg-graphite-800">
+                  <div className="flex min-h-[280px] flex-col items-center justify-center border-b border-mist-800 bg-forest-950 px-8 py-12">
                     {doc.thumbnail ? (
                       <img
                         src={urlFor(doc.thumbnail).width(400).quality(85).url()}
                         alt={l(doc)}
-                        className="max-h-[220px] w-auto rounded border border-graphite-200 dark:border-graphite-600"
+                        className="max-h-[220px] w-auto rounded border border-mist-800"
                       />
                     ) : (
-                      <div className="relative flex h-40 w-[120px] flex-col items-center justify-center rounded border border-graphite-200 bg-white dark:border-graphite-600 dark:bg-graphite-900">
-                        <div className="absolute right-0 top-0 h-5 w-5 border-b border-l border-graphite-200 bg-graphite-100 dark:border-graphite-600 dark:bg-graphite-800" />
+                      <div className="relative flex h-40 w-[120px] flex-col items-center justify-center rounded border border-mist-800 bg-forest-800">
+                        <div className="absolute right-0 top-0 h-5 w-5 border-b border-l border-mist-800 bg-forest-950" />
                         <IconFileText
                           size={32}
                           stroke={1}
-                          className="text-graphite-400 dark:text-graphite-600"
+                          className="text-mist-400"
                         />
-                        <span className="mt-2 text-eyebrow text-graphite-400 dark:text-graphite-600">
+                        <span className="mt-2 text-eyebrow text-mist-400">
                           PDF
                         </span>
                       </div>
                     )}
-                    <p className="mt-5 text-center text-body font-medium text-graphite-900 dark:text-graphite-50">
+                    <p className="mt-5 text-center text-body font-medium text-mist-50">
                       {l(doc)}
                     </p>
                   </div>
@@ -177,13 +177,13 @@ export default async function ProjoyPartnershipPage({
                         href={doc.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-caption font-medium text-brand-600 transition-colors duration-150 hover:text-brand-800 dark:text-brand-200 dark:hover:text-brand-100"
+                        className="inline-flex items-center gap-2 text-caption font-medium text-gold-500 transition-colors duration-150 hover:text-gold-400"
                       >
                         <IconDownload size={15} stroke={1.5} />
                         {t.authorization.viewPdf}
                       </a>
                     ) : (
-                      <span className="text-caption text-graphite-400">
+                      <span className="text-caption text-mist-400">
                         {t.authorization.viewPdf}
                       </span>
                     )}
@@ -192,7 +192,7 @@ export default async function ProjoyPartnershipPage({
               ))}
             </div>
           ) : (
-            <p className="text-body text-graphite-400">
+            <p className="text-body text-mist-400">
               {t.authorization.viewPdf}
             </p>
           )}
@@ -202,7 +202,7 @@ export default async function ProjoyPartnershipPage({
               href="https://projoy-thai.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-caption font-medium text-graphite-600 transition-colors duration-150 hover:text-graphite-900 dark:text-graphite-400 dark:hover:text-graphite-50"
+              className="inline-flex items-center gap-2 text-caption font-medium text-mist-400 transition-colors duration-150 hover:text-mist-50"
             >
               <IconExternalLink size={15} stroke={1.5} />
               {t.authorization.verifyLink}
@@ -212,19 +212,19 @@ export default async function ProjoyPartnershipPage({
       </section>
 
       {/* About Projoy */}
-      <section className="border-t border-graphite-200 dark:border-graphite-600">
+      <section className="border-t border-mist-800">
         <Container className="py-16 lg:py-20">
-          <h2 className="mb-3 text-h2 font-medium text-graphite-900 dark:text-graphite-50">
+          <h2 className="mb-3 text-h2 font-medium text-mist-50">
             {t.aboutProjoy.heading}
           </h2>
-          <p className="mb-8 max-w-2xl text-body text-graphite-600 dark:text-graphite-400">
+          <p className="mb-8 max-w-2xl text-body text-mist-400">
             {t.aboutProjoy.body}
           </p>
           <div className="flex flex-wrap gap-3">
             {Object.values(t.aboutProjoy.facts).map((fact) => (
               <div
                 key={fact}
-                className="rounded-full border border-graphite-200 px-5 py-2.5 text-body font-medium text-graphite-900 dark:border-graphite-600 dark:text-graphite-50"
+                className="rounded-full border border-mist-800 px-5 py-2.5 text-body font-medium text-mist-50"
               >
                 {fact}
               </div>
@@ -234,9 +234,9 @@ export default async function ProjoyPartnershipPage({
       </section>
 
       {/* Projoy product range */}
-      <section className="border-t border-graphite-200 dark:border-graphite-600">
+      <section className="border-t border-mist-800">
         <Container className="py-16 lg:py-20">
-          <h2 className="mb-10 text-h2 font-medium text-graphite-900 dark:text-graphite-50">
+          <h2 className="mb-10 text-h2 font-medium text-mist-50">
             {t.products.heading}
           </h2>
           <div className="grid gap-5 sm:grid-cols-3">
@@ -244,20 +244,20 @@ export default async function ProjoyPartnershipPage({
               <a
                 key={p.title}
                 href={p.href}
-                className="group flex flex-col rounded-lg border border-graphite-200 p-7 transition-colors duration-150 hover:border-brand-600 dark:border-graphite-600 dark:hover:border-brand-200"
+                className="group flex flex-col rounded-xl border border-mist-800 p-7 transition-colors duration-150 hover:border-gold-500"
               >
                 <div className="flex items-center gap-2">
-                  <p className="text-h4 font-medium text-graphite-900 dark:text-graphite-50">
+                  <p className="text-h4 font-medium text-mist-50">
                     {p.title}
                   </p>
                   {"badge" in p && p.badge && (
                     <Badge variant="exclusive">{p.badge}</Badge>
                   )}
                 </div>
-                <p className="mt-2 flex-1 text-body text-graphite-600 dark:text-graphite-400">
+                <p className="mt-2 flex-1 text-body text-mist-400">
                   {p.body}
                 </p>
-                <span className="mt-4 inline-flex items-center gap-1 text-caption font-medium text-brand-600 dark:text-brand-200">
+                <span className="mt-4 inline-flex items-center gap-1 text-caption font-medium text-gold-500">
                   {dict.actions.viewSpecs}
                   <IconArrowRight size={14} stroke={1.5} />
                 </span>
@@ -268,12 +268,12 @@ export default async function ProjoyPartnershipPage({
       </section>
 
       {/* Closing CTA */}
-      <section className="border-t border-graphite-200 bg-graphite-100 dark:border-graphite-600 dark:bg-graphite-800">
+      <section className="border-t border-mist-800 bg-forest-950">
         <Container className="py-16 lg:py-20 text-center">
-          <h2 className="text-h2 font-medium text-graphite-900 dark:text-graphite-50">
+          <h2 className="text-h2 font-medium text-mist-50">
             {t.cta.heading}
           </h2>
-          <p className="mx-auto mt-3 max-w-lg text-body-lg text-graphite-600 dark:text-graphite-400">
+          <p className="mx-auto mt-3 max-w-lg text-body-lg text-mist-400">
             {t.cta.body}
           </p>
           <div className="mt-8 flex justify-center gap-3">

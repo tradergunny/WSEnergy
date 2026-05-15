@@ -23,8 +23,8 @@ export function RfqStep1ProjectType({ dict, value, onChange, onNext }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-h2 font-medium text-graphite-900 dark:text-graphite-50">{t.heading}</h2>
-        <p className="mt-1 text-body text-graphite-600 dark:text-graphite-400">{t.subhead}</p>
+        <h2 className="text-h2 font-medium text-mist-50">{t.heading}</h2>
+        <p className="mt-1 text-body text-mist-400">{t.subhead}</p>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {OPTIONS.map((opt) => {
@@ -36,8 +36,8 @@ export function RfqStep1ProjectType({ dict, value, onChange, onNext }: Props) {
               onClick={() => onChange(opt.value)}
               className={`rounded-lg border px-4 py-4 text-left text-body font-medium transition-colors duration-150 ${
                 selected
-                  ? "border-brand-600 bg-brand-50 text-brand-600 dark:bg-brand-900 dark:text-brand-200"
-                  : "border-graphite-200 text-graphite-900 hover:border-graphite-400 dark:border-graphite-600 dark:text-graphite-50 dark:hover:border-graphite-400"
+                  ? "border-gold-500 bg-gold-500/10 text-gold-500"
+                  : "border-mist-800 text-mist-50 hover:border-mist-400"
               }`}
             >
               {t[opt.labelKey as keyof typeof t]}
@@ -49,7 +49,7 @@ export function RfqStep1ProjectType({ dict, value, onChange, onNext }: Props) {
         <button
           type="button"
           onClick={onNext}
-          className="inline-flex items-center gap-2 rounded-md bg-brand-600 px-[22px] py-[12px] text-body font-medium text-white transition-colors duration-150 hover:bg-brand-800"
+          className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-[22px] py-[12px] text-body font-medium text-forest-900 transition-colors duration-150 hover:bg-gold-600"
         >
           {dict.rfq.next}
         </button>

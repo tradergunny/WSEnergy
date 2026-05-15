@@ -31,20 +31,20 @@ export function DocumentTile({ type, title, meta, href }: DocumentTileProps) {
   return (
     <Link
       href={href}
-      className="group border-graphite-200 hover:border-brand-600 flex items-center gap-3 rounded-md border bg-white px-4 py-3"
+      className="group border-mist-800 hover:border-gold-500 bg-forest-800 flex items-center gap-3 rounded-md border px-4 py-3"
     >
-      <span className="text-graphite-600 group-hover:text-brand-600 shrink-0">
+      <span className="text-mist-400 group-hover:text-gold-500 shrink-0">
         <Icon size={20} stroke={1.5} />
       </span>
       <span className="flex flex-1 flex-col">
-        <span className="text-body text-graphite-900 font-medium">
+        <span className="text-body text-mist-50 font-medium">
           {title}
         </span>
         {meta && (
-          <span className="text-caption text-graphite-600">{meta}</span>
+          <span className="text-caption text-mist-400">{meta}</span>
         )}
       </span>
-      <span className="text-brand-600 shrink-0">
+      <span className="text-gold-500 shrink-0">
         <IconDownload size={18} stroke={1.5} />
       </span>
     </Link>

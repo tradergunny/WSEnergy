@@ -26,23 +26,22 @@ export function AudienceTile({
   icon,
 }: AudienceTileProps) {
   const bg = primary
-    ? "bg-graphite-900 text-graphite-50 border-graphite-900"
-    : "bg-white text-graphite-900 border-graphite-200";
-  const titleColor = primary ? "text-graphite-50" : "text-graphite-900";
-  const descColor = primary ? "text-graphite-200" : "text-graphite-600";
-  const ctaColor = primary ? "text-brand-200" : "text-brand-600";
+    ? "bg-forest-950 text-mist-50 border-gold-500"
+    : "bg-forest-800 text-mist-50 border-mist-800";
+  const descColor = primary ? "text-mist-200" : "text-mist-400";
+  const ctaColor = "text-gold-500";
 
   return (
     <Link
       href={href}
-      className={`group flex flex-col gap-3 rounded-lg border p-6 transition-colors ${bg}`}
+      className={`group flex flex-col gap-3 rounded-xl border p-6 transition-colors ${bg}`}
     >
       {icon && (
-        <span className={`${primary ? "text-brand-200" : "text-brand-600"}`}>
+        <span className="text-gold-500">
           {icon}
         </span>
       )}
-      <h3 className={`text-h3 font-medium ${titleColor}`}>{title}</h3>
+      <h3 className="text-h3 font-medium">{title}</h3>
       <p className={`text-body ${descColor}`}>{description}</p>
       <span
         className={`text-body mt-2 inline-flex items-center gap-1 font-medium ${ctaColor}`}

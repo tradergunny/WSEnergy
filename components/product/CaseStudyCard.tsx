@@ -36,9 +36,9 @@ export function CaseStudyCard({
   return (
     <Link
       href={href}
-      className="group border-graphite-200 flex flex-col overflow-hidden rounded-lg border bg-white"
+      className="group border-mist-800 bg-forest-800 flex flex-col overflow-hidden rounded-xl border"
     >
-      <div className="bg-graphite-100 relative aspect-[4/3] w-full overflow-hidden">
+      <div className="bg-forest-950 relative aspect-[4/3] w-full overflow-hidden">
         {image ? (
           <Image
             src={urlFor(image).width(800).height(600).fit("crop").url()}
@@ -48,22 +48,22 @@ export function CaseStudyCard({
             className="object-cover transition-transform duration-200 group-hover:scale-[1.02]"
           />
         ) : (
-          <div className="text-graphite-400 text-eyebrow flex h-full w-full items-center justify-center">
+          <div className="text-mist-400 text-eyebrow flex h-full w-full items-center justify-center">
             Project
           </div>
         )}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
         {metaParts.length > 0 && (
-          <p className="text-eyebrow text-graphite-600">
+          <p className="text-eyebrow text-mist-400">
             {metaParts.join(" · ")}
           </p>
         )}
-        <h3 className="text-h4 text-graphite-900 group-hover:text-brand-600 font-medium">
+        <h3 className="text-h4 text-mist-50 group-hover:text-gold-500 font-medium">
           {heading}
         </h3>
         {title && customer && title !== customer && (
-          <p className="text-body text-graphite-600">{title}</p>
+          <p className="text-body text-mist-400">{title}</p>
         )}
       </div>
     </Link>

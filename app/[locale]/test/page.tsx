@@ -38,13 +38,13 @@ export default async function TestPage({ params }: PageProps<"/[locale]">) {
 
   return (
     <Container as="section" className="py-12">
-      <p className="text-eyebrow text-graphite-600 mb-2">
+      <p className="text-eyebrow text-mist-400 mb-2">
         Week 3 · Sanity smoke test
       </p>
-      <h1 className="text-h1 text-graphite-900 mb-2 font-medium">
+      <h1 className="text-h1 text-mist-50 mb-2 font-medium">
         Sanity connection
       </h1>
-      <p className="text-body-lg text-graphite-600 mb-8">
+      <p className="text-body-lg text-mist-400 mb-8">
         Fetches every <code className="font-mono">product</code> document from
         the dataset.
       </p>
@@ -55,7 +55,7 @@ export default async function TestPage({ params }: PageProps<"/[locale]">) {
           <pre className="mt-2 text-xs whitespace-pre-wrap">{error}</pre>
         </div>
       ) : products.length === 0 ? (
-        <div className="border-graphite-200 text-graphite-800 rounded-md border bg-white p-4">
+        <div className="border-mist-800 text-mist-200 rounded-md border bg-forest-800 p-4">
           <p className="font-medium">No products yet.</p>
           <p className="text-body-lg mt-1">
             Visit <code className="font-mono">/studio</code> to seed content,
@@ -67,34 +67,34 @@ export default async function TestPage({ params }: PageProps<"/[locale]">) {
           {products.map((p) => (
             <li
               key={p._id}
-              className="border-graphite-200 rounded-md border bg-white p-4"
+              className="border-mist-800 rounded-md border bg-forest-800 p-4"
             >
               <div className="flex flex-wrap items-baseline gap-2">
-                <span className="text-h4 text-graphite-900 font-medium">
+                <span className="text-h4 text-mist-50 font-medium">
                   {p.title}
                 </span>
                 {p.sku && (
-                  <span className="text-caption text-graphite-600 font-mono">
+                  <span className="text-caption text-mist-400 font-mono">
                     {p.sku}
                   </span>
                 )}
                 {p.brand?.name && (
-                  <span className="text-eyebrow border-graphite-200 text-graphite-800 rounded-sm border px-1.5 py-0.5">
+                  <span className="text-eyebrow border-mist-800 text-mist-200 rounded-sm border px-1.5 py-0.5">
                     {p.brand.name}
                   </span>
                 )}
                 {p.exclusive && (
-                  <span className="text-eyebrow bg-brand-50 text-brand-800 rounded-sm px-1.5 py-0.5">
+                  <span className="text-eyebrow bg-gold-500 text-forest-900 rounded-sm px-1.5 py-0.5">
                     ★ Exclusive
                   </span>
                 )}
                 {p.safetyCritical && (
-                  <span className="text-eyebrow bg-safety-50 text-safety-800 rounded-sm px-1.5 py-0.5">
+                  <span className="text-eyebrow bg-safety-600/20 text-safety-400 border border-safety-600/40 rounded-sm px-1.5 py-0.5">
                     Safety critical
                   </span>
                 )}
               </div>
-              <p className="text-body text-graphite-600 mt-1">
+              <p className="text-body text-mist-400 mt-1">
                 {locale === "th"
                   ? (p.shortDescription_th ?? p.shortDescription_en)
                   : (p.shortDescription_en ?? p.shortDescription_th)}
