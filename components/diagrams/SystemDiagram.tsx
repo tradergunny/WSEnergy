@@ -15,15 +15,15 @@ import { Button } from "@/components/ui/Button";
  * self-contained; they match the values in app/globals.css @theme.
  */
 
-const COLOR_SAFETY_600 = "#a32d2d";
-const COLOR_BRAND_600 = "#185fa5";
-const COLOR_GRAPHITE_600 = "#5f5e5a";
-const COLOR_GRAPHITE_200 = "#d3d1c7";
-const COLOR_GRAPHITE_900 = "#1a1a19";
-const COLOR_GRAPHITE_50 = "#f8f8f7";
-const COLOR_WARNING_BG = "#faeeda";
-const COLOR_WARNING_BORDER = "#fac775";
-const COLOR_WARNING_TEXT = "#854f0b";
+const COLOR_SAFETY = "#e24b4a";
+const COLOR_GOLD = "#f4c21b";
+const COLOR_DIM = "#7a8a82";
+const COLOR_NODE_STROKE = "#3a4a42";
+const COLOR_NODE_TEXT = "#ffffff";
+const COLOR_NODE_FILL = "#00321d";
+const COLOR_WARNING_BG = "#7d6309";
+const COLOR_WARNING_BORDER = "#f4c21b";
+const COLOR_WARNING_TEXT = "#f6cc44";
 
 type DiagramState =
   | "live"
@@ -110,13 +110,13 @@ export function SystemDiagram({ labels, nodeLabels }: SystemDiagramProps) {
 
   const statusColor =
     state === "deenergized"
-      ? COLOR_GRAPHITE_600
+      ? COLOR_DIM
       : state === "live"
-        ? COLOR_SAFETY_600
+        ? COLOR_SAFETY
         : COLOR_WARNING_TEXT;
 
   return (
-    <div className="border-graphite-200 bg-graphite-50 rounded-lg border p-6">
+    <div className="border-mist-800 bg-forest-950 rounded-xl border p-6">
       <div
         role="img"
         aria-label={`${labels.statusLive} → ${labels.statusDeenergized}`}
@@ -154,10 +154,10 @@ export function SystemDiagram({ labels, nodeLabels }: SystemDiagramProps) {
               (state === "shutdown-initiated" || state === "pefs-tripped");
             const fill = isShutdownActive
               ? COLOR_WARNING_BG
-              : COLOR_GRAPHITE_50;
+              : COLOR_NODE_FILL;
             const stroke = isShutdownActive
               ? COLOR_WARNING_BORDER
-              : COLOR_GRAPHITE_200;
+              : COLOR_NODE_STROKE;
             return (
               <g key={n.id}>
                 <rect
@@ -180,7 +180,7 @@ export function SystemDiagram({ labels, nodeLabels }: SystemDiagramProps) {
                   fontFamily="Inter, system-ui, sans-serif"
                   fontSize={11}
                   fontWeight={500}
-                  fill={COLOR_GRAPHITE_900}
+                  fill={COLOR_NODE_TEXT}
                 >
                   {nodeLabels?.[n.id] ?? n.label}
                 </text>
@@ -220,14 +220,14 @@ function segmentColor(state: DiagramState, index: number): string {
   // Segments (5 total): 0 PV→PEFS · 1 PEFS→DC · 2 DC→Control · 3 Control→Inv · 4 Inv→Grid
   switch (state) {
     case "live":
-      return COLOR_SAFETY_600;
+      return COLOR_SAFETY;
     case "shutdown-initiated":
       // Signal path Control Box → PEFS travels back through segments 2 and 1.
-      return index === 1 || index === 2 ? COLOR_BRAND_600 : COLOR_SAFETY_600;
+      return index === 1 || index === 2 ? COLOR_GOLD : COLOR_SAFETY;
     case "pefs-tripped":
       // Upstream of PEFS de-energized (segments 0 and 1). Downstream still live.
-      return index <= 1 ? COLOR_GRAPHITE_600 : COLOR_SAFETY_600;
+      return index <= 1 ? COLOR_DIM : COLOR_SAFETY;
     case "deenergized":
-      return COLOR_GRAPHITE_600;
+      return COLOR_DIM;
   }
 }

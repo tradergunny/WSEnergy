@@ -185,10 +185,10 @@ export function RfqForm({ dict, locale }: Props) {
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-caption font-medium transition-colors duration-150 ${
                   active
-                    ? "bg-brand-600 text-white"
+                    ? "bg-gold-500 text-forest-900"
                     : done
-                      ? "bg-brand-100 text-brand-600 dark:bg-brand-900 dark:text-brand-200"
-                      : "bg-graphite-100 text-graphite-400 dark:bg-graphite-800 dark:text-graphite-600"
+                      ? "bg-gold-500/20 text-gold-500"
+                      : "bg-forest-800 text-mist-400"
                 }`}
               >
                 {stepNum}
@@ -196,14 +196,14 @@ export function RfqForm({ dict, locale }: Props) {
               {stepNum < TOTAL_STEPS && (
                 <div
                   className={`h-0.5 w-6 transition-colors duration-150 ${
-                    done ? "bg-brand-200 dark:bg-brand-800" : "bg-graphite-200 dark:bg-graphite-600"
+                    done ? "bg-gold-500/40" : "bg-mist-800"
                   }`}
                 />
               )}
             </div>
           );
         })}
-        <span className="ml-auto text-caption text-graphite-400">
+        <span className="ml-auto text-caption text-mist-400">
           {t.stepOf
             .replace("{current}", String(state.step))
             .replace("{total}", String(TOTAL_STEPS))}

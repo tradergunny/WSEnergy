@@ -6,6 +6,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { SITE_URL } from "@/lib/site";
 import "../globals.css";
 
 const inter = Inter({
@@ -27,9 +28,18 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WS Energy",
+  title: {
+    default: "WS Energy — Thailand's Authorized Projoy Distributor",
+    template: "%s | WS Energy",
+  },
   description:
     "Thailand's authorized Projoy distributor — and your full-line partner for solar generation, storage, and EV.",
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    type: "website",
+    siteName: "WS Energy",
+    locale: "en_US",
+  },
 };
 
 export async function generateStaticParams() {

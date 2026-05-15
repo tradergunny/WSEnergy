@@ -11,8 +11,10 @@ import {
   IconSolarPanel,
   IconTools,
 } from "@tabler/icons-react";
+import type { Metadata } from "next";
 import { hasLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { alternates } from "@/lib/seo";
 import { sanityClient, urlFor } from "@/lib/sanity/client";
 import {
   featuredProductsQuery,
@@ -27,6 +29,7 @@ import {
 } from "@/lib/sanity/training";
 import { withLocale } from "@/lib/navigation";
 import { productHref } from "@/lib/product-url";
+import { SITE_URL } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -82,6 +85,19 @@ type CertificationRow = {
   name?: string;
   logo?: Parameters<typeof urlFor>[0];
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]">): Promise<Metadata> {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
+  return {
+    title: dict.home.hero.headline,
+    description: dict.home.hero.subhead,
+    alternates: alternates("/"),
+    openGraph: { title: dict.home.hero.headline, description: dict.home.hero.subhead },
+  };
+}
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
@@ -159,8 +175,30 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
     },
   ];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "WS Energy Co., Ltd.",
+    url: SITE_URL,
+    logo: `${SITE_URL}/images/WSLogo.png`,
+    description: t.hero.subhead,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "51/17 Moo 3 Bangpla, Bangplee",
+      addressLocality: "Samut Prakan",
+      postalCode: "10540",
+      addressCountry: "TH",
+    },
+    telephone: "+66870538668",
+    sameAs: [],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* ── 1 · Cinematic hero ──────────────────────────────────── */}
       <Hero
         eyebrow={

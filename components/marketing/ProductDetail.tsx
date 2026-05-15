@@ -821,9 +821,6 @@ function RelatedProductCard({
   locale: Locale;
   delay: number;
 }) {
-  const localized = (en?: string, th?: string) =>
-    locale === "th" ? (th ?? en ?? "") : (en ?? th ?? "");
-
   return (
     <ScrollReveal delay={delay}>
       <Link

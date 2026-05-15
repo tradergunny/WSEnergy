@@ -69,6 +69,7 @@ export const mainNav: NavItem[] = [
     href: "/about",
     children: [
       { key: "company", href: "/about" },
+      { key: "team", href: "/about/team" },
       { key: "projoyPartnership", href: "/about/projoy-partnership" },
       { key: "certifications", href: "/about/certifications" },
       { key: "news", href: "/about/news-events" },
