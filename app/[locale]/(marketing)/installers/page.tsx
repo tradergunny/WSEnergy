@@ -49,7 +49,7 @@ export default async function InstallersPage({
     <>
       {/* ── Intro ─────────────────────────────────────────────── */}
       <section className="bg-forest-950">
-        <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <div className="mx-auto max-w-6xl px-6 pt-24 pb-12 md:pt-28 md:pb-16">
           <ScrollReveal className="max-w-3xl">
             <MonoLabel tone="gold">
               {locale === "th"
@@ -79,7 +79,7 @@ export default async function InstallersPage({
 
       {/* ── Filters + grid ────────────────────────────────────── */}
       <section className="bg-forest-900">
-        <div className="mx-auto max-w-6xl px-6 pb-24 md:pb-28">
+        <div className="mx-auto max-w-6xl px-6 pt-14 pb-24 md:pt-20 md:pb-28">
           <ScrollReveal>
             <Suspense fallback={null}>
               <InstallersDirectory
