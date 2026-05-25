@@ -27,6 +27,7 @@ import {
   type TrainingFormat,
   type TrainingSessionRow,
 } from "@/lib/sanity/training";
+import { getInstallerProvinces } from "@/lib/sanity/installers";
 import { withLocale } from "@/lib/navigation";
 import { productHref } from "@/lib/product-url";
 import { SITE_URL } from "@/lib/site";
@@ -105,14 +106,21 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const dict = await getDictionary(locale);
   const t = dict.home;
 
-  const [featuredProducts, projects, articles, certifications, trainingSessions] =
-    await Promise.all([
-      sanityClient.fetch<FeaturedProduct[]>(featuredProductsQuery),
-      sanityClient.fetch<ProjectRow[]>(featuredProjectsQuery),
-      sanityClient.fetch<ArticleRow[]>(latestArticlesQuery),
-      sanityClient.fetch<CertificationRow[]>(homepageCertificationsQuery),
-      getNextUpcomingTrainingSessions(),
-    ]);
+  const [
+    featuredProducts,
+    projects,
+    articles,
+    certifications,
+    trainingSessions,
+    installerProvinces,
+  ] = await Promise.all([
+    sanityClient.fetch<FeaturedProduct[]>(featuredProductsQuery),
+    sanityClient.fetch<ProjectRow[]>(featuredProjectsQuery),
+    sanityClient.fetch<ArticleRow[]>(latestArticlesQuery),
+    sanityClient.fetch<CertificationRow[]>(homepageCertificationsQuery),
+    getNextUpcomingTrainingSessions(),
+    getInstallerProvinces(),
+  ]);
 
   const localized = (en?: string, th?: string) =>
     locale === "th" ? (th ?? en ?? "") : (en ?? th ?? "");
@@ -631,6 +639,80 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 </ScrollReveal>
               ))}
             </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* ── 6.7 · Certified installer finder ─────────────────────── */}
+      {installerProvinces.length > 0 ? (
+        <section className="bg-forest-900">
+          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+            <ScrollReveal>
+              <div className="rounded-2xl bg-card-50 p-10 text-card-ink md:p-14">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-end">
+                  <div className="md:col-span-7">
+                    <MonoLabel tone="forest">
+                      {locale === "th"
+                        ? "เครือข่ายผู้ติดตั้งของเรา"
+                        : "Certified installer directory"}
+                    </MonoLabel>
+                    <h2
+                      className="mt-3 font-medium tracking-tight"
+                      style={{
+                        fontSize: "clamp(28px, 4vw, 44px)",
+                        lineHeight: 1.1,
+                        letterSpacing: "-0.015em",
+                      }}
+                    >
+                      {locale === "th"
+                        ? "ค้นหาช่างติดตั้งโซลาร์ที่ใกล้คุณ"
+                        : "Find a certified installer near you."}
+                    </h2>
+                    <p className="text-body-lg mt-4 max-w-xl text-forest-900/70">
+                      {locale === "th"
+                        ? "ช่างติดตั้งที่ผ่านการฝึกอบรมและรับรองโดย WS Energy พร้อมให้บริการติดตั้งโซลาร์ ระบบกักเก็บพลังงาน และสถานีชาร์จรถยนต์ไฟฟ้าตามมาตรฐานความปลอดภัย"
+                        : "WS Energy–trained partners delivering safety-grade solar, storage, and EV charging across Thailand."}
+                    </p>
+                  </div>
+                  <form
+                    action={withLocale(locale, "/installers")}
+                    method="GET"
+                    className="md:col-span-5"
+                  >
+                    <label
+                      htmlFor="home-installer-province"
+                      className="text-caption font-mono uppercase tracking-wider text-forest-900/55"
+                    >
+                      {locale === "th" ? "เลือกจังหวัด" : "Choose a province"}
+                    </label>
+                    <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                      <select
+                        id="home-installer-province"
+                        name="province"
+                        defaultValue=""
+                        className="flex-1 rounded-full border border-forest-900/20 bg-card-50 px-4 py-3 text-body font-medium text-forest-900 hover:border-forest-900/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                      >
+                        <option value="">
+                          {locale === "th" ? "ทุกจังหวัด" : "All provinces"}
+                        </option>
+                        {installerProvinces.map((p) => (
+                          <option key={p} value={p}>
+                            {p}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="submit"
+                        className="inline-flex items-center justify-center gap-2 rounded-full bg-forest-900 px-6 py-3 text-body font-medium text-mist-50 transition-colors hover:bg-forest-800"
+                      >
+                        {locale === "th" ? "ค้นหา" : "Find installers"}
+                        <IconArrowRight size={16} stroke={2} />
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
         </section>
       ) : null}

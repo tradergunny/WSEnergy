@@ -10,6 +10,8 @@ import { certification } from "./certification";
 import { event } from "./event";
 import { rfqSubmission } from "./rfqSubmission";
 import { trainingSession } from "./trainingSession";
+import { serviceType } from "./serviceType";
+import { installer } from "./installer";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   product,
@@ -23,4 +25,6 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   event,
   rfqSubmission,
   trainingSession,
+  serviceType,
+  installer,
 ];

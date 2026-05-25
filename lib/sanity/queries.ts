@@ -550,3 +550,52 @@ export const firefighterProductsQuery = groq`
     }
   }
 `;
+
+export const allInstallersQuery = groq`
+  *[_type == "installer" && !(_id in path("drafts.**"))]
+    | order(orderRank asc, companyName asc) {
+    _id,
+    companyName,
+    "slug": slug.current,
+    installerCode,
+    tier,
+    contactName,
+    phone,
+    email,
+    website,
+    address_en,
+    address_th,
+    province,
+    district,
+    lat,
+    lng,
+    certifications,
+    yearsActive,
+    logo,
+    photo,
+    "services": services[]->{
+      _id,
+      title_en,
+      title_th,
+      "slug": slug.current,
+      icon
+    }
+  }
+`;
+
+export const allServiceTypesQuery = groq`
+  *[_type == "serviceType" && !(_id in path("drafts.**"))]
+    | order(orderRank asc, title_en asc) {
+    _id,
+    title_en,
+    title_th,
+    "slug": slug.current,
+    icon
+  }
+`;
+
+export const installerProvincesQuery = groq`
+  array::unique(
+    *[_type == "installer" && !(_id in path("drafts.**")) && defined(province)].province
+  )
+`;

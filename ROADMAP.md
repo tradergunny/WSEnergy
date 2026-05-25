@@ -4,7 +4,7 @@ Planned features that go beyond the brand refresh. Each feature has a v1 scope, 
 
 ---
 
-## 1. Training Calendar (in progress)
+## 1. Training Calendar (shipped — PR #8 merged)
 
 **Goal**: a filterable list of WS Energy training sessions — installer certifications, customer workshops, technical webinars — managed by employees in Sanity Studio, with a homepage teaser surfacing the next 3 sessions.
 
@@ -56,7 +56,7 @@ Planned features that go beyond the brand refresh. Each feature has a v1 scope, 
 
 ---
 
-## 2. Certified Installer Directory (planned — starts after Training Calendar)
+## 2. Certified Installer Directory (shipped)
 
 **Goal**: searchable directory of WS Energy certified partner installers — province + service-type filters — with a prominent homepage entry point that deeplinks into province-filtered results.
 
@@ -79,12 +79,29 @@ Planned features that go beyond the brand refresh. Each feature has a v1 scope, 
 - `certifications[]`, `tier` (enum)
 - `photo` (optional)
 
-### Step plan (defined at start of feature — placeholder)
+### Step plan (shipped)
 
-Similar shape to Training Calendar: schema → seed → query → listing page → filters → homepage entry → polish.
+| Step | What | Status |
+|---|---|---|
+| 1 | `installer` + `serviceType` Sanity schemas | ✓ |
+| 2 | Seed 4 service types + 4 installers (via `scripts/seed-installers.mjs`) | ✓ |
+| 3 | GROQ queries + typed fetcher (`lib/sanity/installers.ts`) | ✓ |
+| 4 | `/installers` page — hero + card grid | ✓ |
+| 5 | Client component `InstallersDirectory.tsx` — sidebar filters with URL state (`?province=…&service=…`) | ✓ |
+| 6 | Homepage section 6.7 — "Find a certified installer" band with form → `/installers?province=…` deeplink | ✓ |
+| 7 | Polish: metadata, `<Suspense>` boundary for prerendering, partner-network CTA at page bottom | ✓ |
+
+### Decisions taken at build time
+
+- **URL path**: `/installers` (top-level, parallel to `/training`)
+- **Service taxonomy v1**: rooftop-solar, commercial-industrial, battery-storage, ev-charging
+- **Homepage CTA**: native HTML form (no JS) → submits province as query param
+- **Filter state**: lives in URL params via `useSearchParams` (client component must be `<Suspense>`-wrapped for SSG)
+- **Drafts excluded** in all queries via `!(_id in path("drafts.**"))`
 
 ---
 
 ## Decisions log
 
 - **2026-05-15** — Training Calendar first, then Installer Directory. Both sourced from Sanity (employees self-serve). Table-only v1 for training. Bilingual via existing `[locale]` routing.
+- **2026-05-21** — Installer Directory shipped. Card grid (not two-pane with map yet — wait until ≥50 installers). Filter state in URL so homepage can deeplink.
