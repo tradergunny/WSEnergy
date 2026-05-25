@@ -5,6 +5,7 @@ import { hasLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { TrainingHighlightBand } from "@/components/marketing/TrainingHighlightBand";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { SITE_URL } from "@/lib/site";
 import "../globals.css";
@@ -62,6 +63,7 @@ export default async function RootLayout({
       <body className="flex min-h-dvh flex-col bg-forest-900 text-mist-50">
         <SmoothScroll />
         <Header locale={locale} dict={dict} />
+        <TrainingHighlightBand locale={locale} />
         <main className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />
       </body>

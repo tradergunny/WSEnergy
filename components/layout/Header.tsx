@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { MobileMenu } from "@/components/layout/MobileMenu";
-import { mainNav, withLocale } from "@/lib/navigation";
+import { mainNav, secondaryNav, withLocale } from "@/lib/navigation";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -25,25 +25,41 @@ export function Header({
 
   return (
     <header className="sticky top-0 z-40 border-b border-mist-800/60 bg-forest-900/85 backdrop-blur-md">
-      {/* Utility bar */}
+      {/* Utility bar — secondary nav (left) + contact/locale (right) */}
       <div className="border-b border-mist-800/60">
         <Container>
-          <div className="flex items-center justify-end gap-4 py-1.5 text-caption text-mist-400">
-            <a
-              href="tel:+66000000000"
-              className="hidden items-center gap-1 transition-colors hover:text-gold-500 sm:inline-flex"
-            >
-              <IconPhone size={14} stroke={1.5} />
-              <span>{dict.actions.callUs}</span>
-            </a>
-            <a
-              href="https://line.me/"
-              className="hidden items-center gap-1 transition-colors hover:text-gold-500 sm:inline-flex"
-            >
-              <IconBrandLine size={14} stroke={1.5} />
-              <span>{dict.actions.lineOA}</span>
-            </a>
-            <LocaleToggle current={locale} />
+          <div className="flex items-center justify-between gap-4 py-1.5 text-caption text-mist-400">
+            <nav className="hidden md:block">
+              <ul className="flex items-center gap-5">
+                {secondaryNav.map((item) => (
+                  <li key={item.key}>
+                    <Link
+                      href={withLocale(locale, item.href)}
+                      className="transition-colors hover:text-gold-500"
+                    >
+                      {navLabels[item.key] ?? item.key}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <div className="ml-auto flex items-center gap-4">
+              <a
+                href="tel:+66000000000"
+                className="hidden items-center gap-1 transition-colors hover:text-gold-500 sm:inline-flex"
+              >
+                <IconPhone size={14} stroke={1.5} />
+                <span>{dict.actions.callUs}</span>
+              </a>
+              <a
+                href="https://line.me/"
+                className="hidden items-center gap-1 transition-colors hover:text-gold-500 sm:inline-flex"
+              >
+                <IconBrandLine size={14} stroke={1.5} />
+                <span>{dict.actions.lineOA}</span>
+              </a>
+              <LocaleToggle current={locale} />
+            </div>
           </div>
         </Container>
       </div>

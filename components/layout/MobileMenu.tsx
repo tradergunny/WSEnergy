@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IconMenu2, IconX, IconChevronDown } from "@tabler/icons-react";
-import { mainNav, withLocale } from "@/lib/navigation";
+import { mainNav, secondaryNav, withLocale } from "@/lib/navigation";
 import type { Locale } from "@/lib/i18n/config";
 
 type NavLabels = Record<string, string>;
@@ -123,6 +123,19 @@ export function MobileMenu({
                     </li>
                   );
                 })}
+              </ul>
+              <ul className="mt-4 flex flex-col border-t border-mist-800/40 pt-2">
+                {secondaryNav.map((item) => (
+                  <li key={item.key}>
+                    <Link
+                      href={withLocale(locale, item.href)}
+                      onClick={() => setOpen(false)}
+                      className="text-caption block px-3 py-2 text-mist-400 transition-colors hover:text-gold-500"
+                    >
+                      {navLabels[item.key] ?? item.key}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </nav>
           </div>

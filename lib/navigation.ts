@@ -16,7 +16,6 @@ export type NavItem = {
 };
 
 export const mainNav: NavItem[] = [
-  { key: "home", href: "/" },
   {
     key: "safety",
     href: "/safety",
@@ -51,7 +50,6 @@ export const mainNav: NavItem[] = [
       { key: "scada", href: "/solutions/scada-monitoring" },
     ],
   },
-  { key: "projects", href: "/projects" },
   { key: "training", href: "/training" },
   { key: "installers", href: "/installers" },
   {
@@ -76,6 +74,11 @@ export const mainNav: NavItem[] = [
       { key: "news", href: "/about/news-events" },
     ],
   },
+];
+
+/** Secondary nav — task-driven destinations rendered in the utility bar. */
+export const secondaryNav: NavItem[] = [
+  { key: "projects", href: "/projects" },
   { key: "contact", href: "/contact" },
 ];
 
