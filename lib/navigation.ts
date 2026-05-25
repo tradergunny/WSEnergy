@@ -53,6 +53,7 @@ export const mainNav: NavItem[] = [
   },
   { key: "projects", href: "/projects" },
   { key: "training", href: "/training" },
+  { key: "installers", href: "/installers" },
   {
     key: "resources",
     href: "/resources",
