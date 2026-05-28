@@ -5,6 +5,7 @@ import {
   IconArrowUpRight,
   IconBolt,
   IconCertificate,
+  IconChartLine,
   IconChevronRight,
   IconDownload,
   IconFileText,
@@ -16,8 +17,10 @@ import {
 } from "@tabler/icons-react";
 import { urlFor } from "@/lib/sanity/client";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { ProductSectionNav } from "@/components/marketing/ProductSectionNav";
 import { productHref } from "@/lib/product-url";
 import { withLocale } from "@/lib/navigation";
 import type { Locale } from "@/lib/i18n/config";
@@ -134,6 +137,20 @@ export function ProductDetail({
     relatedBrand: { heading: string };
     projects: { heading: string };
     rfq: { heading: string; body: string };
+    nav: {
+      overview: string;
+      specs: string;
+      compliance: string;
+      documents: string;
+      pairs: string;
+    };
+    highlights: {
+      eyebrow: string;
+      heading: string;
+      bankable: { title: string; subtitle: string };
+      safety: { title: string; subtitle: string };
+      thaiGrid: { title: string; subtitle: string };
+    };
   };
 }) {
   const localized = (en?: string, th?: string) =>
@@ -172,13 +189,20 @@ export function ProductDetail({
     url?: string;
   }[];
 
-  // Quick feature highlights — synthesised from compliance + specs metadata
   const compliance = product.compliance ?? [];
-  const featureHighlights = buildFeatureHighlights({
-    compliance,
-    safetyCritical: product.safetyCritical,
-    locale,
-  });
+
+  // Editorial benefit cards rendered directly under the hero. Static copy
+  // lives in the dictionary; when product.gallery images land, each card's
+  // icon swaps for an image automatically.
+  const featureCards: {
+    icon: typeof IconBolt;
+    title: string;
+    subtitle: string;
+  }[] = [
+    { icon: IconChartLine, ...t.highlights.bankable },
+    { icon: IconShieldCheckered, ...t.highlights.safety },
+    { icon: IconBolt, ...t.highlights.thaiGrid },
+  ];
 
   const shortDesc = localized(
     product.shortDescription_en,
@@ -222,6 +246,34 @@ export function ProductDetail({
           </ol>
         </div>
       </nav>
+
+      {/* ── 1b · Sticky section sub-nav (scroll-spy) ────────────── */}
+      <ProductSectionNav
+        locale={locale}
+        labels={t.nav}
+        sections={[
+          {
+            key: "overview",
+            available: Array.isArray(overview) && overview.length > 0,
+          },
+          {
+            key: "specs",
+            available: (product.specs?.length ?? 0) > 0,
+          },
+          {
+            key: "compliance",
+            available: compliance.length > 0,
+          },
+          {
+            key: "documents",
+            available: docs.length > 0,
+          },
+          {
+            key: "pairs",
+            available: (product.pairsWellWith?.length ?? 0) > 0,
+          },
+        ]}
+      />
 
       {/* ── 2 · Hero (warm-bone with product image) ─────────────── */}
       <section className="bg-forest-900">
@@ -296,6 +348,22 @@ export function ProductDetail({
                     ) : null}
                   </div>
 
+                  {/* Key-spec tiles — big mono numerals beside the title */}
+                  {product.specs && product.specs.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-5 border-t border-forest-900/10 pt-6 sm:grid-cols-4 sm:gap-x-5">
+                      {product.specs.slice(0, 4).map((s, i) => (
+                        <div key={i}>
+                          <div className="text-h2 font-mono font-medium leading-tight tracking-tight text-forest-900">
+                            {s.value}
+                          </div>
+                          <div className="mt-1.5 text-caption text-forest-900/60">
+                            {localized(s.label_en, s.label_th)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+
                   <div>
                     <div className="flex flex-wrap items-center gap-3">
                       <Button variant="on-card" size="md" href={quoteHref}>
@@ -323,14 +391,11 @@ export function ProductDetail({
                       )}
                     </div>
 
-                    {/* At-a-glance mono strip */}
-                    {compliance.length > 0 || product.specs?.length ? (
+                    {/* At-a-glance compliance strip — specs now live in the tile grid above */}
+                    {compliance.length > 0 ? (
                       <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-forest-900/10 pt-5 text-caption font-mono uppercase tracking-wider text-forest-900/65">
                         {compliance.slice(0, 4).map((c) => (
                           <span key={c}>· {c}</span>
-                        ))}
-                        {(product.specs ?? []).slice(0, 2).map((s, i) => (
-                          <span key={i}>· {s.value}</span>
                         ))}
                       </div>
                     ) : null}
@@ -342,49 +407,64 @@ export function ProductDetail({
         </div>
       </section>
 
-      {/* ── 3 · Feature highlights ──────────────────────────────── */}
-      {featureHighlights.length > 0 ? (
-        <section className="bg-forest-950">
-          <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
-            <ScrollReveal className="mb-10 max-w-3xl">
-              <MonoLabel tone="gold">
-                {locale === "th" ? "คุณสมบัติเด่น" : "Key features"}
-              </MonoLabel>
-              <h2
-                className="mt-3 font-medium tracking-tight text-mist-50"
-                style={{
-                  fontSize: "clamp(24px, 3.4vw, 36px)",
-                  lineHeight: 1.15,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                {locale === "th"
-                  ? "ความปลอดภัยระดับโครงการที่ผ่านการรับรอง"
-                  : "Project-grade engineering, certified for Thailand."}
-              </h2>
-            </ScrollReveal>
+      {/* ── 3 · Feature highlight cards (image-led tall tiles) ──── */}
+      <section className="bg-forest-950">
+        <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
+          <ScrollReveal className="mb-10 max-w-3xl">
+            <MonoLabel tone="gold">{t.highlights.eyebrow}</MonoLabel>
+            <h2
+              className="mt-3 font-medium tracking-tight text-mist-50"
+              style={{
+                fontSize: "clamp(24px, 3.4vw, 36px)",
+                lineHeight: 1.15,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {t.highlights.heading}
+            </h2>
+          </ScrollReveal>
 
-            <ScrollReveal delay={0.05}>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {featureHighlights.map((f) => (
-                  <div
-                    key={f.title}
-                    className="rounded-xl border border-mist-800/60 bg-forest-900/40 p-6"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold-500/15 text-gold-500">
-                      <f.icon size={22} stroke={1.5} />
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {featureCards.map((card, i) => {
+              const Icon = card.icon;
+              const cardImage = gallery[i] ?? gallery[0];
+              return (
+                <ScrollReveal key={card.title} delay={i * 0.05}>
+                  <Card surface="forest">
+                    <div className="relative aspect-[4/5]">
+                      {cardImage ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={urlFor(cardImage).width(800).url()}
+                          alt=""
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-gold-500">
+                          <Icon size={64} stroke={1.25} />
+                        </div>
+                      )}
+                      {/* Bottom-fade gradient so the title stays legible on photos */}
+                      <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-forest-950/0 via-forest-950/10 to-forest-950/85"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 p-6">
+                        <h3 className="text-h3 font-medium tracking-tight text-mist-50">
+                          {card.title}
+                        </h3>
+                        <p className="text-body mt-1.5 max-w-[28ch] text-mist-400">
+                          {card.subtitle}
+                        </p>
+                      </div>
                     </div>
-                    <h3 className="text-h3 mt-5 font-medium tracking-tight text-mist-50">
-                      {f.title}
-                    </h3>
-                    <p className="text-body mt-2 text-mist-400">{f.body}</p>
-                  </div>
-                ))}
-              </div>
-            </ScrollReveal>
+                  </Card>
+                </ScrollReveal>
+              );
+            })}
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
 
       {/* ── 4 · Overview (editorial) ────────────────────────────── */}
       {overview && Array.isArray(overview) && overview.length > 0 ? (
@@ -436,23 +516,40 @@ export function ProductDetail({
             </ScrollReveal>
 
             <ScrollReveal delay={0.05}>
-              <div className="overflow-hidden rounded-2xl border border-mist-800/60 bg-forest-900/40">
-                <dl className="divide-y divide-mist-800/60">
-                  {product.specs.map((s, i) => (
+              <dl className="border-t border-mist-800/60">
+                {product.specs.map((s, i) => {
+                  const primaryLabel =
+                    locale === "th"
+                      ? (s.label_th ?? s.label_en ?? "")
+                      : (s.label_en ?? s.label_th ?? "");
+                  const secondaryLabel =
+                    locale === "th" ? s.label_en : s.label_th;
+                  const showSecondary =
+                    secondaryLabel && secondaryLabel !== primaryLabel;
+                  return (
                     <div
                       key={i}
-                      className="grid grid-cols-1 gap-1 px-6 py-4 sm:grid-cols-12 sm:gap-6"
+                      className="grid grid-cols-12 items-baseline gap-6 border-b border-mist-800/40 py-4 sm:py-5"
                     >
-                      <dt className="text-body text-mist-400 sm:col-span-5">
-                        {localized(s.label_en, s.label_th)}
+                      <dt className="col-span-7 sm:col-span-8">
+                        <div className="text-body text-mist-300">
+                          {primaryLabel}
+                        </div>
+                        {showSecondary ? (
+                          <div className="text-caption mt-1 text-mist-500">
+                            {secondaryLabel}
+                          </div>
+                        ) : null}
                       </dt>
-                      <dd className="text-body font-mono text-mist-50 sm:col-span-7">
-                        {s.value}
+                      <dd className="col-span-5 text-right sm:col-span-4">
+                        <span className="text-body font-mono font-medium text-mist-50">
+                          {s.value}
+                        </span>
                       </dd>
                     </div>
-                  ))}
-                </dl>
-              </div>
+                  );
+                })}
+              </dl>
             </ScrollReveal>
           </div>
         </section>
@@ -622,7 +719,7 @@ export function ProductDetail({
 
       {/* ── 9 · Pairs well with ─────────────────────────────────── */}
       {product.pairsWellWith && product.pairsWellWith.length > 0 ? (
-        <section className="bg-forest-950">
+        <section id="pairs" className="bg-forest-950">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
             <ScrollReveal className="mb-10 flex flex-wrap items-end justify-between gap-6">
               <div>
@@ -870,59 +967,3 @@ function RelatedProductCard({
   );
 }
 
-function buildFeatureHighlights({
-  compliance,
-  safetyCritical,
-  locale,
-}: {
-  compliance: string[];
-  safetyCritical?: boolean;
-  locale: Locale;
-}) {
-  const items: { icon: typeof IconBolt; title: string; body: string }[] = [];
-  const has = (substr: string) =>
-    compliance.some((c) => c.toLowerCase().includes(substr.toLowerCase()));
-
-  if (safetyCritical || has("rapid") || has("UL3741")) {
-    items.push({
-      icon: IconShieldCheckered,
-      title: locale === "th" ? "ระบบหยุดฉุกเฉินระดับโมดูล" : "Module-level rapid shutdown",
-      body:
-        locale === "th"
-          ? "ตัดวงจร PV ที่แผงภายในไม่กี่วินาที — ป้องกันนักดับเพลิงและตอบสนองมาตรฐานสากล"
-          : "De-energizes PV strings at the panel within seconds — protecting firefighters and satisfying modern codes.",
-    });
-  }
-  if (has("UL94") || has("V0")) {
-    items.push({
-      icon: IconBolt,
-      title: locale === "th" ? "วัสดุหน่วงไฟ UL94-V0" : "Flame retardant UL94-V0",
-      body:
-        locale === "th"
-          ? "วัสดุภายในผ่านมาตรฐานหน่วงไฟระดับสูงสุดของอุตสาหกรรม"
-          : "Housing materials meet the industry's strictest flame-retardant grade.",
-    });
-  }
-  if (has("IP6") || has("NEMA")) {
-    items.push({
-      icon: IconPlug,
-      title: locale === "th" ? "ปกป้องระดับ IP66 / NEMA 4X" : "IP66 / NEMA 4X ingress",
-      body:
-        locale === "th"
-          ? "ปิดผนึกกันฝุ่นและน้ำสำหรับการติดตั้งกลางแจ้ง"
-          : "Sealed against dust and water for unprotected outdoor installation.",
-    });
-  }
-  if (has("IEC") || has("TIS") || compliance.length > 0) {
-    items.push({
-      icon: IconCertificate,
-      title: locale === "th" ? "ผ่านมาตรฐานสากล" : "Internationally certified",
-      body:
-        locale === "th"
-          ? `รับรองโดย ${compliance.slice(0, 3).join(" · ") || "หน่วยงานสากล"} และมาตรฐานวิศวกรรมไฟฟ้าไทย`
-          : `Certified by ${compliance.slice(0, 3).join(" · ") || "international standards bodies"} and compliant with Thai electrical codes.`,
-    });
-  }
-
-  return items.slice(0, 4);
-}

@@ -21,6 +21,10 @@ export function SmoothScroll() {
       smoothWheel: true,
     });
 
+    // Expose the live instance so in-page anchor links can defer to Lenis
+    // for on-brand smooth scrolling instead of fighting it with native scrollTo.
+    (window as unknown as { lenis: Lenis }).lenis = lenis;
+
     let frame = 0;
     const raf = (time: number) => {
       lenis.raf(time);
@@ -31,6 +35,7 @@ export function SmoothScroll() {
     return () => {
       cancelAnimationFrame(frame);
       lenis.destroy();
+      delete (window as unknown as { lenis?: Lenis }).lenis;
     };
   }, []);
 
