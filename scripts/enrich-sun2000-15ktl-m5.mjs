@@ -119,6 +119,48 @@ const overview_th = [
 const overview_en_with_keys = overview_en;
 const overview_th_with_keys = overview_th;
 
+// ─── Highlights (icon-led "Why EPCs spec this product" tiles) ───────────────
+const highlights = [
+  {
+    icon: "shield-check",
+    title_en: "Bankable yield",
+    title_th: "ของแท้พร้อมเอกสารรับประกัน",
+    credential_en: "IEC 62109-1/2 · TIS 2606 · CE",
+    credential_th: "IEC 62109-1/2 · TIS 2606 · CE",
+    body_en:
+      "Authorized Huawei distributor stock with the warranty paperwork your lender will accept.",
+    body_th:
+      "อุปกรณ์ Huawei ของแท้จากตัวแทนจำหน่ายที่ได้รับอนุญาต พร้อมเอกสารรับประกันที่ผู้ปล่อยกู้ยอมรับ",
+  },
+  {
+    icon: "gauge",
+    title_en: "Engineering efficiency",
+    title_th: "ประสิทธิภาพเชิงวิศวกรรม",
+    credential_en: "98.4% peak · 98.2% Euro · 2 MPPTs",
+    credential_th: "98.4% สูงสุด · 98.2% Euro · 2 MPPT",
+    body_en:
+      "Independent MPP trackers handle asymmetric or partially shaded arrays without yield loss.",
+    body_th:
+      "MPP tracker อิสระ 2 ชุด จัดการกับแผงที่ติดตั้งไม่สมมาตรหรือมีเงาบังบางส่วนได้โดยไม่สูญเสียพลังงาน",
+  },
+  {
+    icon: "plug-connected",
+    title_en: "Built for Thai grids",
+    title_th: "ออกแบบสำหรับโครงข่ายไทย",
+    credential_en: "TIS 2606-2557 · PEA / MEA · 400 V 3φ",
+    credential_th: "TIS 2606-2557 · PEA / MEA · 400 V 3 เฟส",
+    body_en:
+      "Sized for the PEA and MEA interconnection rules our partners file every week.",
+    body_th:
+      "ขนาดเหมาะกับกฎการเชื่อมต่อของ PEA และ MEA ที่พาร์ทเนอร์เรายื่นขออนุญาตทุกสัปดาห์",
+  },
+];
+
+const highlightsWithKeys = highlights.map((h) => ({
+  _key: randomUUID().slice(0, 12),
+  ...h,
+}));
+
 // ─── Pairs well with ────────────────────────────────────────────────────────
 const pairsWellWith = [
   { _key: "pair-dtsu666", _type: "reference", _ref: "product-huawei-dtsu666" },
@@ -141,6 +183,7 @@ async function enrich() {
       compliance,
       overview_en: overview_en_with_keys,
       overview_th: overview_th_with_keys,
+      highlights: highlightsWithKeys,
       pairsWellWith,
     })
     .commit();
@@ -149,6 +192,7 @@ async function enrich() {
   console.log("  - 17 spec rows");
   console.log("  - 7 compliance entries");
   console.log("  - EN + TH overview (3 sections each)");
+  console.log(`  - ${highlights.length} highlight cards (icon-led)`);
   console.log("  - 4 pairsWellWith references\n");
   console.log("Reload http://localhost:3000/en/products/inverters/huawei/huawei-sun2000-15ktl-m5");
 }

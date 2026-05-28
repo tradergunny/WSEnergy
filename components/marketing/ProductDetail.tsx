@@ -3,13 +3,27 @@ import { PortableText } from "@portabletext/react";
 import {
   IconArrowRight,
   IconArrowUpRight,
+  IconBattery,
   IconBolt,
-  IconChartLine,
+  IconBoltOff,
+  IconCertificate,
   IconChevronRight,
+  IconClockHour3,
+  IconCpu,
+  IconCube,
   IconDownload,
+  IconGauge,
   IconMapPin,
+  IconPlugConnected,
+  IconShieldBolt,
+  IconShieldCheck,
   IconShieldCheckered,
   IconSolarPanel,
+  IconSun,
+  IconThermometer,
+  IconTools,
+  IconWifi,
+  IconWorld,
 } from "@tabler/icons-react";
 import { urlFor } from "@/lib/sanity/client";
 import { Button } from "@/components/ui/Button";
@@ -40,6 +54,25 @@ const SPEC_GROUP_LABELS: Record<SpecGroupId, { en: string; th: string }> = {
   compliance: { en: "Compliance", th: "มาตรฐาน" },
 };
 
+const HIGHLIGHT_ICONS: Record<string, typeof IconShieldCheck> = {
+  "shield-check": IconShieldCheck,
+  "bolt-off": IconBoltOff,
+  "plug-connected": IconPlugConnected,
+  certificate: IconCertificate,
+  gauge: IconGauge,
+  bolt: IconBolt,
+  sun: IconSun,
+  battery: IconBattery,
+  tools: IconTools,
+  "shield-bolt": IconShieldBolt,
+  thermometer: IconThermometer,
+  world: IconWorld,
+  clock: IconClockHour3,
+  cube: IconCube,
+  cpu: IconCpu,
+  wifi: IconWifi,
+};
+
 /**
  * Split "22,500 W" → { value: "22,500", unit: "W" } so the unit can render
  * dimmer beside the number. Leaves strings without a recognisable trailing
@@ -49,6 +82,41 @@ function splitValueUnit(raw: string): { value: string; unit?: string } {
   const m = raw.match(/^(.+?)\s+([%°A-Za-z][%°A-Za-z/]{0,4})\s*$/);
   if (m) return { value: m[1], unit: m[2] };
   return { value: raw };
+}
+
+type PTBlock = { _type?: string; style?: string; children?: { text?: string }[] };
+
+function extractHeadingText(block: unknown): string {
+  if (!block) return "";
+  const b = block as PTBlock;
+  if (b._type !== "block") return "";
+  return (b.children ?? []).map((c) => c.text ?? "").join("");
+}
+
+/**
+ * Split a Portable Text array into editorial sections at every heading block
+ * (h1–h6). Paragraphs before the first heading become an unnumbered intro
+ * section with `heading: null`.
+ */
+function segmentOverviewByHeading(
+  blocks: unknown[],
+): { heading: unknown | null; body: unknown[] }[] {
+  const sections: { heading: unknown | null; body: unknown[] }[] = [];
+  let current: { heading: unknown | null; body: unknown[] } | null = null;
+  for (const block of blocks) {
+    const b = block as PTBlock;
+    const isHeading =
+      b._type === "block" && typeof b.style === "string" && /^h[1-6]$/.test(b.style);
+    if (isHeading) {
+      if (current) sections.push(current);
+      current = { heading: block, body: [] };
+    } else {
+      if (!current) current = { heading: null, body: [] };
+      current.body.push(block);
+    }
+  }
+  if (current) sections.push(current);
+  return sections;
 }
 
 function toHeaderProps(
@@ -129,7 +197,12 @@ function toHeaderProps(
 }
 
 type SanityImageRef = Parameters<typeof urlFor>[0] | undefined | null;
-type DocRef = { title?: string; url?: string } | null | undefined;
+type DocRef = {
+  title_en?: string;
+  title_th?: string;
+  fileSize?: string;
+  url?: string;
+} | null | undefined;
 
 export type ProductDetailData = {
   _id: string;
@@ -143,6 +216,15 @@ export type ProductDetailData = {
   shortDescription_th?: string;
   overview_en?: unknown[];
   overview_th?: unknown[];
+  highlights?: {
+    icon?: string;
+    title_en?: string;
+    title_th?: string;
+    credential_en?: string;
+    credential_th?: string;
+    body_en?: string;
+    body_th?: string;
+  }[];
   gallery?: SanityImageRef[];
   specs?: {
     label_en?: string;
@@ -249,9 +331,6 @@ export function ProductDetail({
     highlights: {
       eyebrow: string;
       heading: string;
-      bankable: { title: string; subtitle: string };
-      safety: { title: string; subtitle: string };
-      thaiGrid: { title: string; subtitle: string };
     };
   };
 }) {
@@ -265,17 +344,7 @@ export function ProductDetail({
       ? (product.overview_th ?? product.overview_en)
       : (product.overview_en ?? product.overview_th);
 
-  const gallery = product.gallery ?? [];
-
-  const featureCards: {
-    icon: typeof IconBolt;
-    title: string;
-    subtitle: string;
-  }[] = [
-    { icon: IconChartLine, ...t.highlights.bankable },
-    { icon: IconShieldCheckered, ...t.highlights.safety },
-    { icon: IconBolt, ...t.highlights.thaiGrid },
-  ];
+  const highlights = product.highlights ?? [];
 
   return (
     <>
@@ -318,73 +387,12 @@ export function ProductDetail({
       {/* ── 2 · Engineering-ledger product header ───────────────── */}
       <ProductDetailHeader {...toHeaderProps(product, locale)} />
 
-      {/* ── 3 · Feature highlight cards (image-led tall tiles) ──── */}
-      <section className="bg-forest-950">
-        <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
-          <ScrollReveal className="mb-10 max-w-3xl">
-            <MonoLabel tone="gold">{t.highlights.eyebrow}</MonoLabel>
-            <h2
-              className="mt-3 font-medium tracking-tight text-mist-50"
-              style={{
-                fontSize: "clamp(24px, 3.4vw, 36px)",
-                lineHeight: 1.15,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {t.highlights.heading}
-            </h2>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {featureCards.map((card, i) => {
-              const Icon = card.icon;
-              const cardImage = gallery[i] ?? gallery[0];
-              return (
-                <ScrollReveal key={card.title} delay={i * 0.05}>
-                  <Card surface="forest">
-                    <div className="relative aspect-[4/5]">
-                      {cardImage ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={urlFor(cardImage).width(800).url()}
-                          alt=""
-                          className="absolute inset-0 h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-gold-500">
-                          <Icon size={64} stroke={1.25} />
-                        </div>
-                      )}
-                      {/* Bottom-fade gradient so the title stays legible on photos */}
-                      <div
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-forest-950/0 via-forest-950/10 to-forest-950/85"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 p-6">
-                        <h3 className="text-h3 font-medium tracking-tight text-mist-50">
-                          {card.title}
-                        </h3>
-                        <p className="text-body mt-1.5 max-w-[28ch] text-mist-400">
-                          {card.subtitle}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                </ScrollReveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4 · Overview (editorial) ────────────────────────────── */}
-      {overview && Array.isArray(overview) && overview.length > 0 ? (
-        <section id="overview" className="bg-forest-900">
+      {/* ── 3 · Feature highlight cards (icon-led, Sanity-driven) ── */}
+      {highlights.length > 0 ? (
+        <section className="bg-forest-950">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
             <ScrollReveal className="mb-10 max-w-3xl">
-              <MonoLabel tone="mist">
-                {locale === "th" ? "ภาพรวม" : "Overview"}
-              </MonoLabel>
+              <MonoLabel tone="gold">{t.highlights.eyebrow}</MonoLabel>
               <h2
                 className="mt-3 font-medium tracking-tight text-mist-50"
                 style={{
@@ -393,18 +401,51 @@ export function ProductDetail({
                   letterSpacing: "-0.01em",
                 }}
               >
-                {t.overview.heading}
+                {t.highlights.heading}
               </h2>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.05}>
-              <div className="text-body-lg max-w-[65ch] space-y-5 text-mist-200">
-                <PortableText value={overview as never} />
-              </div>
-            </ScrollReveal>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {highlights.map((h, i) => {
+                const Icon =
+                  HIGHLIGHT_ICONS[h.icon ?? "shield-check"] ?? IconShieldCheck;
+                const title = localized(h.title_en, h.title_th);
+                const credential = localized(h.credential_en, h.credential_th);
+                const body = localized(h.body_en, h.body_th);
+                return (
+                  <ScrollReveal key={i} delay={i * 0.05}>
+                    <Card surface="forest">
+                      <div className="flex h-full flex-col p-7 md:p-8">
+                        <div className="mb-5 text-gold-500">
+                          <Icon size={36} stroke={1.5} aria-hidden />
+                        </div>
+                        <h3 className="text-h3 font-medium tracking-tight text-mist-50">
+                          {title}
+                        </h3>
+                        {credential ? (
+                          <p className="mt-1.5 font-mono text-caption uppercase tracking-wider text-gold-500/85">
+                            {credential}
+                          </p>
+                        ) : null}
+                        {body ? (
+                          <p className="text-body mt-3 text-mist-300">{body}</p>
+                        ) : null}
+                      </div>
+                    </Card>
+                  </ScrollReveal>
+                );
+              })}
+            </div>
           </div>
         </section>
       ) : null}
+
+      {/* ── 4 · Overview (editorial two-column with section numbering) ─ */}
+      <ProductOverview
+        overview={overview}
+        locale={locale}
+        heading={t.overview.heading}
+      />
 
       {/* ── 8 · Authorized distribution (brand trust) ───────────── */}
       {product.brand?.authorizedDistributor &&
@@ -459,41 +500,14 @@ export function ProductDetail({
         </section>
       ) : null}
 
-      {/* ── 9 · Pairs well with ─────────────────────────────────── */}
-      {product.pairsWellWith && product.pairsWellWith.length > 0 ? (
-        <section id="pairs" className="bg-forest-950">
-          <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
-            <ScrollReveal className="mb-10 flex flex-wrap items-end justify-between gap-6">
-              <div>
-                <MonoLabel tone="mist">
-                  {locale === "th" ? "ใช้คู่กันได้ดี" : "Pairs well with"}
-                </MonoLabel>
-                <h2
-                  className="mt-3 max-w-2xl font-medium tracking-tight text-mist-50"
-                  style={{
-                    fontSize: "clamp(24px, 3.4vw, 36px)",
-                    lineHeight: 1.15,
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  {t.pairsWellWith.heading}
-                </h2>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {product.pairsWellWith.map((p, i) => (
-                <RelatedProductCard
-                  key={p._id}
-                  product={p}
-                  locale={locale}
-                  delay={i * 0.05}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
+      {/* ── 9 · Documents (replaces pairs well with) ────────────── */}
+      <ProductDocuments
+        datasheet={product.datasheet}
+        installManual={product.installManual}
+        wiringDiagram={product.wiringDiagram}
+        locale={locale}
+        labels={t.documents}
+      />
 
       {/* ── 10 · Projects using this product ───────────────────── */}
       {projects.length > 0 ? (
@@ -648,6 +662,174 @@ export function ProductDetail({
         </div>
       </section>
     </>
+  );
+}
+
+function ProductOverview({
+  overview,
+  locale,
+  heading,
+}: {
+  overview: unknown[] | undefined;
+  locale: Locale;
+  heading: string;
+}) {
+  if (!overview || !Array.isArray(overview) || overview.length === 0) return null;
+
+  const sections = segmentOverviewByHeading(overview);
+  const hasHeadings = sections.some((s) => s.heading !== null);
+
+  return (
+    <section id="overview" className="bg-forest-900">
+      <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
+        <ScrollReveal className="mb-12 max-w-3xl md:mb-16">
+          <MonoLabel tone="mist">
+            {locale === "th" ? "ภาพรวม" : "Overview"}
+          </MonoLabel>
+          <h2
+            className="mt-3 font-medium tracking-tight text-mist-50"
+            style={{
+              fontSize: "clamp(24px, 3.4vw, 36px)",
+              lineHeight: 1.15,
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {heading}
+          </h2>
+        </ScrollReveal>
+
+        {hasHeadings ? (
+          <div className="space-y-14 md:space-y-20">
+            {sections.map((section, i) => {
+              const headingText = extractHeadingText(section.heading);
+              return (
+                <ScrollReveal key={i} delay={0.05}>
+                  <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+                    <div className="lg:col-span-5">
+                      <div className="lg:sticky lg:top-24">
+                        <MonoLabel tone="gold">
+                          {String(i + 1).padStart(2, "0")}
+                        </MonoLabel>
+                        {headingText ? (
+                          <h3
+                            className="mt-3 font-medium tracking-tight text-mist-50"
+                            style={{
+                              fontSize: "clamp(20px, 2.2vw, 26px)",
+                              lineHeight: 1.2,
+                              letterSpacing: "-0.005em",
+                            }}
+                          >
+                            {headingText}
+                          </h3>
+                        ) : null}
+                      </div>
+                    </div>
+                    <div className="lg:col-span-7">
+                      <div className="text-body-lg space-y-5 text-mist-200">
+                        <PortableText value={section.body as never} />
+                      </div>
+                    </div>
+                  </div>
+                </ScrollReveal>
+              );
+            })}
+          </div>
+        ) : (
+          <ScrollReveal delay={0.05}>
+            <div className="text-body-lg max-w-[65ch] space-y-5 text-mist-200">
+              <PortableText value={overview as never} />
+            </div>
+          </ScrollReveal>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function ProductDocuments({
+  datasheet,
+  installManual,
+  wiringDiagram,
+  locale,
+  labels,
+}: {
+  datasheet: DocRef;
+  installManual: DocRef;
+  wiringDiagram: DocRef;
+  locale: Locale;
+  labels: {
+    heading: string;
+    datasheet: string;
+    wiringDiagram: string;
+    installManual: string;
+  };
+}) {
+  const rows: { doc: DocRef; label: string }[] = [
+    { doc: datasheet, label: labels.datasheet },
+    { doc: installManual, label: labels.installManual },
+    { doc: wiringDiagram, label: labels.wiringDiagram },
+  ].filter((r) => r.doc?.url) as { doc: DocRef; label: string }[];
+
+  if (rows.length === 0) return null;
+
+  return (
+    <section id="documents" className="bg-forest-950">
+      <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
+        <ScrollReveal className="mb-10 max-w-3xl">
+          <MonoLabel tone="mist">
+            {locale === "th" ? "เอกสาร" : "Documents"}
+          </MonoLabel>
+          <h2
+            className="mt-3 font-medium tracking-tight text-mist-50"
+            style={{
+              fontSize: "clamp(24px, 3.4vw, 36px)",
+              lineHeight: 1.15,
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {labels.heading}
+          </h2>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.05}>
+          <Card surface="bone" className="max-w-3xl">
+            <ul className="divide-y divide-forest-900/10">
+              {rows.map(({ doc, label }) => {
+                const subtitle =
+                  locale === "th"
+                    ? (doc?.title_th ?? doc?.title_en)
+                    : (doc?.title_en ?? doc?.title_th);
+                return (
+                  <li key={label}>
+                    <a
+                      href={doc!.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/row flex items-center gap-4 px-6 py-5 transition-colors hover:bg-forest-900/[0.03]"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="text-body font-medium text-forest-900">
+                          {label}
+                        </div>
+                        {subtitle && subtitle !== label ? (
+                          <div className="mt-0.5 truncate font-mono text-caption text-forest-900/55">
+                            {subtitle}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="flex items-center gap-2 whitespace-nowrap font-mono text-caption text-forest-900/70 transition-colors group-hover/row:text-gold-600">
+                        <IconDownload size={14} stroke={1.75} />
+                        {doc?.fileSize ?? "PDF"}
+                      </div>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </Card>
+        </ScrollReveal>
+      </div>
+    </section>
   );
 }
 

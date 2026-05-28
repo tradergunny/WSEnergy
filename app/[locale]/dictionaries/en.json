@@ -232,19 +232,7 @@
     },
     "highlights": {
       "eyebrow": "Highlights",
-      "heading": "Why EPCs in Thailand spec this product.",
-      "bankable": {
-        "title": "Bankable yield",
-        "subtitle": "Authorized stock with the warranty paperwork your lender will accept."
-      },
-      "safety": {
-        "title": "Module-level safety",
-        "subtitle": "Rapid Shutdown ready — meets NEC §690.12 and IEC 60947-3."
-      },
-      "thaiGrid": {
-        "title": "Built for Thai grids",
-        "subtitle": "TIS-certified and sized for PEA / MEA interconnection rules."
-      }
+      "heading": "Why EPCs in Thailand spec this product."
     }
   },
   "safety": {
