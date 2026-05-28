@@ -94,9 +94,33 @@ export const product = defineType({
             { name: "label_en", title: "Label (EN)", type: "string" },
             { name: "label_th", title: "Label (TH)", type: "string" },
             { name: "value", title: "Value (mono)", type: "string" },
+            {
+              name: "group",
+              title: "Group",
+              type: "string",
+              description:
+                "Which tab this row appears in on the product header.",
+              options: {
+                list: [
+                  { title: "Electrical", value: "electrical" },
+                  { title: "Mechanical", value: "mechanical" },
+                  { title: "Environment", value: "environment" },
+                  { title: "Compliance", value: "compliance" },
+                ],
+                layout: "radio",
+                direction: "horizontal",
+              },
+              initialValue: "electrical",
+            },
           ],
           preview: {
-            select: { title: "label_en", subtitle: "value" },
+            select: { label: "label_en", value: "value", group: "group" },
+            prepare({ label, value, group }) {
+              return {
+                title: label,
+                subtitle: `${group ? `[${group}] ` : ""}${value ?? ""}`,
+              };
+            },
           },
         },
       ],
