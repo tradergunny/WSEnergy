@@ -40,24 +40,25 @@ const PRODUCT_ID = "product-huawei-sun2000-15ktl-m5";
 
 // ─── Specs ──────────────────────────────────────────────────────────────────
 // Real-world public spec-sheet values for SUN2000-15KTL-M5.
+// `group` controls which tab the row appears under in the product header.
 const specs = [
-  { label_en: "Max DC input power",      label_th: "กำลังไฟฟ้าขาเข้าสูงสุด",   value: "22,500 W" },
-  { label_en: "Max DC input voltage",    label_th: "แรงดันไฟฟ้าขาเข้าสูงสุด", value: "1,080 V" },
-  { label_en: "MPP voltage range",       label_th: "ช่วงแรงดัน MPP",          value: "200 – 1,000 V" },
-  { label_en: "Number of MPP trackers",  label_th: "จำนวน MPPT",              value: "2" },
-  { label_en: "Max input current / MPPT",label_th: "กระแสไฟฟ้าสูงสุด / MPPT",  value: "26 A" },
-  { label_en: "Rated AC output power",   label_th: "กำลังไฟฟ้าขาออก",         value: "15,000 W" },
-  { label_en: "Max apparent power",      label_th: "กำลังไฟฟ้าปรากฏสูงสุด",   value: "16,500 VA" },
-  { label_en: "Rated AC voltage",        label_th: "แรงดันไฟฟ้า AC",          value: "400 V, 3-phase" },
-  { label_en: "AC grid frequency",       label_th: "ความถี่กริด",             value: "50 / 60 Hz" },
-  { label_en: "Max efficiency",          label_th: "ประสิทธิภาพสูงสุด",       value: "98.4 %" },
-  { label_en: "European efficiency",     label_th: "ประสิทธิภาพ Euro",        value: "98.2 %" },
-  { label_en: "Ingress protection",      label_th: "ระดับการป้องกัน",         value: "IP66" },
-  { label_en: "Operating temperature",   label_th: "อุณหภูมิใช้งาน",          value: "-25 °C – +60 °C" },
-  { label_en: "Cooling",                 label_th: "ระบบระบายความร้อน",       value: "Natural convection" },
-  { label_en: "Communication",           label_th: "การสื่อสาร",              value: "RS485, WLAN-FE, 4G (optional)" },
-  { label_en: "Dimensions (W×H×D)",      label_th: "ขนาด (กว้าง×สูง×ลึก)",   value: "525 × 470 × 166 mm" },
-  { label_en: "Weight",                  label_th: "น้ำหนัก",                 value: "17 kg" },
+  { group: "electrical",  label_en: "Max DC input power",      label_th: "กำลังไฟฟ้าขาเข้าสูงสุด",   value: "22,500 W" },
+  { group: "electrical",  label_en: "Max DC input voltage",    label_th: "แรงดันไฟฟ้าขาเข้าสูงสุด", value: "1,080 V" },
+  { group: "electrical",  label_en: "MPP voltage range",       label_th: "ช่วงแรงดัน MPP",          value: "200 – 1,000 V" },
+  { group: "electrical",  label_en: "Number of MPP trackers",  label_th: "จำนวน MPPT",              value: "2" },
+  { group: "electrical",  label_en: "Max input current / MPPT",label_th: "กระแสไฟฟ้าสูงสุด / MPPT",  value: "26 A" },
+  { group: "electrical",  label_en: "Rated AC output power",   label_th: "กำลังไฟฟ้าขาออก",         value: "15,000 W" },
+  { group: "electrical",  label_en: "Max apparent power",      label_th: "กำลังไฟฟ้าปรากฏสูงสุด",   value: "16,500 VA" },
+  { group: "electrical",  label_en: "Rated AC voltage",        label_th: "แรงดันไฟฟ้า AC",          value: "400 V, 3-phase" },
+  { group: "electrical",  label_en: "AC grid frequency",       label_th: "ความถี่กริด",             value: "50 / 60 Hz" },
+  { group: "electrical",  label_en: "Max efficiency",          label_th: "ประสิทธิภาพสูงสุด",       value: "98.4 %" },
+  { group: "electrical",  label_en: "European efficiency",     label_th: "ประสิทธิภาพ Euro",        value: "98.2 %" },
+  { group: "environment", label_en: "Ingress protection",      label_th: "ระดับการป้องกัน",         value: "IP66" },
+  { group: "environment", label_en: "Operating temperature",   label_th: "อุณหภูมิใช้งาน",          value: "-25 °C – +60 °C" },
+  { group: "mechanical",  label_en: "Cooling",                 label_th: "ระบบระบายความร้อน",       value: "Natural convection" },
+  { group: "environment", label_en: "Communication",           label_th: "การสื่อสาร",              value: "RS485, WLAN-FE, 4G (optional)" },
+  { group: "mechanical",  label_en: "Dimensions (W×H×D)",      label_th: "ขนาด (กว้าง×สูง×ลึก)",   value: "525 × 470 × 166 mm" },
+  { group: "mechanical",  label_en: "Weight",                  label_th: "น้ำหนัก",                 value: "17 kg" },
 ];
 
 // Add _key for array items (Sanity requires unique _key on every array entry).

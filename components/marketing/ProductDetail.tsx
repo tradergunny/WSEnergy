@@ -4,26 +4,129 @@ import {
   IconArrowRight,
   IconArrowUpRight,
   IconBolt,
-  IconCertificate,
   IconChartLine,
   IconChevronRight,
   IconDownload,
-  IconFileText,
   IconMapPin,
-  IconPlug,
   IconShieldCheckered,
   IconSolarPanel,
-  IconTools,
 } from "@tabler/icons-react";
 import { urlFor } from "@/lib/sanity/client";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { ProductSectionNav } from "@/components/marketing/ProductSectionNav";
+import {
+  ProductDetailHeader,
+  type ProductDetailHeaderProps,
+  type SpecGroup,
+  type SpecGroupId,
+} from "@/components/product/ProductDetailHeader";
 import { productHref } from "@/lib/product-url";
 import { withLocale } from "@/lib/navigation";
 import type { Locale } from "@/lib/i18n/config";
+
+const SPEC_GROUP_ORDER: SpecGroupId[] = [
+  "electrical",
+  "mechanical",
+  "environment",
+  "compliance",
+];
+
+const SPEC_GROUP_LABELS: Record<SpecGroupId, { en: string; th: string }> = {
+  electrical: { en: "Electrical", th: "ไฟฟ้า" },
+  mechanical: { en: "Mechanical", th: "กลศาสตร์" },
+  environment: { en: "Environment", th: "สิ่งแวดล้อม" },
+  compliance: { en: "Compliance", th: "มาตรฐาน" },
+};
+
+/**
+ * Split "22,500 W" → { value: "22,500", unit: "W" } so the unit can render
+ * dimmer beside the number. Leaves strings without a recognisable trailing
+ * unit ("Natural convection", "IP66") untouched.
+ */
+function splitValueUnit(raw: string): { value: string; unit?: string } {
+  const m = raw.match(/^(.+?)\s+([%°A-Za-z][%°A-Za-z/]{0,4})\s*$/);
+  if (m) return { value: m[1], unit: m[2] };
+  return { value: raw };
+}
+
+function toHeaderProps(
+  product: ProductDetailData,
+  locale: Locale,
+): ProductDetailHeaderProps {
+  const specs = product.specs ?? [];
+
+  // Bucket every spec into its declared group (default: electrical).
+  const buckets = new Map<SpecGroupId, SpecGroup["rows"]>();
+  for (const s of specs) {
+    const groupId: SpecGroupId =
+      (s.group as SpecGroupId | undefined) ?? "electrical";
+    const split = splitValueUnit(s.value ?? "");
+    const rows = buckets.get(groupId) ?? [];
+    rows.push({
+      label: { en: s.label_en ?? "", th: s.label_th },
+      value: split.value,
+      unit: split.unit,
+    });
+    buckets.set(groupId, rows);
+  }
+
+  // Render tabs in canonical order, only for groups that have rows.
+  const specGroups: SpecGroup[] = SPEC_GROUP_ORDER.filter((g) =>
+    buckets.has(g),
+  ).map((g) => ({
+    id: g,
+    label: SPEC_GROUP_LABELS[g],
+    rows: buckets.get(g)!,
+  }));
+
+  // First 4 spec rows become the hero stats. Editors control which by
+  // ordering the specs array in Studio.
+  const stats = specs.slice(0, 4).map((s) => {
+    const split = splitValueUnit(s.value ?? "");
+    return {
+      label: { en: s.label_en ?? "", th: s.label_th },
+      value: split.value,
+      unit: split.unit,
+    };
+  });
+
+  const summaryEn = product.shortDescription_en ?? "";
+  const summaryTh = product.shortDescription_th;
+
+  const classificationEn = product.category?.title_en ?? "";
+  const classificationTh = product.category?.title_th;
+
+  return {
+    locale,
+    mpn: product.sku ?? product.title ?? "",
+    manufacturer: product.brand?.name ?? "",
+    classification: { en: classificationEn, th: classificationTh },
+    authorized: Boolean(product.authorized),
+    authorizedNote: product.brand?.authorizedDistributor
+      ? {
+          en: `${product.brand.name ?? ""} authorized partner`.trim(),
+          th: `ตัวแทนจำหน่าย ${product.brand.name ?? ""}`.trim(),
+        }
+      : undefined,
+    inStock: true,
+    stockLocation: "TH",
+    title: product.title ?? product.sku ?? "",
+    summary: { en: summaryEn, th: summaryTh },
+    imageSrc: product.gallery?.[0]
+      ? urlFor(product.gallery[0]).width(900).url()
+      : undefined,
+    imageAlt: product.title ?? product.sku,
+    stats,
+    specGroups,
+    certifications: product.compliance ?? [],
+    datasheetHref: product.datasheet?.url,
+    datasheetMeta: "PDF",
+    quoteHref: withLocale(locale, "/quote"),
+    contactHref: withLocale(locale, "/contact"),
+  };
+}
 
 type SanityImageRef = Parameters<typeof urlFor>[0] | undefined | null;
 type DocRef = { title?: string; url?: string } | null | undefined;
@@ -41,7 +144,12 @@ export type ProductDetailData = {
   overview_en?: unknown[];
   overview_th?: unknown[];
   gallery?: SanityImageRef[];
-  specs?: { label_en?: string; label_th?: string; value?: string }[];
+  specs?: {
+    label_en?: string;
+    label_th?: string;
+    value?: string;
+    group?: "electrical" | "mechanical" | "environment" | "compliance";
+  }[];
   compliance?: string[];
   datasheet?: DocRef;
   wiringDiagram?: DocRef;
@@ -99,12 +207,6 @@ export type BreadcrumbCrumb = {
   href?: string;
 };
 
-const docTypeIcon = {
-  datasheet: IconFileText,
-  diagram: IconPlug,
-  manual: IconTools,
-} as const;
-
 export function ProductDetail({
   product,
   related,
@@ -156,7 +258,6 @@ export function ProductDetail({
   const localized = (en?: string, th?: string) =>
     locale === "th" ? (th ?? en ?? "") : (en ?? th ?? "");
 
-  const displayTitle = product.title ?? product.sku ?? "";
   const quoteHref = withLocale(locale, "/quote");
 
   const overview =
@@ -165,35 +266,7 @@ export function ProductDetail({
       : (product.overview_en ?? product.overview_th);
 
   const gallery = product.gallery ?? [];
-  const heroImage = gallery[0];
 
-  const docs = [
-    product.datasheet && {
-      type: "datasheet" as const,
-      title: product.datasheet.title ?? t.documents.datasheet,
-      url: product.datasheet.url,
-    },
-    product.wiringDiagram && {
-      type: "diagram" as const,
-      title: product.wiringDiagram.title ?? t.documents.wiringDiagram,
-      url: product.wiringDiagram.url,
-    },
-    product.installManual && {
-      type: "manual" as const,
-      title: product.installManual.title ?? t.documents.installManual,
-      url: product.installManual.url,
-    },
-  ].filter(Boolean) as {
-    type: "datasheet" | "diagram" | "manual";
-    title: string;
-    url?: string;
-  }[];
-
-  const compliance = product.compliance ?? [];
-
-  // Editorial benefit cards rendered directly under the hero. Static copy
-  // lives in the dictionary; when product.gallery images land, each card's
-  // icon swaps for an image automatically.
   const featureCards: {
     icon: typeof IconBolt;
     title: string;
@@ -203,11 +276,6 @@ export function ProductDetail({
     { icon: IconShieldCheckered, ...t.highlights.safety },
     { icon: IconBolt, ...t.highlights.thaiGrid },
   ];
-
-  const shortDesc = localized(
-    product.shortDescription_en,
-    product.shortDescription_th,
-  );
 
   return (
     <>
@@ -247,165 +315,8 @@ export function ProductDetail({
         </div>
       </nav>
 
-      {/* ── 1b · Sticky section sub-nav (scroll-spy) ────────────── */}
-      <ProductSectionNav
-        locale={locale}
-        labels={t.nav}
-        sections={[
-          {
-            key: "overview",
-            available: Array.isArray(overview) && overview.length > 0,
-          },
-          {
-            key: "specs",
-            available: (product.specs?.length ?? 0) > 0,
-          },
-          {
-            key: "compliance",
-            available: compliance.length > 0,
-          },
-          {
-            key: "documents",
-            available: docs.length > 0,
-          },
-          {
-            key: "pairs",
-            available: (product.pairsWellWith?.length ?? 0) > 0,
-          },
-        ]}
-      />
-
-      {/* ── 2 · Hero (warm-bone with product image) ─────────────── */}
-      <section className="bg-forest-900">
-        <div className="mx-auto max-w-6xl px-6 py-12 md:py-16 lg:py-20">
-          <ScrollReveal>
-            <div className="overflow-hidden rounded-2xl bg-card-50 text-card-ink">
-              <div className="grid grid-cols-1 lg:grid-cols-12">
-                {/* Image panel */}
-                <div className="relative bg-card-100 lg:col-span-5">
-                  <div className="bg-grid-forest absolute inset-0 opacity-50" />
-                  <div className="relative flex aspect-square items-center justify-center p-10 lg:aspect-auto lg:h-full">
-                    {heroImage ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={urlFor(heroImage).width(900).url()}
-                        alt={displayTitle}
-                        className="max-h-[420px] w-auto object-contain"
-                      />
-                    ) : (
-                      <div className="flex h-44 w-44 items-center justify-center rounded-full bg-forest-900 text-gold-500">
-                        <IconShieldCheckered size={72} stroke={1.25} />
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Identity panel */}
-                <div className="flex flex-col justify-between gap-8 p-8 md:p-12 lg:col-span-7">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {product.brand?.name ? (
-                        <span className="text-caption inline-flex items-center gap-1.5 rounded-full bg-forest-900/8 px-3 py-1 font-mono uppercase tracking-wider text-forest-900/70">
-                          {product.brand.name}
-                        </span>
-                      ) : null}
-                      {product.exclusive ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-forest-900 px-3 py-1 text-caption font-medium text-gold-500">
-                          ★ {dict.common.exclusiveBadge}
-                        </span>
-                      ) : null}
-                      {product.authorized ? (
-                        <span className="text-caption inline-flex items-center gap-1.5 rounded-full bg-gold-500/15 px-3 py-1 font-medium text-forest-900">
-                          ★ {dict.common.authorizedBadge}
-                        </span>
-                      ) : null}
-                      {product.safetyCritical ? (
-                        <span className="text-caption inline-flex items-center gap-1.5 rounded-full bg-safety-600 px-3 py-1 font-medium text-white">
-                          {dict.common.safetyBadge}
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <h1
-                      className="mt-6 font-medium tracking-tight"
-                      style={{
-                        fontSize: "clamp(28px, 4vw, 44px)",
-                        lineHeight: 1.05,
-                        letterSpacing: "-0.015em",
-                      }}
-                    >
-                      {displayTitle}
-                    </h1>
-                    {product.sku ? (
-                      <p className="mt-2 text-caption font-mono uppercase tracking-wider text-forest-900/60">
-                        {product.sku}
-                      </p>
-                    ) : null}
-                    {shortDesc ? (
-                      <p className="text-body-lg mt-5 max-w-lg text-forest-900/75">
-                        {shortDesc}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  {/* Key-spec tiles — big mono numerals beside the title */}
-                  {product.specs && product.specs.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-5 border-t border-forest-900/10 pt-6 sm:grid-cols-4 sm:gap-x-5">
-                      {product.specs.slice(0, 4).map((s, i) => (
-                        <div key={i}>
-                          <div className="text-h2 font-mono font-medium leading-tight tracking-tight text-forest-900">
-                            {s.value}
-                          </div>
-                          <div className="mt-1.5 text-caption text-forest-900/60">
-                            {localized(s.label_en, s.label_th)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : null}
-
-                  <div>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <Button variant="on-card" size="md" href={quoteHref}>
-                        {dict.actions.requestQuote}
-                        <IconArrowRight size={14} stroke={2} />
-                      </Button>
-                      {product.datasheet?.url ? (
-                        <a
-                          href={product.datasheet.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-body group/btn inline-flex items-center gap-2 rounded-full border border-forest-900/15 px-[22px] py-[12px] font-medium text-forest-900 transition-colors hover:bg-forest-900/5"
-                        >
-                          <IconDownload size={14} stroke={2} />
-                          {locale === "th" ? "ดาวน์โหลดดาต้าชีต" : "Download datasheet"}
-                        </a>
-                      ) : (
-                        <Link
-                          href={quoteHref}
-                          className="text-body group/btn inline-flex items-center gap-1.5 font-medium text-forest-900 hover:text-forest-700"
-                        >
-                          {dict.actions.talkToEngineer}
-                          <IconArrowUpRight size={14} stroke={2} />
-                        </Link>
-                      )}
-                    </div>
-
-                    {/* At-a-glance compliance strip — specs now live in the tile grid above */}
-                    {compliance.length > 0 ? (
-                      <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-forest-900/10 pt-5 text-caption font-mono uppercase tracking-wider text-forest-900/65">
-                        {compliance.slice(0, 4).map((c) => (
-                          <span key={c}>· {c}</span>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
+      {/* ── 2 · Engineering-ledger product header ───────────────── */}
+      <ProductDetailHeader {...toHeaderProps(product, locale)} />
 
       {/* ── 3 · Feature highlight cards (image-led tall tiles) ──── */}
       <section className="bg-forest-950">
@@ -491,175 +402,6 @@ export function ProductDetail({
                 <PortableText value={overview as never} />
               </div>
             </ScrollReveal>
-          </div>
-        </section>
-      ) : null}
-
-      {/* ── 5 · Specs (datasheet-style table) ───────────────────── */}
-      {product.specs && product.specs.length > 0 ? (
-        <section id="specs" className="bg-forest-950">
-          <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
-            <ScrollReveal className="mb-10 max-w-3xl">
-              <MonoLabel tone="gold">
-                {locale === "th" ? "ข้อมูลจำเพาะ" : "Specifications"}
-              </MonoLabel>
-              <h2
-                className="mt-3 font-medium tracking-tight text-mist-50"
-                style={{
-                  fontSize: "clamp(24px, 3.4vw, 36px)",
-                  lineHeight: 1.15,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                {t.specs.heading}
-              </h2>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.05}>
-              <dl className="border-t border-mist-800/60">
-                {product.specs.map((s, i) => {
-                  const primaryLabel =
-                    locale === "th"
-                      ? (s.label_th ?? s.label_en ?? "")
-                      : (s.label_en ?? s.label_th ?? "");
-                  const secondaryLabel =
-                    locale === "th" ? s.label_en : s.label_th;
-                  const showSecondary =
-                    secondaryLabel && secondaryLabel !== primaryLabel;
-                  return (
-                    <div
-                      key={i}
-                      className="grid grid-cols-12 items-baseline gap-6 border-b border-mist-800/40 py-4 sm:py-5"
-                    >
-                      <dt className="col-span-7 sm:col-span-8">
-                        <div className="text-body text-mist-300">
-                          {primaryLabel}
-                        </div>
-                        {showSecondary ? (
-                          <div className="text-caption mt-1 text-mist-500">
-                            {secondaryLabel}
-                          </div>
-                        ) : null}
-                      </dt>
-                      <dd className="col-span-5 text-right sm:col-span-4">
-                        <span className="text-body font-mono font-medium text-mist-50">
-                          {s.value}
-                        </span>
-                      </dd>
-                    </div>
-                  );
-                })}
-              </dl>
-            </ScrollReveal>
-          </div>
-        </section>
-      ) : null}
-
-      {/* ── 6 · Certifications wall ─────────────────────────────── */}
-      {compliance.length > 0 ? (
-        <section id="compliance" className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
-            <ScrollReveal>
-              <div className="overflow-hidden rounded-2xl bg-card-50 text-card-ink">
-                <div className="bg-grid-forest relative grid grid-cols-1 gap-8 p-10 md:p-14 lg:grid-cols-12">
-                  <div className="relative lg:col-span-5">
-                    <MonoLabel tone="forest">
-                      {locale === "th" ? "การรับรองและมาตรฐาน" : "Certified & compliant"}
-                    </MonoLabel>
-                    <h2
-                      className="mt-4 font-medium tracking-tight"
-                      style={{
-                        fontSize: "clamp(22px, 3vw, 32px)",
-                        lineHeight: 1.2,
-                        letterSpacing: "-0.01em",
-                      }}
-                    >
-                      {t.compliance.heading}
-                    </h2>
-                    <p className="text-body mt-4 max-w-md text-forest-900/65">
-                      {locale === "th"
-                        ? "ผ่านการรับรองมาตรฐานสากลและตอบสนองข้อกำหนดทางวิศวกรรมของไทย"
-                        : "Backed by international certifications and the engineering codes Thai EPCs are spec'ing today."}
-                    </p>
-                  </div>
-
-                  <div className="relative grid grid-cols-2 gap-3 sm:grid-cols-3 lg:col-span-7">
-                    {compliance.map((c) => (
-                      <div
-                        key={c}
-                        className="flex items-center justify-center rounded-xl border border-forest-900/10 bg-card-100/50 px-4 py-5 text-center"
-                      >
-                        <div>
-                          <IconCertificate
-                            size={20}
-                            stroke={1.5}
-                            className="mx-auto text-forest-900/50"
-                          />
-                          <p className="mt-2 text-caption font-mono uppercase tracking-wider text-forest-900/80">
-                            {c}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-      ) : null}
-
-      {/* ── 7 · Documents downloads ─────────────────────────────── */}
-      {docs.length > 0 ? (
-        <section id="documents" className="bg-forest-950">
-          <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
-            <ScrollReveal className="mb-10 max-w-3xl">
-              <MonoLabel tone="mist">
-                {locale === "th" ? "เอกสาร" : "Documents"}
-              </MonoLabel>
-              <h2
-                className="mt-3 font-medium tracking-tight text-mist-50"
-                style={{
-                  fontSize: "clamp(24px, 3.4vw, 36px)",
-                  lineHeight: 1.15,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                {t.documents.heading}
-              </h2>
-            </ScrollReveal>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              {docs.map((d, i) => {
-                const Icon = docTypeIcon[d.type];
-                return (
-                  <ScrollReveal key={d.type} delay={i * 0.05}>
-                    <a
-                      href={d.url ?? "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/doc flex h-full items-start gap-4 rounded-xl border border-mist-800/60 bg-forest-900/40 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-mist-800 hover:bg-forest-900/70"
-                    >
-                      <div className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-gold-500/15 text-gold-500">
-                        <Icon size={20} stroke={1.5} />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-caption font-mono uppercase tracking-wider text-mist-400">
-                          PDF
-                        </p>
-                        <h3 className="text-h4 mt-1 font-medium text-mist-50">
-                          {d.title}
-                        </h3>
-                        <span className="mt-3 inline-flex items-center gap-1.5 text-body font-medium text-gold-500">
-                          {locale === "th" ? "ดาวน์โหลด" : "Download"}
-                          <IconDownload size={14} stroke={2} />
-                        </span>
-                      </div>
-                    </a>
-                  </ScrollReveal>
-                );
-              })}
-            </div>
           </div>
         </section>
       ) : null}
