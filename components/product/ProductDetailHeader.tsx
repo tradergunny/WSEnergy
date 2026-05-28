@@ -93,7 +93,6 @@ const UI = {
     class: "Class",
     inStock: "In stock",
     authorized: "Authorized",
-    fullDatasheet: "Full datasheet",
     certified: "Certified",
     datasheet: "Datasheet",
   },
@@ -102,7 +101,6 @@ const UI = {
     class: "ประเภท",
     inStock: "มีสินค้า",
     authorized: "ได้รับอนุญาต",
-    fullDatasheet: "ดาต้าชีตฉบับเต็ม",
     certified: "ผ่านการรับรอง",
     datasheet: "ดาต้าชีต",
   },
@@ -304,6 +302,17 @@ export function ProductDetailHeader(props: ProductDetailHeaderProps) {
                 {dominant(contactLabel, locale)}
                 <IconArrowUpRight size={12} stroke={1.5} />
               </a>
+              {datasheetHref && (
+                <a
+                  href={datasheetHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-[14px] font-medium text-gold-500 hover:text-gold-400 hover:underline"
+                >
+                  <IconDownload size={14} stroke={1.75} />
+                  {t.datasheet}
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -327,16 +336,6 @@ export function ProductDetailHeader(props: ProductDetailHeaderProps) {
                   </button>
                 );
               })}
-              <div className="flex-1" />
-              {datasheetHref && (
-                <a
-                  href={datasheetHref}
-                  className="hidden shrink-0 items-center gap-2 whitespace-nowrap py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-gold-500 hover:underline lg:inline-flex"
-                >
-                  {t.fullDatasheet}
-                  <IconArrowUpRight size={11} stroke={1.5} />
-                </a>
-              )}
             </div>
 
             <div

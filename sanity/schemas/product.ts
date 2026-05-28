@@ -66,6 +66,80 @@ export const product = defineType({
       type: "string",
     }),
     defineField({
+      name: "highlights",
+      title: "Highlights (\"Why EPCs spec this product\")",
+      description:
+        "Up to 4 icon-led cards shown under the product header. Each card needs an icon (curated set), a short title, an optional mono credential line (cert codes), and a 1–2 line body. Section hides if empty.",
+      type: "array",
+      validation: (r) => r.max(4),
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "icon",
+              title: "Icon",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Shield check — bankability / certified", value: "shield-check" },
+                  { title: "Bolt off — rapid shutdown / safety", value: "bolt-off" },
+                  { title: "Plug connected — grid tie / interconnection", value: "plug-connected" },
+                  { title: "Certificate — compliance", value: "certificate" },
+                  { title: "Gauge — performance / efficiency", value: "gauge" },
+                  { title: "Bolt — power", value: "bolt" },
+                  { title: "Sun — solar yield", value: "sun" },
+                  { title: "Battery — storage", value: "battery" },
+                  { title: "Tools — installation", value: "tools" },
+                  { title: "Shield bolt — surge protection", value: "shield-bolt" },
+                  { title: "Thermometer — thermal", value: "thermometer" },
+                  { title: "World — international standards", value: "world" },
+                  { title: "Clock — warranty / lifetime", value: "clock" },
+                  { title: "Cube — modular / component", value: "cube" },
+                  { title: "Cpu — smart / IoT", value: "cpu" },
+                  { title: "Wifi — connectivity", value: "wifi" },
+                ],
+              },
+              initialValue: "shield-check",
+              validation: (r) => r.required(),
+            },
+            {
+              name: "title_en",
+              title: "Title (EN)",
+              type: "string",
+              validation: (r) => r.required(),
+            },
+            { name: "title_th", title: "Title (TH)", type: "string" },
+            {
+              name: "credential_en",
+              title: "Credential line (EN, mono)",
+              type: "string",
+              description:
+                "Small mono caption under the title — e.g. 'TIS · IEC 62109-1/2 · CE'. Keep short.",
+            },
+            { name: "credential_th", title: "Credential line (TH, mono)", type: "string" },
+            {
+              name: "body_en",
+              title: "Body (EN)",
+              type: "text",
+              rows: 3,
+              validation: (r) => r.required(),
+            },
+            { name: "body_th", title: "Body (TH)", type: "text", rows: 3 },
+          ],
+          preview: {
+            select: { title: "title_en", credential: "credential_en", icon: "icon" },
+            prepare({ title, credential, icon }) {
+              return {
+                title: title ?? "(untitled highlight)",
+                subtitle: `[${icon ?? "no-icon"}] ${credential ?? ""}`,
+              };
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: "overview_en",
       title: "Overview (EN)",
       type: "array",
