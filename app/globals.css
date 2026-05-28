@@ -163,6 +163,14 @@
     color-scheme: dark;
   }
 
+  /* Global density knob — html-level zoom mimics a "browser at 80% zoom" feel
+     across the whole site (scales visuals AND widens the effective viewport).
+     Routes that need their original tuning (e.g. product detail) counter-zoom
+     on their own outer wrapper. */
+  html {
+    zoom: 0.8125;
+  }
+
   html,
   body {
     background-color: var(--color-forest-900);
