@@ -37,6 +37,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { StatBlock } from "@/components/ui/StatBlock";
 import { Hero } from "@/components/marketing/Hero";
 import { SolutionsTabs, type SolutionTab } from "@/components/marketing/SolutionsTabs";
+import { TestimonialsMarquee } from "@/components/marketing/TestimonialsMarquee";
 
 type FeaturedProduct = {
   _id: string;
@@ -717,47 +718,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </section>
       ) : null}
 
-      {/* ── 7 · Testimonial ─────────────────────────────────────── */}
-      <section className="bg-forest-950">
-        <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
-          <ScrollReveal>
-            <div className="overflow-hidden rounded-2xl bg-card-50 text-card-ink">
-              <div className="grid grid-cols-1 lg:grid-cols-12">
-                <div className="bg-grid-forest relative flex items-center justify-center bg-card-100 p-10 lg:col-span-4 lg:p-12">
-                  <div className="flex h-24 w-24 items-center justify-center rounded-full bg-forest-900 text-gold-500">
-                    <span className="text-h2 font-medium">SC</span>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center gap-6 p-10 md:p-14 lg:col-span-8">
-                  <MonoLabel tone="forest">
-                    {locale === "th" ? "ลูกค้า EPC" : "EPC partner"}
-                  </MonoLabel>
-                  <p
-                    className="font-medium tracking-tight"
-                    style={{
-                      fontSize: "clamp(20px, 2.4vw, 28px)",
-                      lineHeight: 1.35,
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    {locale === "th"
-                      ? "“WS Energy เป็นพันธมิตรที่เราโทรหาก่อนการประมูลทุกครั้ง — ข้อมูลจำเพาะถูกต้อง สินค้ามาตรงเวลา และทีมงานท้องถิ่นรู้จักกฎความปลอดภัยเป็นอย่างดี”"
-                      : "“WS Energy is the partner we call before every bid — specs come back accurate, product lands on time, and their on-site team actually knows the safety codes.”"}
-                  </p>
-                  <div>
-                    <p className="font-medium">Somchai Charoenkul</p>
-                    <p className="text-body text-forest-900/65">
-                      {locale === "th"
-                        ? "ผู้อำนวยการโครงการ · Solar Power EPC"
-                        : "Project Director · Solar Power EPC"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
+      {/* ── 7 · Testimonials ────────────────────────────────────── */}
+      <TestimonialsMarquee locale={locale} />
 
       {/* ── 8 · Latest articles ─────────────────────────────────── */}
       <section className="bg-forest-900">
