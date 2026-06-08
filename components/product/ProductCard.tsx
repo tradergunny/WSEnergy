@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/Badge";
+import { BrandLogoBadge } from "@/components/ui/BrandLogoBadge";
 import { Button } from "@/components/ui/Button";
 import { urlFor } from "@/lib/sanity/client";
 
@@ -11,12 +12,16 @@ import { urlFor } from "@/lib/sanity/client";
  * Featured card (exclusive=true): 2px Brand 600 border — the only place we
  * go thicker. Safety-critical SKUs add a Safety 600 badge but keep the
  * brand border treatment.
+ *
+ * When the brand has a `logo` asset in Sanity, a warm-bone
+ * `<BrandLogoBadge>` is overlaid on the top-left of the image area
+ * (BRIEF §8.10). Brands without a logo only get the text chip below.
  */
 
 type SanityImageRef = Parameters<typeof urlFor>[0] | undefined | null;
 
 export type ProductCardProps = {
-  brand?: string | null;
+  brand?: { name?: string | null; logo?: SanityImageRef } | null;
   authorized?: boolean;
   exclusive?: boolean;
   safetyCritical?: boolean;
@@ -80,14 +85,21 @@ export function ProductCard({
           />
         ) : (
           <div className="text-mist-400 text-eyebrow flex h-full w-full items-center justify-center">
-            {brand ?? "WS Energy"}
+            {brand?.name ?? "WS Energy"}
           </div>
         )}
+        {/* Brand logo overlay — only renders when the brand has a logo */}
+        <BrandLogoBadge
+          logo={brand?.logo}
+          name={brand?.name}
+          size="md"
+          className="absolute top-3 left-3"
+        />
       </Link>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex flex-wrap items-center gap-2">
-          {brand && <Badge variant="brand">{brand}</Badge>}
+          {brand?.name && <Badge variant="brand">{brand.name}</Badge>}
           {authorized && (
             <Badge variant="authorized">★ {authorizedLabel}</Badge>
           )}

@@ -46,7 +46,7 @@ type Project = {
     shortDescription_en?: string;
     shortDescription_th?: string;
     image?: SanityImageRef;
-    brand?: { name?: string; slug?: string };
+    brand?: { name?: string; slug?: string; logo?: SanityImageRef };
     category?: { title_en?: string; title_th?: string; slug?: string; parentSlug?: string };
   }>;
 };
@@ -243,7 +243,7 @@ export default async function ProjectDetailPage({
               {project.productsUsed.map((p) => (
                 <li key={p._id}>
                   <ProductCard
-                    brand={p.brand?.name}
+                    brand={p.brand}
                     image={p.image}
                     sku={p.sku}
                     title={p.title}

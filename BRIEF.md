@@ -537,7 +537,7 @@ Never combine more than 3 badges on a single component.
 
 ```tsx
 <ProductCard
-  brand="Huawei"
+  brand={{ name: "Huawei", logo: brand.logo }}  // logo overlays top-left when present — §8.10
   authorized={true}
   exclusive={false}              // true → 2px Brand 600 border
   safetyCritical={false}
@@ -551,6 +551,7 @@ Never combine more than 3 badges on a single component.
 - Standard card: 0.5px Graphite 200 border, 12px radius, white bg
 - Featured card: 2px Brand 600 border (the only place we go thicker)
 - Two CTAs at bottom: [Specs] outlined + [Quote] primary
+- When `brand.logo` is set, a `<BrandLogoBadge>` (§8.10) is overlaid at top-left of the image area. The text brand chip below the image stays — the logo is a redundant visual anchor, not a replacement
 
 ### 8.4 Form fields
 
@@ -634,6 +635,18 @@ Compact, file icon left, title + meta center, download icon right (Brand 600).
 ```
 
 SVG-based, 5 nodes (Modules · PEFS · DC string · Control box · Inverter), Signal Red for live circuits, Graphite for de-energized. 4 click states, ~8 seconds total.
+
+### 8.10 Brand logo badge
+
+```tsx
+<BrandLogoBadge logo={brand.logo} name={brand.name} size="md" />
+```
+
+- Warm-bone pill (`bg-card-50` + `var(--shadow-card)` lift) wrapping a manufacturer logo from Sanity (`brand->logo`).
+- Sizes: `sm` (24px tall pill, 16px logo) for dense overlays, `md` (32px / 20px) default.
+- Positioning is the caller's responsibility — pass `className="absolute top-3 left-3"` to overlay on a product image, or place inline.
+- Renders nothing when `logo` is missing, so callers can pass `brand?.logo` unconditionally and the badge falls away for brands without an uploaded asset.
+- Currently used as the top-left overlay inside `<ProductCard>`. Reuse anywhere else a brand needs visual claim (product detail header, related-products strip, brand-pillar sections) rather than recreating an image-in-pill inline.
 
 ---
 
