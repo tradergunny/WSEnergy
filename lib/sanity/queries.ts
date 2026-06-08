@@ -16,7 +16,7 @@ export const allProductsQuery = groq`
     safetyCritical,
     shortDescription_en,
     shortDescription_th,
-    "brand": brand->{ name, "slug": slug.current },
+    "brand": brand->{ name, "slug": slug.current, logo },
     "category": category->{ title_en, title_th, "slug": slug.current }
   }
 `;
@@ -34,7 +34,7 @@ export const featuredProductsQuery = groq`
     shortDescription_en,
     shortDescription_th,
     "image": gallery[0],
-    "brand": brand->{ name, "slug": slug.current },
+    "brand": brand->{ name, "slug": slug.current, logo },
     "category": category->{
       title_en,
       title_th,
@@ -57,7 +57,7 @@ export const productsByCategoryQuery = groq`
     shortDescription_en,
     shortDescription_th,
     "image": gallery[0],
-    "brand": brand->{ name, "slug": slug.current },
+    "brand": brand->{ name, "slug": slug.current, logo },
     "category": category->{
       title_en,
       title_th,
@@ -214,7 +214,7 @@ export const productBySkuQuery = groq`
       shortDescription_en,
       shortDescription_th,
       "image": gallery[0],
-      "brand": brand->{ name, "slug": slug.current },
+      "brand": brand->{ name, "slug": slug.current, logo },
       "category": category->{
         title_en,
         title_th,
@@ -246,7 +246,7 @@ export const relatedByBrandQuery = groq`
     shortDescription_en,
     shortDescription_th,
     "image": gallery[0],
-    "brand": brand->{ name, "slug": slug.current },
+    "brand": brand->{ name, "slug": slug.current, logo },
     "category": category->{
       title_en,
       title_th,
@@ -285,7 +285,7 @@ export const rapidShutdownProductsQuery = groq`
     shortDescription_en,
     shortDescription_th,
     "image": gallery[0],
-    "brand": brand->{ name, "slug": slug.current },
+    "brand": brand->{ name, "slug": slug.current, logo },
     "category": category->{
       title_en,
       title_th,
@@ -337,7 +337,7 @@ export const productsByCategoriesQuery = groq`
     shortDescription_en,
     shortDescription_th,
     "image": gallery[0],
-    "brand": brand->{ name, "slug": slug.current },
+    "brand": brand->{ name, "slug": slug.current, logo },
     "category": category->{
       title_en,
       title_th,
@@ -458,7 +458,7 @@ export const projectBySlugQuery = groq`
       shortDescription_en,
       shortDescription_th,
       "image": gallery[0],
-      "brand": brand->{ name, "slug": slug.current },
+      "brand": brand->{ name, "slug": slug.current, logo },
       "category": category->{
         title_en,
         title_th,
@@ -550,7 +550,7 @@ export const firefighterProductsQuery = groq`
     shortDescription_en,
     shortDescription_th,
     "image": gallery[0],
-    "brand": brand->{ name, "slug": slug.current },
+    "brand": brand->{ name, "slug": slug.current, logo },
     "category": category->{
       title_en,
       title_th,
@@ -607,4 +607,81 @@ export const installerProvincesQuery = groq`
   array::unique(
     *[_type == "installer" && !(_id in path("drafts.**")) && defined(province)].province
   )
+`;
+
+/**
+ * Brand-in-category route data — used by the dedicated
+ * /products/[category]/[brand] page.
+ */
+
+export const brandBySlugQuery = groq`
+  *[_type == "brand" && slug.current == $slug][0] {
+    _id,
+    name,
+    "slug": slug.current,
+    authorizedDistributor,
+    whyWeCarryIt_en,
+    whyWeCarryIt_th,
+    logo
+  }
+`;
+
+export const productsByCategoryAndBrandQuery = groq`
+  *[_type == "product"
+    && category->slug.current == $category
+    && brand->slug.current == $brand]
+    | order(orderRank asc, title asc) {
+    _id,
+    title,
+    sku,
+    "slug": slug.current,
+    authorized,
+    exclusive,
+    safetyCritical,
+    shortDescription_en,
+    shortDescription_th,
+    "image": gallery[0],
+    "brand": brand->{ name, "slug": slug.current, logo },
+    "category": category->{
+      title_en,
+      title_th,
+      "slug": slug.current,
+      "parentSlug": parent->slug.current
+    }
+  }
+`;
+
+/**
+ * (category, brand) tuples for `generateStaticParams` on the
+ * brand-in-category route. Excludes drafts and safety subcategories
+ * (those live under /safety not /products).
+ */
+export const categoryBrandTuplesQuery = groq`
+  *[_type == "product"
+    && defined(category->slug.current)
+    && defined(brand->slug.current)
+    && !(_id in path("drafts.**"))
+    && category->parent->slug.current != "safety"]
+  {
+    "category": category->slug.current,
+    "brand": brand->slug.current
+  }
+`;
+
+/**
+ * Drives the third level of the Products nav dropdown.
+ * Returns one row per (category, brand) pair — duplicates per product
+ * are deduped on the consumer side via a Map keyed by brand slug.
+ * Filters out safety subcategories (those live under /safety) and drafts.
+ */
+export const productNavBrandsQuery = groq`
+  *[_type == "product"
+    && defined(category->slug.current)
+    && defined(brand->slug.current)
+    && category->parent->slug.current != "safety"
+    && !(_id in path("drafts.**"))]
+  {
+    "category": category->slug.current,
+    "brand": brand->{ name, "slug": slug.current }
+  }
 `;

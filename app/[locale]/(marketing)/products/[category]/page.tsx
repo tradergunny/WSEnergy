@@ -14,6 +14,8 @@ import {
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { MonoLabel } from "@/components/ui/MonoLabel";
+import { BrandLogoBadge } from "@/components/ui/BrandLogoBadge";
 import { ProductCard } from "@/components/product/ProductCard";
 import { CaseStudyCard } from "@/components/product/CaseStudyCard";
 import { withLocale } from "@/lib/navigation";
@@ -50,7 +52,7 @@ type ProductRow = {
   shortDescription_en?: string;
   shortDescription_th?: string;
   image?: Parameters<typeof urlFor>[0];
-  brand?: { name?: string; slug?: string };
+  brand?: { name?: string; slug?: string; logo?: Parameters<typeof urlFor>[0] };
   category?: {
     title_en?: string;
     title_th?: string;
@@ -66,6 +68,7 @@ type BrandRow = {
   authorizedDistributor?: boolean;
   whyWeCarryIt_en?: string;
   whyWeCarryIt_th?: string;
+  logo?: Parameters<typeof urlFor>[0];
 };
 
 type ProjectRow = {
@@ -129,6 +132,27 @@ export default async function CategoryPage({
   );
   const quoteHref = withLocale(locale, "/quote");
 
+  // Group products under their brand for the section-by-brand layout below.
+  // Authorized distributors lead, then alphabetical. Brands without products
+  // in this category are filtered out via the `groupProducts.length > 0` check.
+  const brandedGroups = brands
+    .map((brand) => ({
+      brand,
+      products: products.filter((p) => p.brand?.slug === brand.slug),
+    }))
+    .filter((group) => group.products.length > 0)
+    .sort((a, b) => {
+      const aAuth = a.brand.authorizedDistributor ? 0 : 1;
+      const bAuth = b.brand.authorizedDistributor ? 0 : 1;
+      if (aAuth !== bAuth) return aAuth - bAuth;
+      return (a.brand.name ?? "").localeCompare(b.brand.name ?? "");
+    });
+
+  const productCountLabel = (n: number) =>
+    locale === "th"
+      ? `${n} สินค้า`
+      : `${n} ${n === 1 ? "product" : "products"}`;
+
   return (
     <>
       {/* ── Section 1 · Breadcrumb ──────────────────────────────── */}
@@ -169,7 +193,15 @@ export default async function CategoryPage({
             <ul className="mt-5 flex flex-wrap items-center gap-2">
               {brands.map((b) => (
                 <li key={b._id}>
-                  <Badge variant="brand">{b.name}</Badge>
+                  <Link
+                    href={withLocale(
+                      locale,
+                      `/products/${categorySlug}/${b.slug}`,
+                    )}
+                    className="inline-block rounded-sm transition-colors hover:bg-gold-500/10"
+                  >
+                    <Badge variant="brand">{b.name}</Badge>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -195,7 +227,7 @@ export default async function CategoryPage({
         </Container>
       </section>
 
-      {/* ── Section 4 · Product card grid ───────────────────────── */}
+      {/* ── Section 4 · Product cards grouped by brand ──────────── */}
       <section>
         <Container className="py-12">
           {products.length === 0 ? (
@@ -213,37 +245,75 @@ export default async function CategoryPage({
               </div>
             </div>
           ) : (
-            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((p) => (
-                <li key={p._id}>
-                  <ProductCard
-                    brand={p.brand?.name}
-                    authorized={p.authorized}
-                    exclusive={p.exclusive}
-                    safetyCritical={p.safetyCritical}
-                    image={p.image}
-                    sku={p.sku}
-                    title={p.title}
-                    description={localized(
-                      p.shortDescription_en,
-                      p.shortDescription_th,
-                    )}
-                    href={productHref(locale, {
-                      categorySlug: p.category?.slug,
-                      parentSlug: p.category?.parentSlug,
-                      brandSlug: p.brand?.slug,
-                      productSlug: p.slug,
-                    })}
-                    specsLabel={dict.actions.viewSpecs}
-                    quoteLabel={dict.actions.requestQuote}
-                    quoteHref={quoteHref}
-                    authorizedLabel={dict.common.authorizedBadge}
-                    exclusiveLabel={dict.common.exclusiveBadge}
-                    safetyLabel={dict.common.safetyBadge}
-                  />
-                </li>
+            <div className="flex flex-col gap-16">
+              {brandedGroups.map(({ brand, products: groupProducts }) => (
+                <div key={brand._id}>
+                  {/* Brand group header — logo (or mono+name fallback)
+                      + authorized chip + product count on the right */}
+                  <div className="border-mist-800/40 mb-6 flex flex-wrap items-center justify-between gap-3 border-b pb-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      {brand.logo ? (
+                        <BrandLogoBadge
+                          logo={brand.logo}
+                          name={brand.name}
+                          size="md"
+                        />
+                      ) : (
+                        <>
+                          <MonoLabel tone="mist">
+                            _{(brand.name ?? "").toUpperCase()}
+                          </MonoLabel>
+                          <span className="text-h3 text-mist-50 font-medium">
+                            {brand.name}
+                          </span>
+                        </>
+                      )}
+                      {brand.authorizedDistributor && (
+                        <Badge variant="authorized">
+                          ★ {dict.common.authorizedBadge}
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="text-caption text-mist-400 font-mono">
+                      {productCountLabel(groupProducts.length)}
+                    </span>
+                  </div>
+
+                  {/* Card grid for this brand */}
+                  <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {groupProducts.map((p) => (
+                      <li key={p._id}>
+                        <ProductCard
+                          brand={p.brand}
+                          authorized={p.authorized}
+                          exclusive={p.exclusive}
+                          safetyCritical={p.safetyCritical}
+                          image={p.image}
+                          sku={p.sku}
+                          title={p.title}
+                          description={localized(
+                            p.shortDescription_en,
+                            p.shortDescription_th,
+                          )}
+                          href={productHref(locale, {
+                            categorySlug: p.category?.slug,
+                            parentSlug: p.category?.parentSlug,
+                            brandSlug: p.brand?.slug,
+                            productSlug: p.slug,
+                          })}
+                          specsLabel={dict.actions.viewSpecs}
+                          quoteLabel={dict.actions.requestQuote}
+                          quoteHref={quoteHref}
+                          authorizedLabel={dict.common.authorizedBadge}
+                          exclusiveLabel={dict.common.exclusiveBadge}
+                          safetyLabel={dict.common.safetyBadge}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </Container>
       </section>

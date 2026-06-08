@@ -23,7 +23,7 @@ export type SolutionProductRow = {
   shortDescription_en?: string;
   shortDescription_th?: string;
   image?: SanityImageRef;
-  brand?: { name?: string; slug?: string };
+  brand?: { name?: string; slug?: string; logo?: SanityImageRef };
   category?: {
     title_en?: string;
     title_th?: string;
@@ -154,7 +154,7 @@ export function SolutionPage({
               {products.map((p) => (
                 <li key={p._id}>
                   <ProductCard
-                    brand={p.brand?.name}
+                    brand={p.brand}
                     authorized={p.authorized}
                     exclusive={p.exclusive}
                     safetyCritical={p.safetyCritical}
