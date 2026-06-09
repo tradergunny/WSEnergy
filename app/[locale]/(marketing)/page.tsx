@@ -6,6 +6,7 @@ import {
   IconBolt,
   IconCertificate,
   IconMapPin,
+  IconPlus,
   IconSchool,
   IconShieldCheckered,
   IconSolarPanel,
@@ -87,6 +88,29 @@ type CertificationRow = {
   name?: string;
   logo?: Parameters<typeof urlFor>[0];
 };
+
+type BusinessPartner = {
+  name: string;
+  slug: string;
+  /** Drop a transparent SVG/PNG into `public/partners/` and reference it here
+   *  (e.g. `/partners/huawei.svg`). Without it, the cell renders the name as
+   *  styled card text — a safe placeholder until the asset lands. */
+  logoSrc?: string;
+};
+
+const BUSINESS_PARTNERS: readonly BusinessPartner[] = [
+  { name: "PEA ENCOM", slug: "pea-encom", logoSrc: "/partners/pea-encom.png" },
+  { name: "Godung Faifaa", slug: "godung-faifaa", logoSrc: "/partners/godung-faifaa.png" },
+  { name: "Gunkul", slug: "gunkul", logoSrc: "/partners/gunkul.png" },
+  { name: "SolaX Power", slug: "solax", logoSrc: "/partners/solax.png" },
+  { name: "Prime Road Power", slug: "prime-road", logoSrc: "/partners/prime-road.png" },
+  { name: "Huawei", slug: "huawei", logoSrc: "/partners/huawei.png" },
+  { name: "Projoy Electric", slug: "projoy", logoSrc: "/partners/projoy.png" },
+  // Per-user order: Sigenergy takes the "closing" slot of row 1; Greenergy
+  // opens row 2 so the new logo lands in a fresh row of its own.
+  { name: "Sigenergy", slug: "sigenergy", logoSrc: "/partners/sigenergy.png" },
+  { name: "Greenergy", slug: "greenergy", logoSrc: "/partners/greenergy.png" },
+] as const;
 
 export async function generateMetadata({
   params,
@@ -235,31 +259,112 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         }}
       />
 
-      {/* ── 2 · Trust strip ─────────────────────────────────────── */}
-      <section className="border-y border-mist-800/40 bg-forest-950">
-        <div className="mx-auto max-w-6xl px-6 py-10">
-          <ScrollReveal className="flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">
+      {/* ── 2 · Business partners (editorial logo grid) ─────────── */}
+      <section className="bg-forest-950">
+        <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
+          <ScrollReveal className="mb-12 flex flex-col items-center gap-3 text-center md:mb-14">
             <MonoLabel tone="mist">
-              {locale === "th" ? "พันธมิตรที่เชื่อถือได้" : "Trusted partners"}
+              {locale === "th" ? "พันธมิตรทางธุรกิจ" : "Business partners"}
             </MonoLabel>
-            <ul className="flex flex-wrap items-center gap-x-8 gap-y-3">
-              {[
-                "Projoy",
-                "Huawei",
-                "SolaX",
-                "KUVO",
-                "T-SUN",
-                "Sine Xcel",
-                "SCU",
-              ].map((name) => (
-                <li
-                  key={name}
-                  className="text-h4 font-medium tracking-tight text-mist-400 transition-colors hover:text-mist-50"
-                >
-                  {name}
-                </li>
-              ))}
+            <p
+              className="max-w-2xl font-medium tracking-tight text-mist-50"
+              style={{
+                fontSize: "clamp(22px, 2.8vw, 30px)",
+                lineHeight: 1.25,
+                letterSpacing: "-0.015em",
+              }}
+            >
+              {locale === "th" ? (
+                <>
+                  ทำงานร่วมกับผู้นำใน{" "}
+                  <span className="text-gold-500">อุตสาหกรรมพลังงานสะอาด</span>
+                </>
+              ) : (
+                <>
+                  The companies we{" "}
+                  <span className="text-gold-500">collaborate</span> with.
+                </>
+              )}
+            </p>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.1}>
+            <ul className="relative grid grid-cols-2 gap-px bg-mist-800/60 md:grid-cols-4">
+              {/* Full-bleed top hairline */}
+              <li
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-px left-1/2 w-screen -translate-x-1/2 border-t border-mist-800/60"
+              />
+
+              {/* 8 cells in 4-col × 2-row layout. Greenergy is the 9th in the
+                  source list — it sits off-grid and is implied by the "+more"
+                  link below. Slice keeps Greenergy in `BUSINESS_PARTNERS` so
+                  its logo file stays referenced and easy to re-introduce. */}
+              {BUSINESS_PARTNERS.slice(0, 8).map((partner, i) => {
+                const col = i % 4;
+                const row = Math.floor(i / 4);
+                // 4×2 internal intersections: bottom-right of cells in
+                // cols 0–2 of row 0 → 3 markers (indices 0,1,2).
+                const showPlus = col < 3 && row < 1;
+                // Column-banded rhythm — 8 cells in 4 cols means each column
+                // alternates 900/950 down the rows; pleasant editorial stripe.
+                const raised = i % 2 === 0;
+                return (
+                  <li
+                    key={partner.slug}
+                    className={`relative flex h-32 items-center justify-center px-6 md:h-40 md:px-8 lg:h-48 lg:px-10 ${
+                      raised ? "bg-forest-900" : "bg-forest-950"
+                    }`}
+                  >
+                    {partner.logoSrc ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={partner.logoSrc}
+                        alt={partner.name}
+                        className="max-h-14 w-auto select-none object-contain opacity-90 brightness-0 invert md:max-h-16 lg:max-h-20"
+                      />
+                    ) : (
+                      <span className="text-h4 font-medium tracking-tight text-mist-200">
+                        {partner.name}
+                      </span>
+                    )}
+                    {showPlus ? (
+                      <IconPlus
+                        size={20}
+                        stroke={1.5}
+                        className="pointer-events-none absolute -right-[10px] -bottom-[10px] z-10 hidden text-mist-600 md:block"
+                      />
+                    ) : null}
+                  </li>
+                );
+              })}
+
+              {/* Full-bleed bottom hairline */}
+              <li
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-px left-1/2 w-screen -translate-x-1/2 border-b border-mist-800/60"
+              />
             </ul>
+          </ScrollReveal>
+
+          {/* "+more partners" — text-only tertiary CTA, right-aligned beneath
+              the grid. Anchors the bottom-right of the section and implies
+              the partner network extends beyond the visible eight. */}
+          <ScrollReveal delay={0.2} className="mt-6 flex justify-end md:mt-8">
+            <Link
+              href={withLocale(locale, "/about")}
+              className="group/more inline-flex items-center gap-2 text-body font-medium text-gold-500 transition-colors hover:text-gold-400"
+            >
+              <IconPlus size={14} stroke={2.5} />
+              <span>
+                {locale === "th" ? "พันธมิตรเพิ่มเติม" : "more partners"}
+              </span>
+              <IconArrowRight
+                size={14}
+                stroke={2}
+                className="transition-transform duration-200 group-hover/more:translate-x-0.5"
+              />
+            </Link>
           </ScrollReveal>
         </div>
       </section>
