@@ -495,6 +495,16 @@ The brand refresh introduces **medium-intensity motion** — subtle but present 
 - **Reduced motion**: when `prefers-reduced-motion: reduce`, all of the above collapse to instant opacity transitions only.
 - The interactive Safety system diagram remains the rich-motion exception: discrete on/off equipment transitions, not eased animation.
 
+### 7.10 Experience primitives (2026-06, introduced by the homepage draft)
+
+The GSAP experience layer. All five respect `prefers-reduced-motion` (collapse to static/final state per §7.9) and use only §7.1 tokens.
+
+- **`<ScrollVideo src poster>`** — scroll-scrubbed video backdrop (`components/ui/ScrollVideo.tsx`). Inside a PinnedScene, playback position is locked to scroll progress (lightly eased so it feels weighty). Clips must be one continuous shot, ~5–10 s, encoded all-intra for smooth seeking (`ffmpeg -an -c:v libx264 -pix_fmt yuv420p -g 1 -crf 22 -movflags +faststart`). Fallback ladder: missing/unloadable `src` → poster image with a slow scroll-driven push-in; reduced motion → static poster. Ships safely with a poster placeholder and upgrades itself when the clip lands in `/public`.
+- **`<PinnedScene length={n}>`** — scroll-runway orchestrator (`components/ui/PinnedScene.tsx`). Renders an `n`-viewport-tall runway with a sticky full-screen stage and publishes 0→1 scroll progress via `usePinnedScene()` (ref-based, no re-renders). ScrollVideo auto-subscribes when nested inside one. Use for pinned story "acts"; keep to one or two per page.
+- **`<SplitTextReveal as="h1|h2|…">`** — headline reveal (`components/ui/SplitTextReveal.tsx`). Splits into masked lines and staggers the words up on first viewport entry (GSAP SplitText, font-load-safe, SSR keeps full text in markup). Use for section headlines; body copy stays on `<ScrollReveal>`. Thai copy degrades to a per-line rise.
+- **`<Magnetic strength={0..1}>`** — magnetic cursor pull (`components/ui/Magnetic.tsx`). Wraps a single child — typically `<Button>` — easing it toward the pointer on hover with an elastic return. Transform-only on the wrapper, so §8.1 button styling is untouched. Inert on coarse pointers. Reserve for primary CTAs.
+- **`<CountUp to={n} prefix suffix>`** — stat number animation (`components/ui/CountUp.tsx`). Counts 0→n on first viewport entry; SSR renders the final value; tabular-nums prevents layout wobble. Drop into a `StatBlock` `value` slot (which now accepts a ReactNode).
+
 ---
 
 ## 8. Component Library

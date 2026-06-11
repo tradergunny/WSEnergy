@@ -10,7 +10,7 @@ export function StatBlock({
   icon,
   className = "",
 }: {
-  value: string;
+  value: ReactNode;
   label: string;
   icon?: ReactNode;
   className?: string;

@@ -158,6 +158,21 @@
   background-size: 12px 12px;
 }
 
+/* Falling gold tick inside the draft hero's "_SCROLL" cue */
+@utility animate-scroll-hint {
+  animation: scroll-hint 1.8s ease-in-out infinite;
+}
+
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(200%);
+  }
+}
+
 @layer base {
   :root {
     color-scheme: dark;
