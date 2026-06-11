@@ -488,6 +488,7 @@ The brand refresh introduces **medium-intensity motion** — subtle but present 
 - **Smooth scroll site-wide** via Lenis (lerp 0.1).
 - **Scroll reveal** on every major section: 24px upward translate + opacity fade, 600ms ease-out, triggered once when 20% of the element enters the viewport. Implemented via `<ScrollReveal>` (Framer Motion `whileInView`).
 - **Card hover**: lift -2px translate-y + shadow swap to `--shadow-card-hover`, 220ms ease-out.
+- **Product bounce hero**: hero product imagery on marketing surfaces uses `<ProductBounceCard>` — a continuous y[0,-20,0] rise + rotateY[0,10,-10,0] 3D rock, 1.7s ease-in-out infinite, paired with a contracting puddle shadow (scaleX 1→0.78→1). Sits naked on the forest canvas (no card frame) so the puddle reads against the dark. Reach for this on the Projoy safety band and equivalent product spotlights; not for catalog cards. Includes an `onError` fallback that swaps to a slow-bob gold safety-shield icon, so the layout never breaks while a product asset is being sourced.
 - **Button hover**: fill darken 8% (gold-500 → gold-600) + 1px translate-x on the trailing arrow icon.
 - **Hero entrance**: staggered headline reveal (50ms between lines) + slow zoom-out on the hero photo (1.05 → 1.0 over 1.2s).
 - **Focus**: 2px gold-500 ring, no shadow.

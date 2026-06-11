@@ -18,7 +18,6 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { alternates } from "@/lib/seo";
 import { sanityClient, urlFor } from "@/lib/sanity/client";
 import {
-  featuredProductsQuery,
   featuredProjectsQuery,
   latestArticlesQuery,
   homepageCertificationsQuery,
@@ -30,35 +29,16 @@ import {
 } from "@/lib/sanity/training";
 import { getInstallerProvinces } from "@/lib/sanity/installers";
 import { withLocale } from "@/lib/navigation";
-import { productHref } from "@/lib/product-url";
 import { SITE_URL } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { MonoLabel } from "@/components/ui/MonoLabel";
+import { ProductBounceCard } from "@/components/ui/ProductBounceCard";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { StatBlock } from "@/components/ui/StatBlock";
 import { Hero } from "@/components/marketing/Hero";
 import { SolutionsTabs, type SolutionTab } from "@/components/marketing/SolutionsTabs";
 import { TestimonialsMarquee } from "@/components/marketing/TestimonialsMarquee";
-
-type FeaturedProduct = {
-  _id: string;
-  title?: string;
-  sku?: string;
-  slug?: string;
-  authorized?: boolean;
-  exclusive?: boolean;
-  safetyCritical?: boolean;
-  shortDescription_en?: string;
-  shortDescription_th?: string;
-  image?: Parameters<typeof urlFor>[0];
-  brand?: { name?: string; slug?: string };
-  category?: {
-    title_en?: string;
-    title_th?: string;
-    slug?: string;
-    parentSlug?: string;
-  };
-};
 
 type ProjectRow = {
   _id: string;
@@ -132,14 +112,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const t = dict.home;
 
   const [
-    featuredProducts,
     projects,
     articles,
     certifications,
     trainingSessions,
     installerProvinces,
   ] = await Promise.all([
-    sanityClient.fetch<FeaturedProduct[]>(featuredProductsQuery),
     sanityClient.fetch<ProjectRow[]>(featuredProjectsQuery),
     sanityClient.fetch<ArticleRow[]>(latestArticlesQuery),
     sanityClient.fetch<CertificationRow[]>(homepageCertificationsQuery),
@@ -151,7 +129,56 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
     locale === "th" ? (th ?? en ?? "") : (en ?? th ?? "");
 
   const quoteHref = withLocale(locale, "/quote");
-  const featured = featuredProducts[0];
+
+  const FLAGSHIP_PLACEHOLDER = "/products/projoy-rapid-shutdown.png";
+  const flagships: {
+    key: string;
+    title: string;
+    brandPill?: "PROJOY" | "T-SUN";
+    photoUrl?: string;
+    href: string;
+  }[] = [
+    {
+      key: "rapid-shutdown",
+      title: "Rapid Shutdown",
+      brandPill: "PROJOY",
+      photoUrl: FLAGSHIP_PLACEHOLDER,
+      href: withLocale(locale, "/safety/rapid-shutdown"),
+    },
+    {
+      key: "controller-box",
+      title: "Controller Box",
+      brandPill: "PROJOY",
+      photoUrl: FLAGSHIP_PLACEHOLDER,
+      href: withLocale(locale, "/safety/rapid-shutdown"),
+    },
+    {
+      key: "firefighter-safety-switches",
+      title: "Firefighter Safety Switches",
+      brandPill: "PROJOY",
+      photoUrl: FLAGSHIP_PLACEHOLDER,
+      href: withLocale(locale, "/safety/firefighter-safety-switches"),
+    },
+    {
+      key: "micro-inverter",
+      title: "Micro Inverter",
+      brandPill: "T-SUN",
+      photoUrl: FLAGSHIP_PLACEHOLDER,
+      href: withLocale(locale, "/products/micro-inverters"),
+    },
+    {
+      key: "scada-monitoring",
+      title: "SCADA & Monitoring",
+      photoUrl: FLAGSHIP_PLACEHOLDER,
+      href: withLocale(locale, "/solutions/scada-monitoring"),
+    },
+    {
+      key: "full-catalog",
+      title: "Full catalog",
+      photoUrl: FLAGSHIP_PLACEHOLDER,
+      href: withLocale(locale, "/products"),
+    },
+  ];
 
   const solutionTabs: SolutionTab[] = [
     {
@@ -369,132 +396,173 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
-      {/* ── 3 · Featured product (warm-bone card, big) ─────────── */}
-      {featured ? (
-        <section className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
-            <ScrollReveal className="mb-10 flex items-end justify-between gap-6">
-              <div>
-                <MonoLabel tone="gold">
-                  {locale === "th" ? "ผลิตภัณฑ์เด่น" : "Featured product"}
-                </MonoLabel>
-                <h2
-                  className="mt-3 max-w-2xl font-medium tracking-tight text-mist-50"
-                  style={{
-                    fontSize: "clamp(28px, 4vw, 44px)",
-                    lineHeight: 1.1,
-                    letterSpacing: "-0.015em",
-                  }}
+      {/* ── 3 · Projoy safety band (the wedge) ──────────────────── */}
+      <section className="bg-forest-900">
+        <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:items-center">
+            <ScrollReveal className="md:col-span-7">
+              <MonoLabel tone="gold">{t.safety.eyebrow}</MonoLabel>
+              <h2
+                className="mt-4 font-medium tracking-tight text-mist-50"
+                style={{
+                  fontSize: "clamp(28px, 4vw, 44px)",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.015em",
+                }}
+              >
+                {t.safety.headline}
+              </h2>
+              <p className="text-body-lg mt-5 max-w-xl text-mist-400">
+                {t.safety.body}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Button
+                  variant="primary"
+                  size="md"
+                  href={withLocale(locale, "/safety/rapid-shutdown")}
+                >
+                  {t.safety.cta}
+                  <IconArrowRight size={14} stroke={2} />
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="md"
+                  href={withLocale(locale, "/about/projoy-partnership")}
                 >
                   {locale === "th"
-                    ? "ระบบโซลาร์ที่ปลอดภัยทุกการติดตั้ง"
-                    : "Safer solar, every install."}
-                </h2>
+                    ? "เกี่ยวกับพันธมิตร Projoy"
+                    : "About the Projoy partnership"}
+                  <IconArrowUpRight size={14} stroke={2} />
+                </Button>
               </div>
-              <Link
-                href={withLocale(locale, "/products")}
-                className="group/btn hidden items-center gap-1.5 text-body font-medium text-gold-500 hover:text-gold-400 md:inline-flex"
-              >
-                {dict.actions.viewAll}
-                <IconArrowUpRight
-                  size={16}
-                  stroke={2}
-                  className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
-                />
-              </Link>
             </ScrollReveal>
 
-            <ScrollReveal className="overflow-hidden rounded-2xl bg-card-50 text-card-ink" delay={0.05}>
-              <div className="grid grid-cols-1 lg:grid-cols-12">
-                <div className="flex flex-col justify-between gap-8 p-8 md:p-12 lg:col-span-6">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {featured.exclusive ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-forest-900 px-3 py-1 text-caption font-medium text-gold-500">
-                          ★ {dict.common.exclusiveBadge}
-                        </span>
-                      ) : null}
-                      {featured.authorized ? (
-                        <span className="text-caption inline-flex items-center gap-1.5 rounded-full bg-forest-900/10 px-3 py-1 font-medium text-forest-900">
-                          ★ {dict.common.authorizedBadge}
-                        </span>
-                      ) : null}
-                    </div>
-                    <h3
-                      className="mt-5 font-medium tracking-tight"
-                      style={{ fontSize: 36, lineHeight: 1.1 }}
-                    >
-                      {featured.title}
-                    </h3>
-                    {featured.sku ? (
-                      <p className="mt-2 text-caption font-mono uppercase tracking-wider text-forest-900/60">
-                        {featured.sku}
-                      </p>
-                    ) : null}
-                    <p className="text-body-lg mt-5 max-w-md text-forest-900/75">
-                      {localized(
-                        featured.shortDescription_en,
-                        featured.shortDescription_th,
-                      )}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button
-                      variant="on-card"
-                      size="md"
-                      href={productHref(locale, {
-                        categorySlug: featured.category?.slug,
-                        parentSlug: featured.category?.parentSlug,
-                        brandSlug: featured.brand?.slug,
-                        productSlug: featured.slug,
-                      })}
-                    >
-                      {dict.actions.viewSpecs}
-                      <IconArrowRight size={14} stroke={2} />
-                    </Button>
-                    <Link
-                      href={quoteHref}
-                      className="text-body group/btn inline-flex items-center gap-1.5 font-medium text-forest-900 hover:text-forest-700"
-                    >
-                      {dict.actions.requestQuote}
-                      <IconArrowUpRight
-                        size={14}
-                        stroke={2}
-                        className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
-                      />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Product visual panel — uses Sanity image when present */}
-                <div className="relative bg-card-100 lg:col-span-6">
-                  <div className="bg-grid-forest absolute inset-0 opacity-60" />
-                  <div className="relative flex aspect-[5/4] items-center justify-center p-10 lg:aspect-auto lg:h-full">
-                    {featured.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={urlFor(featured.image).width(720).url()}
-                        alt={featured.title ?? ""}
-                        className="max-h-[320px] w-auto object-contain"
-                      />
-                    ) : (
-                      <div className="flex h-44 w-44 items-center justify-center rounded-full bg-forest-900 text-gold-500">
-                        <IconShieldCheckered size={72} stroke={1.25} />
-                      </div>
-                    )}
-                    <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-caption font-mono uppercase tracking-wider text-forest-900/70">
-                      <span>· Rapid Shutdown</span>
-                      <span>· IEC 60947-3</span>
-                      <span>· IP66</span>
-                    </div>
-                  </div>
+            <ScrollReveal delay={0.1} className="md:col-span-5">
+              <div className="flex flex-col items-center justify-center py-6 md:py-10">
+                <ProductBounceCard
+                  imageUrl="/products/projoy-rapid-shutdown.png"
+                  alt={
+                    locale === "th"
+                      ? "Projoy PEFS-PL Rapid Shutdown"
+                      : "Projoy PEFS-PL Rapid Shutdown module"
+                  }
+                />
+                <div className="mt-10 inline-flex items-center gap-2 rounded-full border border-mist-400/25 px-4 py-1.5">
+                  <span className="text-caption font-mono uppercase tracking-wider text-mist-400">
+                    {locale === "th"
+                      ? "PEFS-PL · IEC 60947-3 · IP66"
+                      : "PEFS-PL · IEC 60947-3 · IP66"}
+                  </span>
                 </div>
               </div>
             </ScrollReveal>
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
+
+      {/* ── 3.5 · Flagship products grid (replaces single Featured) ── */}
+      <section className="bg-forest-950">
+        <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+          <ScrollReveal className="mb-12 flex flex-wrap items-end justify-between gap-6">
+            <div className="max-w-2xl">
+              <MonoLabel tone="mist">
+                {locale === "th" ? "ผลิตภัณฑ์เด่น" : "Flagship products"}
+              </MonoLabel>
+              <h2
+                className="mt-3 font-medium tracking-tight text-mist-50"
+                style={{
+                  fontSize: "clamp(28px, 4vw, 44px)",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.015em",
+                }}
+              >
+                {t.categories.heading}
+              </h2>
+              <p className="text-body-lg mt-4 text-mist-400">
+                {t.categories.subhead}
+              </p>
+            </div>
+            <Link
+              href={withLocale(locale, "/products")}
+              className="group/btn inline-flex items-center gap-1.5 rounded-full border border-mist-400/30 px-4 py-2 text-body font-medium text-mist-50 hover:bg-mist-50/5 hover:border-mist-400/60"
+            >
+              {dict.actions.viewAll}
+              <IconArrowRight
+                size={16}
+                stroke={2}
+                className="transition-transform duration-200 group-hover/btn:translate-x-0.5"
+              />
+            </Link>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {flagships.map((tile, i) => (
+              <ScrollReveal key={tile.key} delay={i * 0.04}>
+                <Card
+                  surface="forest-deep"
+                  href={tile.href}
+                  className="h-full"
+                >
+                  <div className="flex h-full flex-col">
+                    {/* Photo plane — forest-950, transparent PNG centered */}
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-forest-950">
+                      {tile.photoUrl ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={tile.photoUrl}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 h-full w-full object-contain p-8"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-caption font-mono uppercase tracking-wider text-mist-500">
+                            _{tile.key.toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Hairline rule between planes */}
+                    <div
+                      aria-hidden="true"
+                      className="h-px w-full bg-mist-800"
+                    />
+
+                    {/* Label band — forest-900, title left, pill + arrow right */}
+                    <div className="flex min-h-[72px] flex-1 items-center justify-between gap-3 bg-forest-900 px-5 py-4">
+                      <h3
+                        className="truncate font-medium tracking-tight text-mist-50 transition-transform duration-300 ease-out group-hover/card:translate-x-0.5"
+                        style={{
+                          fontSize: 17,
+                          lineHeight: 1.3,
+                          letterSpacing: "-0.01em",
+                        }}
+                        title={tile.title}
+                      >
+                        {tile.title}
+                      </h3>
+                      <span className="flex shrink-0 items-center gap-2">
+                        {tile.brandPill ? (
+                          <span className="text-caption inline-flex items-center rounded-full border border-mist-800 px-2.5 py-1 font-mono uppercase tracking-wider text-mist-300">
+                            {tile.brandPill}
+                          </span>
+                        ) : null}
+                        <IconArrowUpRight
+                          size={14}
+                          stroke={2}
+                          className="text-mist-400 transition-transform duration-200 group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </Card>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── 4 · Solutions tabs ──────────────────────────────────── */}
       <section className="bg-forest-900">
@@ -932,13 +1000,24 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 {dict.actions.requestQuote}
                 <IconArrowRight size={16} stroke={2} />
               </Button>
-              <Link
+              <Button
+                variant="secondary"
+                size="lg"
                 href={withLocale(locale, "/contact")}
-                className="text-body group/btn inline-flex items-center gap-2 rounded-full border border-mist-400/30 px-[26px] py-[14px] font-medium text-mist-50 transition-colors hover:bg-mist-50/5 hover:border-mist-400/60"
               >
                 {locale === "th" ? "พูดคุยกับวิศวกร" : "Talk to an engineer"}
                 <IconArrowUpRight size={16} stroke={2} />
-              </Link>
+              </Button>
+              <Button
+                variant="outline-primary"
+                size="lg"
+                href={withLocale(locale, "/installers")}
+              >
+                {locale === "th"
+                  ? "เข้าร่วมเครือข่ายช่างติดตั้ง"
+                  : "Become an installer"}
+                <IconArrowUpRight size={16} stroke={2} />
+              </Button>
             </div>
             {certifications.length > 0 ? (
               <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-caption font-mono uppercase tracking-wider text-mist-400">
