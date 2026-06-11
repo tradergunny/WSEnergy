@@ -239,14 +239,31 @@
     "indexTitle": "Safety",
     "indexSubhead": "Solar safety systems — rapid shutdown, firefighter switches, and compliance resources for modern PV installations.",
     "rapidShutdown": {
-      "eyebrow": "★ Exclusive in Thailand",
+      "eyebrow": "Projoy Rapid Shutdown",
       "headline": "Projoy Rapid Shutdown",
-      "subhead": "The safety layer that de-energizes PV strings at the panel level within seconds — protecting firefighters, satisfying insurers, and meeting the codes arriving in Thailand now.",
-      "whyHeading": "Why rapid shutdown matters",
-      "whyBody": "NEC 2017 §690.12 and IEC 60947-3 require module-level shutdown on rooftop PV systems. Rapid Shutdown devices cut string voltage to safe levels within 30 seconds of activation, enabling first responders to work on a roof without risk of electrocution.",
-      "productsHeading": "Rapid Shutdown products",
-      "diagramHeading": "How it works",
-      "diagramIntro": "Trigger a simulated shutdown to watch the signal travel from the Control Box to each PEFS unit and de-energize the array.",
+      "subhead": "Module-level shutdown built to NEC 690.12 and IEC 60947-3, stocked and supported in Thailand exclusively by WS Energy.",
+      "heroLine1": "Every panel touch-safe.",
+      "heroLine2": "In thirty seconds.",
+      "heroSecondaryCta": "See how it works",
+      "hazardHeading": "Sunlight doesn't have an off switch.",
+      "hazardBody": "While light reaches the roof, every string carries lethal DC voltage that breakers and fuses cannot interrupt. Rapid shutdown collapses that voltage at the module, so first responders work over dead conductors instead of live ones.",
+      "stats": {
+        "string": "What a rooftop string carries in full sun",
+        "seconds": "Time allowed to reach controlled voltage",
+        "outside": "Limit outside the array boundary, per NEC 690.12",
+        "inside": "Limit inside the array, panel to panel"
+      },
+      "howHeading": "One signal keeps the array live.",
+      "howBody": "Each Projoy PEFS unit listens for a heartbeat signal from the control box. When that signal stops, deliberately or through power loss, every unit opens on its own. Fail-safe by design.",
+      "steps": [
+        { "title": "Trigger", "body": "A firefighter switch, AC disconnect, or grid failure cuts power to the control box." },
+        { "title": "Signal lost", "body": "The heartbeat on the DC string stops instantly. No separate command is needed." },
+        { "title": "Modules isolate", "body": "Every PEFS unit opens at its panel, collapsing string voltage to touch-safe levels." }
+      ],
+      "diagramHint": "Press trigger to watch the signal travel from the control box to each PEFS unit.",
+      "productsEyebrow": "The range",
+      "productsHeading": "Match the device to your string design.",
+      "productsEmpty": "Product data is being added. Contact us for the current Projoy range.",
       "diagram": {
         "triggerShutdown": "Trigger shutdown",
         "reset": "Reset",
@@ -262,9 +279,32 @@
         "nodeGrid": "Grid"
       },
       "certsHeading": "Certifications & standards",
+      "authHeading": "Exclusive authorized distributor in Thailand",
+      "authBody": "Every unit ships from WS Energy stock with manufacturer warranty and the authorization paperwork insurers and inspectors ask for.",
+      "authDocLabel": "View Projoy authorization document",
+      "partnerCta": "About the Projoy partnership",
+      "faqHeading": "Common questions",
+      "faq": [
+        {
+          "q": "Is rapid shutdown required in Thailand?",
+          "a": "Thai regulation is aligning with NEC 690.12 and IEC frameworks, and insurers already ask for shutdown documentation on commercial projects. New C&I installations are increasingly specified with it from day one."
+        },
+        {
+          "q": "Does it work with my inverter?",
+          "a": "Yes. The PEFS family operates on the DC side, independent of inverter brand. Send us your string design and we will confirm the right model and wiring."
+        },
+        {
+          "q": "Can I retrofit an existing array?",
+          "a": "In most cases, yes. PEFS units install at module level on existing strings. A site survey tells us how many units and which control box your system needs."
+        },
+        {
+          "q": "What documentation comes with an order?",
+          "a": "Datasheets, wiring diagrams, certification records, and the Projoy authorization letter naming WS Energy as the exclusive Thai distributor."
+        }
+      ],
+      "ctaEyebrow": "Get a quote",
       "ctaHeading": "Need rapid shutdown for your project?",
-      "ctaBody": "We stock the full Projoy Rapid Shutdown range and can spec the right combination for your system size.",
-      "authDocLabel": "View Projoy authorization document"
+      "ctaBody": "We stock the full Projoy Rapid Shutdown range and can spec the right combination for your system size."
     },
     "firefighterSwitches": {
       "eyebrow": "Firefighter Safety",
