@@ -153,6 +153,31 @@
     "indexEyebrow": "Catalog",
     "indexTitle": "Products",
     "indexSubhead": "Authorized distribution for inverters, storage, optimizers, micro inverters, EV chargers, and accessories.",
+    "index": {
+      "headline": "Inverters, storage, and everything between",
+      "statProducts": "Products",
+      "statBrands": "Brands",
+      "statCategories": "Categories",
+      "productsUnit": "products",
+      "categoryBlurbs": {
+        "inverters": "String and hybrid inverters, from home rooftops to solar farms.",
+        "battery-storage": "Battery systems for homes, businesses, and backup power.",
+        "optimizers": "Module-level DC optimization and monitoring.",
+        "micro-inverters": "Per-panel AC conversion for complex rooftops.",
+        "ev-chargers": "AC and DC charging, from home wallbox to fleet depot.",
+        "accessories": "Meters, dongles, and balance-of-system parts."
+      },
+      "authorizedLine": "Authorized distributor for {brands} in Thailand.",
+      "safety": {
+        "heading": "Looking for rapid shutdown?",
+        "body": "Projoy rapid shutdown devices and firefighter safety switches have their own section, with standards references and wiring guides."
+      },
+      "help": {
+        "heading": "Not sure which combination fits?",
+        "body": "Send the project size and site constraints. A sales engineer will spec the system and come back with a quote.",
+        "datasheets": "Browse datasheets"
+      }
+    },
     "filters": {
       "heading": "Filter",
       "brand": "Brand",
