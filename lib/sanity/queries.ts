@@ -685,3 +685,38 @@ export const productNavBrandsQuery = groq`
     "brand": brand->{ name, "slug": slug.current }
   }
 `;
+
+/**
+ * Products index page data — one round-trip for the catalog landing.
+ * Categories are scoped to children of the "products" parent (safety
+ * subcategories live under /safety), enriched with live inventory counts,
+ * the brand names present in each, and a representative product image
+ * where one exists. Brands are scoped the same way for the logo band.
+ */
+export const productsIndexQuery = groq`
+{
+  "categories": *[_type == "category"
+      && parent->slug.current == "products"
+      && !(_id in path("drafts.**"))]
+    | order(orderRank asc) {
+    _id,
+    title_en,
+    title_th,
+    "slug": slug.current,
+    "parentSlug": parent->slug.current,
+    "productCount": count(*[_type == "product" && references(^._id)]),
+    "brandNames": array::unique(*[_type == "product" && category._ref == ^._id].brand->name),
+    "image": *[_type == "product" && category._ref == ^._id && defined(gallery[0])]
+      | order(orderRank asc) [0].gallery[0]
+  },
+  "brands": *[_type == "brand"
+      && count(*[_type == "product" && references(^._id) && category->parent->slug.current == "products"]) > 0]
+    | order(authorizedDistributor desc, name asc) {
+    _id,
+    name,
+    "slug": slug.current,
+    authorizedDistributor,
+    "logo": select(defined(logo.asset->_id) => logo, null)
+  }
+}
+`;
