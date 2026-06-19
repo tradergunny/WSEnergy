@@ -366,6 +366,35 @@
     }
   },
   "solutions": {
+    "index": {
+      "eyebrow": "Solutions",
+      "headline": "From a single rooftop to a utility solar farm",
+      "subhead": "Authorized components, engineering support, and safety-first BOMs, matched to how your project actually gets built.",
+      "credentials": [
+        {
+          "title": "Authorized Projoy distributor",
+          "body": "Genuine stock, full manufacturer warranty, paperwork on file."
+        },
+        {
+          "title": "Exclusive: Rapid Shutdown",
+          "body": "The only authorized Projoy Rapid Shutdown distributor in Thailand."
+        }
+      ],
+      "segments": {
+        "commercial-industrial": "Engineering-grade BOMs for factory roofs and logistics yards, anchored on Projoy Rapid Shutdown.",
+        "residential": "Authorized inverters, storage, and EV chargers for homes and small commercial rooftops.",
+        "solar-farm": "Inverter sourcing and string-design support for MW-scale ground-mount and utility PV.",
+        "scada-monitoring": "Plant-level visibility, smart metering, and alarm management across your inverter fleet."
+      },
+      "safety": {
+        "heading": "Every rooftop needs a safety layer",
+        "body": "Projoy Rapid Shutdown runs through our C&I, solar farm, and residential work. WS Energy is the exclusive authorized distributor in Thailand, with the paperwork your insurer and AHJ expect."
+      },
+      "help": {
+        "heading": "Not sure which path fits your project?",
+        "body": "Send a BOM, a single-line drawing, or a rough capacity. A sales engineer will scope it and come back with a quote in 24 hours."
+      }
+    },
     "commercialIndustrial": {
       "breadcrumb": "Commercial & Industrial",
       "eyebrow": "Solutions · C&I rooftop",
