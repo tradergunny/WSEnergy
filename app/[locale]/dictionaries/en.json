@@ -399,7 +399,9 @@
       "breadcrumb": "Commercial & Industrial",
       "eyebrow": "Solutions · C&I rooftop",
       "headline": "Commercial & industrial rooftop",
-      "subhead": "Engineering-grade BOMs for factory roofs, logistics yards, and commercial portfolios — anchored on Projoy Rapid Shutdown, sized for the inverters and storage your insurer will accept.",
+      "subhead": "Engineering-grade BOMs for factory roofs, logistics yards, and commercial portfolios. Anchored on Projoy Rapid Shutdown, sized for the inverters and storage your insurer will accept.",
+      "standardsNote": "Built to the codes Thai AHJs and insurers are adopting.",
+      "standards": ["NEC 690.12", "IEC 60947-3", "TIS / UL"],
       "benefitsHeading": "Why EPCs spec WS Energy on C&I",
       "benefits": [
         {
@@ -412,17 +414,56 @@
         },
         {
           "title": "Storage where it makes sense",
-          "body": "Battery sizing for peak-shaving and time-of-use tariffs — not a one-size-fits-all kit."
+          "body": "Battery sizing for peak-shaving and time-of-use tariffs, not a one-size-fits-all kit."
         },
         {
           "title": "Documentation your insurer accepts",
-          "body": "TIS, IEC, and authorization letters bundled with every quote — no scrambling at handover."
+          "body": "TIS, IEC, and authorization letters bundled with every quote, so nothing stalls at handover."
         }
       ],
+      "compliance": {
+        "eyebrow": "Safety layer",
+        "heading": "Rapid Shutdown, built into every C&I BOM",
+        "body": "Commercial roofs carry lethal DC voltage in full sun, and Thai AHJs and insurers increasingly ask for module-level shutdown on new installations. We spec the Projoy Rapid Shutdown layer into the BOM from the start, so compliance is designed in, not bolted on.",
+        "checklist": [
+          "NEC 690.12 module-level shutdown to a touch-safe limit",
+          "IEC 60947-3 isolation for PV load-break switching",
+          "TIS and UL marks on every device we ship",
+          "Authorization letters and datasheets your AHJ and insurer will accept"
+        ]
+      },
       "productsHeading": "Components we ship into C&I projects",
       "projectsHeading": "Recent C&I installations",
+      "projectsSubhead": "Factory, warehouse, and commercial rooftops delivered with the components above.",
       "ctaHeading": "Quoting a C&I rooftop?",
-      "ctaBody": "Send us the array layout or rough kW — we'll come back with a Rapid-Shutdown-aware BOM and stock confirmation."
+      "ctaBody": "Send us the array layout or a rough kW and we will come back with a Rapid-Shutdown-aware BOM and stock confirmation.",
+      "statLabels": [
+        "Touch-safe conductor voltage after rapid shutdown",
+        "From initiation to a de-energized array",
+        "Authorized three-phase inverter brands, warranty intact",
+        "Manufacturer warranty bundled with the BOM"
+      ],
+      "diagram": {
+        "eyebrow": "Rapid shutdown, live",
+        "heading": "Watch the roof go touch-safe",
+        "body": "In full sun a commercial array holds hundreds of volts of DC across the roof, a real hazard for anyone working on it. Projoy module-level rapid shutdown collapses every conductor outside the array boundary to a touch-safe level. Arm it and watch.",
+        "liveState": "Array energized",
+        "liveCaption": "Full string voltage across the roof. Hazardous to touch.",
+        "safeState": "Rapid shutdown initiated",
+        "safeCaption": "Conductors dropped below the touch-safe limit. Safe to approach.",
+        "armCta": "Initiate rapid shutdown",
+        "resetCta": "Re-energize array",
+        "note": "Illustrative behaviour. Actual timing and voltages follow the device datasheet and NEC 690.12.",
+        "labels": {
+          "string": "PV string",
+          "device": "Projoy RSD",
+          "inverter": "Inverter",
+          "grid": "Grid",
+          "boundary": "Array boundary",
+          "touchSafe": "Touch-safe",
+          "live": "Live"
+        }
+      }
     },
     "residential": {
       "breadcrumb": "Residential",
