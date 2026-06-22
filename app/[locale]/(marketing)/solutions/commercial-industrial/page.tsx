@@ -22,7 +22,7 @@ import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
 import { CountUp } from "@/components/ui/CountUp";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { GsapBridge } from "@/components/marketing/GsapBridge";
-import { CIHero } from "@/components/solution/CIHero";
+import { SolutionHero } from "@/components/solution/SolutionHero";
 import { RapidShutdownDiagram } from "@/components/solution/RapidShutdownDiagram";
 import { ProductCard } from "@/components/product/ProductCard";
 import { CaseStudyCard } from "@/components/product/CaseStudyCard";
@@ -123,12 +123,12 @@ export default async function CommercialIndustrialPage({
       <GsapBridge />
 
       {/* ── 1 · Cinematic hero ──────────────────────────────────── */}
-      <CIHero
+      <SolutionHero
         eyebrow={t.eyebrow}
         headline={t.headline}
         subhead={t.subhead}
-        standards={t.standards}
-        standardsNote={t.standardsNote}
+        chips={t.standards}
+        chipsNote={t.standardsNote}
         primaryLabel={dict.actions.requestQuote}
         primaryHref={quoteHref}
         secondaryLabel={dict.actions.talkToEngineer}

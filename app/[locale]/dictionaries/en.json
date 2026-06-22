@@ -474,7 +474,7 @@
       "benefits": [
         {
           "title": "Genuine, authorized stock",
-          "body": "Huawei, SolaX, KUVO, T-SUN — direct from authorized supply, full warranty intact."
+          "body": "Huawei, SolaX, KUVO, and T-SUN, direct from authorized supply with full warranty intact."
         },
         {
           "title": "Single-phase to three-phase",
@@ -492,7 +492,37 @@
       "productsHeading": "Residential-ready products",
       "projectsHeading": "Residential references",
       "ctaHeading": "Pricing a residential install?",
-      "ctaBody": "Tell us the kW and whether the homeowner wants storage or EV — we'll come back with a tight kit and stock confirmation."
+      "ctaBody": "Tell us the kW and whether the homeowner wants storage or EV, and we will come back with a tight kit and stock confirmation.",
+      "heroChipsNote": "Authorized supply, full warranty intact.",
+      "brands": ["Huawei", "SolaX", "KUVO", "T-SUN"],
+      "lineCta": "Chat on LINE",
+      "kitScale": {
+        "eyebrow": "Sizes on the shelf",
+        "heading": "From a single villa to a small estate",
+        "body": "Most of what installers need sits in three sizes. Pick the closest and we tune the inverter and battery to the roof and the tariff.",
+        "tiers": [
+          {
+            "size": "5 kW",
+            "name": "Single home",
+            "detail": "Single-phase hybrid inverter and an optional 5 kWh battery. The everyday villa kit."
+          },
+          {
+            "size": "15 kW",
+            "name": "Large home or villa with EV",
+            "detail": "Hybrid inverter with headroom for an EV charger and 10 to 15 kWh of storage."
+          },
+          {
+            "size": "30 kW",
+            "name": "Estate or small commercial",
+            "detail": "Three-phase inverter and scalable storage, ready for shophouse and small-factory roofs."
+          }
+        ]
+      },
+      "evReady": {
+        "eyebrow": "EV ready",
+        "heading": "Charge-ready from day one",
+        "body": "SCU, Sine Xcel, and SolaX chargers that pair cleanly with the inverter brands you already stock, so a solar quote can carry the EV charger too."
+      }
     },
     "solarFarm": {
       "breadcrumb": "Solar Farm",

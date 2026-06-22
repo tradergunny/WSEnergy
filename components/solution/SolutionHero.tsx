@@ -15,21 +15,22 @@ import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * CIHero — cinematic, full-bleed hero for the C&I flagship.
- * A graded rooftop backdrop (photo when supplied, an art-directed CSS canvas
- * until then) drifts on scroll for parallax depth; the headline reveals kinetic
- * via SplitTextReveal; a single gold light-sweep crosses once on load; the
- * primary CTA is magnetic. Compliance chips sit as a credential strip.
+ * SolutionHero — shared cinematic hero for the bespoke solution pages.
+ * A graded backdrop (photo when supplied, an art-directed CSS canvas until
+ * then) drifts on scroll for parallax depth; the headline reveals kinetic via
+ * SplitTextReveal; a single gold light-sweep crosses once on load; the primary
+ * CTA is magnetic. `chips` render as a credential strip (standards on C&I,
+ * authorized brands on Residential, etc.).
  *
- * Drop a photo at /solutions/ci-hero.webp and pass it as `imageSrc` — the CSS
- * backdrop stays underneath as a graceful fallback.
+ * Drop a photo in /public/solutions and pass it as `imageSrc`; the CSS backdrop
+ * stays underneath as a graceful fallback.
  */
-export function CIHero({
+export function SolutionHero({
   eyebrow,
   headline,
   subhead,
-  standards,
-  standardsNote,
+  chips,
+  chipsNote,
   primaryLabel,
   primaryHref,
   secondaryLabel,
@@ -41,8 +42,8 @@ export function CIHero({
   eyebrow: string;
   headline: string;
   subhead: string;
-  standards: string[];
-  standardsNote: string;
+  chips: string[];
+  chipsNote: string;
   primaryLabel: string;
   primaryHref: string;
   secondaryLabel: string;
@@ -59,7 +60,6 @@ export function CIHero({
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      // Parallax: backdrop drifts up and scales slightly through the hero.
       if (bg.current) {
         gsap.fromTo(
           bg.current,
@@ -78,7 +78,6 @@ export function CIHero({
         );
       }
 
-      // One-time gold light sweep across the array.
       if (sweep.current) {
         gsap.fromTo(
           sweep.current,
@@ -99,7 +98,7 @@ export function CIHero({
   return (
     <section
       ref={root}
-      className="relative isolate flex min-h-[88svh] items-end overflow-hidden bg-forest-950"
+      className="bg-forest-950 relative isolate flex min-h-[88svh] items-end overflow-hidden"
     >
       {/* Backdrop (parallax layer) */}
       <div ref={bg} className="absolute inset-0 -z-10">
@@ -113,7 +112,6 @@ export function CIHero({
             className="object-cover"
           />
         ) : null}
-        {/* Art-directed canvas: forest base + stylized array rows + grid */}
         <div
           className="absolute inset-0"
           style={{
@@ -128,7 +126,7 @@ export function CIHero({
         />
       </div>
 
-      {/* Grade overlays — keep text legible over any photo, pull toward brand */}
+      {/* Grade overlays */}
       <div
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
@@ -145,7 +143,7 @@ export function CIHero({
         }}
         aria-hidden
       />
-      {/* Left scrim — keeps the headline legible over the bright sun/sky */}
+      {/* Left scrim — keeps the headline legible over a bright sky */}
       <div
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
@@ -154,7 +152,6 @@ export function CIHero({
         }}
         aria-hidden
       />
-      {/* Gold light sweep */}
       <div
         ref={sweep}
         className="pointer-events-none absolute inset-y-0 -z-10 w-1/3 opacity-0"
@@ -196,22 +193,19 @@ export function CIHero({
           </div>
 
           <div className="border-mist-800 mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 border-t pt-6">
-            {standards.map((s) => (
+            {chips.map((c) => (
               <span
-                key={s}
+                key={c}
                 className="border-mist-700 text-caption text-mist-300 rounded-full border px-3 py-1"
               >
-                {s}
+                {c}
               </span>
             ))}
-            <span className="text-caption text-mist-400 ml-1">
-              {standardsNote}
-            </span>
+            <span className="text-caption text-mist-400 ml-1">{chipsNote}</span>
           </div>
         </div>
       </Container>
 
-      {/* Scroll cue */}
       <div
         className="text-mist-600 pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2"
         aria-hidden
