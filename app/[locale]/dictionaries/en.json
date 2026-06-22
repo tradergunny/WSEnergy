@@ -366,11 +366,42 @@
     }
   },
   "solutions": {
+    "index": {
+      "eyebrow": "Solutions",
+      "headline": "From a single rooftop to a utility solar farm",
+      "subhead": "Authorized components, engineering support, and safety-first BOMs, matched to how your project actually gets built.",
+      "credentials": [
+        {
+          "title": "Authorized Projoy distributor",
+          "body": "Genuine stock, full manufacturer warranty, paperwork on file."
+        },
+        {
+          "title": "Exclusive: Rapid Shutdown",
+          "body": "The only authorized Projoy Rapid Shutdown distributor in Thailand."
+        }
+      ],
+      "segments": {
+        "commercial-industrial": "Engineering-grade BOMs for factory roofs and logistics yards, anchored on Projoy Rapid Shutdown.",
+        "residential": "Authorized inverters, storage, and EV chargers for homes and small commercial rooftops.",
+        "solar-farm": "Inverter sourcing and string-design support for MW-scale ground-mount and utility PV.",
+        "scada-monitoring": "Plant-level visibility, smart metering, and alarm management across your inverter fleet."
+      },
+      "safety": {
+        "heading": "Every rooftop needs a safety layer",
+        "body": "Projoy Rapid Shutdown runs through our C&I, solar farm, and residential work. WS Energy is the exclusive authorized distributor in Thailand, with the paperwork your insurer and AHJ expect."
+      },
+      "help": {
+        "heading": "Not sure which path fits your project?",
+        "body": "Send a BOM, a single-line drawing, or a rough capacity. A sales engineer will scope it and come back with a quote in 24 hours."
+      }
+    },
     "commercialIndustrial": {
       "breadcrumb": "Commercial & Industrial",
       "eyebrow": "Solutions · C&I rooftop",
       "headline": "Commercial & industrial rooftop",
-      "subhead": "Engineering-grade BOMs for factory roofs, logistics yards, and commercial portfolios — anchored on Projoy Rapid Shutdown, sized for the inverters and storage your insurer will accept.",
+      "subhead": "Engineering-grade BOMs for factory roofs, logistics yards, and commercial portfolios. Anchored on Projoy Rapid Shutdown, sized for the inverters and storage your insurer will accept.",
+      "standardsNote": "Built to the codes Thai AHJs and insurers are adopting.",
+      "standards": ["NEC 690.12", "IEC 60947-3", "TIS / UL"],
       "benefitsHeading": "Why EPCs spec WS Energy on C&I",
       "benefits": [
         {
@@ -383,17 +414,56 @@
         },
         {
           "title": "Storage where it makes sense",
-          "body": "Battery sizing for peak-shaving and time-of-use tariffs — not a one-size-fits-all kit."
+          "body": "Battery sizing for peak-shaving and time-of-use tariffs, not a one-size-fits-all kit."
         },
         {
           "title": "Documentation your insurer accepts",
-          "body": "TIS, IEC, and authorization letters bundled with every quote — no scrambling at handover."
+          "body": "TIS, IEC, and authorization letters bundled with every quote, so nothing stalls at handover."
         }
       ],
+      "compliance": {
+        "eyebrow": "Safety layer",
+        "heading": "Rapid Shutdown, built into every C&I BOM",
+        "body": "Commercial roofs carry lethal DC voltage in full sun, and Thai AHJs and insurers increasingly ask for module-level shutdown on new installations. We spec the Projoy Rapid Shutdown layer into the BOM from the start, so compliance is designed in, not bolted on.",
+        "checklist": [
+          "NEC 690.12 module-level shutdown to a touch-safe limit",
+          "IEC 60947-3 isolation for PV load-break switching",
+          "TIS and UL marks on every device we ship",
+          "Authorization letters and datasheets your AHJ and insurer will accept"
+        ]
+      },
       "productsHeading": "Components we ship into C&I projects",
       "projectsHeading": "Recent C&I installations",
+      "projectsSubhead": "Factory, warehouse, and commercial rooftops delivered with the components above.",
       "ctaHeading": "Quoting a C&I rooftop?",
-      "ctaBody": "Send us the array layout or rough kW — we'll come back with a Rapid-Shutdown-aware BOM and stock confirmation."
+      "ctaBody": "Send us the array layout or a rough kW and we will come back with a Rapid-Shutdown-aware BOM and stock confirmation.",
+      "statLabels": [
+        "Touch-safe conductor voltage after rapid shutdown",
+        "From initiation to a de-energized array",
+        "Authorized three-phase inverter brands, warranty intact",
+        "Manufacturer warranty bundled with the BOM"
+      ],
+      "diagram": {
+        "eyebrow": "Rapid shutdown, live",
+        "heading": "Watch the roof go touch-safe",
+        "body": "In full sun a commercial array holds hundreds of volts of DC across the roof, a real hazard for anyone working on it. Projoy module-level rapid shutdown collapses every conductor outside the array boundary to a touch-safe level. Arm it and watch.",
+        "liveState": "Array energized",
+        "liveCaption": "Full string voltage across the roof. Hazardous to touch.",
+        "safeState": "Rapid shutdown initiated",
+        "safeCaption": "Conductors dropped below the touch-safe limit. Safe to approach.",
+        "armCta": "Initiate rapid shutdown",
+        "resetCta": "Re-energize array",
+        "note": "Illustrative behaviour. Actual timing and voltages follow the device datasheet and NEC 690.12.",
+        "labels": {
+          "string": "PV string",
+          "device": "Projoy RSD",
+          "inverter": "Inverter",
+          "grid": "Grid",
+          "boundary": "Array boundary",
+          "touchSafe": "Touch-safe",
+          "live": "Live"
+        }
+      }
     },
     "residential": {
       "breadcrumb": "Residential",
@@ -404,7 +474,7 @@
       "benefits": [
         {
           "title": "Genuine, authorized stock",
-          "body": "Huawei, SolaX, KUVO, T-SUN — direct from authorized supply, full warranty intact."
+          "body": "Huawei, SolaX, KUVO, and T-SUN, direct from authorized supply with full warranty intact."
         },
         {
           "title": "Single-phase to three-phase",
@@ -422,13 +492,43 @@
       "productsHeading": "Residential-ready products",
       "projectsHeading": "Residential references",
       "ctaHeading": "Pricing a residential install?",
-      "ctaBody": "Tell us the kW and whether the homeowner wants storage or EV — we'll come back with a tight kit and stock confirmation."
+      "ctaBody": "Tell us the kW and whether the homeowner wants storage or EV, and we will come back with a tight kit and stock confirmation.",
+      "heroChipsNote": "Authorized supply, full warranty intact.",
+      "brands": ["Huawei", "SolaX", "KUVO", "T-SUN"],
+      "lineCta": "Chat on LINE",
+      "kitScale": {
+        "eyebrow": "Sizes on the shelf",
+        "heading": "From a single villa to a small estate",
+        "body": "Most of what installers need sits in three sizes. Pick the closest and we tune the inverter and battery to the roof and the tariff.",
+        "tiers": [
+          {
+            "size": "5 kW",
+            "name": "Single home",
+            "detail": "Single-phase hybrid inverter and an optional 5 kWh battery. The everyday villa kit."
+          },
+          {
+            "size": "15 kW",
+            "name": "Large home or villa with EV",
+            "detail": "Hybrid inverter with headroom for an EV charger and 10 to 15 kWh of storage."
+          },
+          {
+            "size": "30 kW",
+            "name": "Estate or small commercial",
+            "detail": "Three-phase inverter and scalable storage, ready for shophouse and small-factory roofs."
+          }
+        ]
+      },
+      "evReady": {
+        "eyebrow": "EV ready",
+        "heading": "Charge-ready from day one",
+        "body": "SCU, Sine Xcel, and SolaX chargers that pair cleanly with the inverter brands you already stock, so a solar quote can carry the EV charger too."
+      }
     },
     "solarFarm": {
       "breadcrumb": "Solar Farm",
       "eyebrow": "Solutions · Utility scale",
       "headline": "Solar farm & utility",
-      "subhead": "Component supply and specification support for MW-scale ground-mount and utility-scale PV projects — string inverters, accessories, and the Rapid Shutdown layer where the AHJ requires it.",
+      "subhead": "Component supply and specification support for MW-scale ground-mount and utility-scale PV projects: string inverters, accessories, and the Rapid Shutdown layer where the AHJ requires it.",
       "benefitsHeading": "Built for utility-scale projects",
       "benefits": [
         {
@@ -445,42 +545,126 @@
         },
         {
           "title": "Logistics from Samut Prakan",
-          "body": "Staged deliveries that match your install schedule — not a single drop that blocks the site."
+          "body": "Staged deliveries that match your install schedule, not a single drop that blocks the site."
         }
       ],
       "productsHeading": "Components we ship into solar farms",
       "projectsHeading": "Utility-scale references",
       "ctaHeading": "Spec'ing a solar farm?",
-      "ctaBody": "Share the single-line or capacity target — we'll come back with an inverter and accessories BOM, plus Projoy where the design needs it."
+      "ctaBody": "Share the single-line or capacity target, and we'll come back with an inverter and accessories BOM, plus Projoy where the design needs it.",
+      "heroChips": ["MW-scale", "1500 V DC", "AHJ-ready"],
+      "heroChipsNote": "Authorized string-inverter supply for utility PV.",
+      "engineering": {
+        "eyebrow": "Engineering support",
+        "heading": "We design to your single-line, not a catalogue",
+        "body": "Our sales engineers work the numbers with you before anything ships, so the bill of materials matches the array and the authority having jurisdiction.",
+        "checklist": [
+          "Size strings and balance MPPTs across the array",
+          "Reconcile the inverter and accessories BOM against your single-line",
+          "Specify the Projoy Rapid Shutdown layer to string voltage and module count where the AHJ requires it",
+          "Design to a 1500 V DC system class for utility arrays"
+        ]
+      },
+      "logistics": {
+        "eyebrow": "Logistics",
+        "heading": "Stock that tracks your install schedule",
+        "body": "Volume leaves our Samut Prakan warehouse in stages, so deliveries land as each block is ready instead of one drop that clogs the site.",
+        "steps": [
+          { "title": "Single-line and capacity review", "detail": "Send the single-line or a capacity target and we scope the inverter and accessories list." },
+          { "title": "BOM and stock confirmation", "detail": "We confirm authorized stock and lead time, with Projoy specified where the design needs it." },
+          { "title": "Staged dispatch from Samut Prakan", "detail": "Inverters and accessories ship in blocks that follow your construction sequence." },
+          { "title": "Support through commissioning", "detail": "Engineers stay reachable for string questions and swaps through energization." }
+        ]
+      }
     },
     "scadaMonitoring": {
       "breadcrumb": "SCADA & Monitoring",
-      "eyebrow": "Solutions · SCADA",
-      "headline": "SCADA & monitoring",
-      "subhead": "Plant-level visibility, alarm management, and inverter-fleet monitoring built on the smart meters, dataloggers, and inverter platforms we already supply.",
-      "benefitsHeading": "Why operators wire in WS Energy",
-      "benefits": [
-        {
-          "title": "Inverter-fleet visibility",
-          "body": "Huawei FusionSolar and SolaX cloud monitoring configured per plant, with alerts that match your O&M SLA."
-        },
-        {
-          "title": "DTSU666 smart metering",
-          "body": "Authorized DTSU666 stock for export limits, self-consumption metering, and revenue-grade reads."
-        },
-        {
-          "title": "Alarm routing that scales",
-          "body": "Plant-by-plant rules, on-call rotations, and a clear escalation path — not a single inbox."
-        },
-        {
-          "title": "Commissioning support",
-          "body": "We help on the wire-up, the registration, and the first month of clean data."
+      "eyebrow": "Solutions · SCADA, EMS & HMI",
+      "headline": "Supervisory control for substations and BESS plants",
+      "subhead": "We build the SCADA, EMS, and HMI layer that monitors and runs grid-scale assets, from the RTU on the floor to the operator screen and the utility control centre.",
+      "hero": {
+        "statusLabel": "System nominal",
+        "caption": "Illustrative HMI. Live plants sit behind operator login.",
+        "tiles": [
+          { "label": "Sites online", "value": "14", "unit": "" },
+          { "label": "Availability", "value": "99.4", "unit": "%" },
+          { "label": "BESS state of charge", "value": "47", "unit": "%" },
+          { "label": "Active alarms", "value": "2", "unit": "" }
+        ],
+        "events": [
+          "10:42:18  INV-03  GRID_OK         cleared",
+          "10:39:55  BESS-A  SOC_LOW         warning",
+          "10:31:02  MET-01  COMMS_RESTORED  info"
+        ]
+      },
+      "architecture": {
+        "eyebrow": "How it connects",
+        "heading": "From the RTU on the floor to the utility control centre",
+        "body": "One stack runs two ways. Telemetry flows up for monitoring; operator commands flow down for control. We wire the RTUs, gateways, and protocols that carry both.",
+        "monitoringLabel": "Process monitoring",
+        "controlLabel": "Process control",
+        "monitoringCaption": "Telemetry flows up from the field devices to the EMS and the utility SCADA.",
+        "controlCaption": "Operator commands flow down from the control centre to the field devices.",
+        "nodes": {
+          "field": "PCS / ESS",
+          "sacu": "SACU",
+          "rtu": "RTU / gateway",
+          "ems": "EMS server",
+          "firewall": "Firewall",
+          "scada": "Utility SCADA",
+          "operator": "Operator"
         }
-      ],
-      "productsHeading": "SCADA & monitoring components",
-      "projectsHeading": "Where we run monitoring",
-      "ctaHeading": "Adding monitoring to a plant?",
-      "ctaBody": "Send us the inverter brand and plant count — we'll come back with a SCADA stack and the meters to back it."
+      },
+      "capabilities": {
+        "eyebrow": "What we build",
+        "heading": "The full supervisory stack",
+        "items": [
+          { "title": "EMS and SCADA servers", "body": "Energy-management and supervisory servers configured to the plant, with redundancy where the grid code asks for it." },
+          { "title": "HMI mimic design", "body": "Single-line mimic screens operators actually read, with live metering, breaker states, and BESS control functions." },
+          { "title": "RTU, gateway and protocols", "body": "MODBUS TCP, IEC 60870-5-104, and DNP3 wired between PLCs, meters, PCS, and the control centre." },
+          { "title": "Utility SCADA integration", "body": "Telemetry handed to the provider's control centre through a firewall, in the format and protocol they require." },
+          { "title": "BESS control modes", "body": "Peak shaving, load levelling, and islanding logic configured and tested against the dispatch the plant was built for." },
+          { "title": "Alarm and event management", "body": "Plant-by-plant alarm rules, event logging, and an escalation path an O&M team can run." }
+        ]
+      },
+      "project": {
+        "eyebrow": "Featured deployment",
+        "customer": "Provincial Electricity Authority (PEA)",
+        "title": "Samui 2 Substation BESS",
+        "body": "A battery-energy-storage substation on Koh Samui, fed by the submarine cable from Khanom, with two independent BESS strings under peak-shaving, load-levelling, and islanding control. We designed the HMI mimic and integrated the plant with the PEA SCADA control centre.",
+        "facts": [
+          { "label": "Asset", "value": "Dual BESS strings, A and B" },
+          { "label": "Feed", "value": "Submarine cable from Khanom" },
+          { "label": "Control", "value": "Peak shaving, load levelling, islanding" },
+          { "label": "Integration", "value": "Custom HMI with PEA SCADA" }
+        ]
+      },
+      "services": {
+        "eyebrow": "Field services",
+        "heading": "Preventive maintenance and commissioning",
+        "body": "Beyond the software, our engineers test and commission the high-voltage plant the SCADA watches, on a schedule or before first energization.",
+        "groups": [
+          {
+            "title": "Preventive maintenance",
+            "items": [
+              "Scheduled and annual electrical equipment inspection",
+              "Diagnostic testing that catches faults before they trip the plant",
+              "Emergency callout and fault investigation"
+            ]
+          },
+          {
+            "title": "Test and commissioning",
+            "items": [
+              "Power transformers: insulation resistance, power factor, turns ratio, winding resistance",
+              "115 kV SF6 breakers, current and voltage transformers, disconnect switches",
+              "Protection relays: characteristic and operation-function testing",
+              "Medium and low-voltage switchgear acceptance and energization"
+            ]
+          }
+        ]
+      },
+      "ctaHeading": "Scoping a SCADA or BESS plant?",
+      "ctaBody": "Tell us the assets and the control centre you report to, and our engineers will scope the SCADA, EMS, and HMI to match."
     }
   },
   "common": {
