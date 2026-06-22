@@ -492,7 +492,7 @@
       "breadcrumb": "[TH] Solar Farm",
       "eyebrow": "[TH] Solutions · Utility scale",
       "headline": "[TH] Solar farm & utility",
-      "subhead": "[TH] Component supply and specification support for MW-scale ground-mount and utility-scale PV projects — string inverters, accessories, and the Rapid Shutdown layer where the AHJ requires it.",
+      "subhead": "[TH] Component supply and specification support for MW-scale ground-mount and utility-scale PV projects: string inverters, accessories, and the Rapid Shutdown layer where the AHJ requires it.",
       "benefitsHeading": "[TH] Built for utility-scale projects",
       "benefits": [
         { "title": "[TH] MW-scale inverter sourcing", "body": "[TH] Huawei SUN2000 and SolaX three-phase string inverters in volume, authorized supply." },
@@ -503,7 +503,31 @@
       "productsHeading": "[TH] Components we ship into solar farms",
       "projectsHeading": "[TH] Utility-scale references",
       "ctaHeading": "[TH] Spec'ing a solar farm?",
-      "ctaBody": "[TH] Share the single-line or capacity target — we'll come back with an inverter and accessories BOM."
+      "ctaBody": "[TH] Share the single-line or capacity target, and we'll come back with an inverter and accessories BOM.",
+      "heroChips": ["MW-scale", "1500 V DC", "AHJ-ready"],
+      "heroChipsNote": "[TH] Authorized string-inverter supply for utility PV.",
+      "engineering": {
+        "eyebrow": "[TH] Engineering support",
+        "heading": "[TH] We design to your single-line, not a catalogue",
+        "body": "[TH] Our sales engineers work the numbers with you before anything ships, so the bill of materials matches the array and the authority having jurisdiction.",
+        "checklist": [
+          "[TH] Size strings and balance MPPTs across the array",
+          "[TH] Reconcile the inverter and accessories BOM against your single-line",
+          "[TH] Specify the Projoy Rapid Shutdown layer to string voltage and module count where the AHJ requires it",
+          "[TH] Design to a 1500 V DC system class for utility arrays"
+        ]
+      },
+      "logistics": {
+        "eyebrow": "[TH] Logistics",
+        "heading": "[TH] Stock that tracks your install schedule",
+        "body": "[TH] Volume leaves our Samut Prakan warehouse in stages, so deliveries land as each block is ready instead of one drop that clogs the site.",
+        "steps": [
+          { "title": "[TH] Single-line and capacity review", "detail": "[TH] Send the single-line or a capacity target and we scope the inverter and accessories list." },
+          { "title": "[TH] BOM and stock confirmation", "detail": "[TH] We confirm authorized stock and lead time, with Projoy specified where the design needs it." },
+          { "title": "[TH] Staged dispatch from Samut Prakan", "detail": "[TH] Inverters and accessories ship in blocks that follow your construction sequence." },
+          { "title": "[TH] Support through commissioning", "detail": "[TH] Engineers stay reachable for string questions and swaps through energization." }
+        ]
+      }
     },
     "scadaMonitoring": {
       "breadcrumb": "[TH] SCADA & Monitoring",
