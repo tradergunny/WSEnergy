@@ -125,6 +125,7 @@ export default async function ResidentialPage({
         secondaryHref={quoteHref}
         imageSrc={heroImage}
         imageAlt={t.headline}
+        imagePosition="center 22%"
         breadcrumb={breadcrumb}
       />
 

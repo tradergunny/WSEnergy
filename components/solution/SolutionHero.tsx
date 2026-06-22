@@ -37,6 +37,7 @@ export function SolutionHero({
   secondaryHref,
   imageSrc = null,
   imageAlt = "",
+  imagePosition = "center",
   breadcrumb = null,
 }: {
   eyebrow: string;
@@ -50,6 +51,8 @@ export function SolutionHero({
   secondaryHref: string;
   imageSrc?: string | null;
   imageAlt?: string;
+  /** object-position for the backdrop crop, e.g. "center 22%" to keep a tall subject. */
+  imagePosition?: string;
   breadcrumb?: ReactNode;
 }) {
   const root = useRef<HTMLElement>(null);
@@ -110,6 +113,7 @@ export function SolutionHero({
             priority
             sizes="100vw"
             className="object-cover"
+            style={{ objectPosition: imagePosition }}
           />
         ) : null}
         <div
