@@ -531,20 +531,92 @@
     },
     "scadaMonitoring": {
       "breadcrumb": "[TH] SCADA & Monitoring",
-      "eyebrow": "[TH] Solutions · SCADA",
-      "headline": "[TH] SCADA & monitoring",
-      "subhead": "[TH] Plant-level visibility, alarm management, and inverter-fleet monitoring built on the smart meters, dataloggers, and inverter platforms we already supply.",
-      "benefitsHeading": "[TH] Why operators wire in WS Energy",
-      "benefits": [
-        { "title": "[TH] Inverter-fleet visibility", "body": "[TH] Huawei FusionSolar and SolaX cloud monitoring configured per plant, with alerts that match your O&M SLA." },
-        { "title": "[TH] DTSU666 smart metering", "body": "[TH] Authorized DTSU666 stock for export limits, self-consumption metering, and revenue-grade reads." },
-        { "title": "[TH] Alarm routing that scales", "body": "[TH] Plant-by-plant rules, on-call rotations, and a clear escalation path." },
-        { "title": "[TH] Commissioning support", "body": "[TH] We help on the wire-up, the registration, and the first month of clean data." }
-      ],
-      "productsHeading": "[TH] SCADA & monitoring components",
-      "projectsHeading": "[TH] Where we run monitoring",
-      "ctaHeading": "[TH] Adding monitoring to a plant?",
-      "ctaBody": "[TH] Send us the inverter brand and plant count — we'll come back with a SCADA stack."
+      "eyebrow": "[TH] Solutions · SCADA, EMS & HMI",
+      "headline": "[TH] Supervisory control for substations and BESS plants",
+      "subhead": "[TH] We build the SCADA, EMS, and HMI layer that monitors and runs grid-scale assets, from the RTU on the floor to the operator screen and the utility control centre.",
+      "hero": {
+        "statusLabel": "[TH] System nominal",
+        "caption": "[TH] Illustrative HMI. Live plants sit behind operator login.",
+        "tiles": [
+          { "label": "[TH] Sites online", "value": "14", "unit": "" },
+          { "label": "[TH] Availability", "value": "99.4", "unit": "%" },
+          { "label": "[TH] BESS state of charge", "value": "47", "unit": "%" },
+          { "label": "[TH] Active alarms", "value": "2", "unit": "" }
+        ],
+        "events": [
+          "10:42:18  INV-03  GRID_OK         cleared",
+          "10:39:55  BESS-A  SOC_LOW         warning",
+          "10:31:02  MET-01  COMMS_RESTORED  info"
+        ]
+      },
+      "architecture": {
+        "eyebrow": "[TH] How it connects",
+        "heading": "[TH] From the RTU on the floor to the utility control centre",
+        "body": "[TH] One stack runs two ways. Telemetry flows up for monitoring; operator commands flow down for control. We wire the RTUs, gateways, and protocols that carry both.",
+        "monitoringLabel": "[TH] Process monitoring",
+        "controlLabel": "[TH] Process control",
+        "monitoringCaption": "[TH] Telemetry flows up from the field devices to the EMS and the utility SCADA.",
+        "controlCaption": "[TH] Operator commands flow down from the control centre to the field devices.",
+        "nodes": {
+          "field": "PCS / ESS",
+          "sacu": "SACU",
+          "rtu": "[TH] RTU / gateway",
+          "ems": "[TH] EMS server",
+          "firewall": "[TH] Firewall",
+          "scada": "[TH] Utility SCADA",
+          "operator": "[TH] Operator"
+        }
+      },
+      "capabilities": {
+        "eyebrow": "[TH] What we build",
+        "heading": "[TH] The full supervisory stack",
+        "items": [
+          { "title": "[TH] EMS and SCADA servers", "body": "[TH] Energy-management and supervisory servers configured to the plant, with redundancy where the grid code asks for it." },
+          { "title": "[TH] HMI mimic design", "body": "[TH] Single-line mimic screens operators actually read, with live metering, breaker states, and BESS control functions." },
+          { "title": "[TH] RTU, gateway and protocols", "body": "[TH] MODBUS TCP, IEC 60870-5-104, and DNP3 wired between PLCs, meters, PCS, and the control centre." },
+          { "title": "[TH] Utility SCADA integration", "body": "[TH] Telemetry handed to the provider's control centre through a firewall, in the format and protocol they require." },
+          { "title": "[TH] BESS control modes", "body": "[TH] Peak shaving, load levelling, and islanding logic configured and tested against the dispatch the plant was built for." },
+          { "title": "[TH] Alarm and event management", "body": "[TH] Plant-by-plant alarm rules, event logging, and an escalation path an O&M team can run." }
+        ]
+      },
+      "project": {
+        "eyebrow": "[TH] Featured deployment",
+        "customer": "[TH] Provincial Electricity Authority (PEA)",
+        "title": "[TH] Samui 2 Substation BESS",
+        "body": "[TH] A battery-energy-storage substation on Koh Samui, fed by the submarine cable from Khanom, with two independent BESS strings under peak-shaving, load-levelling, and islanding control. We designed the HMI mimic and integrated the plant with the PEA SCADA control centre.",
+        "facts": [
+          { "label": "[TH] Asset", "value": "[TH] Dual BESS strings, A and B" },
+          { "label": "[TH] Feed", "value": "[TH] Submarine cable from Khanom" },
+          { "label": "[TH] Control", "value": "[TH] Peak shaving, load levelling, islanding" },
+          { "label": "[TH] Integration", "value": "[TH] Custom HMI with PEA SCADA" }
+        ]
+      },
+      "services": {
+        "eyebrow": "[TH] Field services",
+        "heading": "[TH] Preventive maintenance and commissioning",
+        "body": "[TH] Beyond the software, our engineers test and commission the high-voltage plant the SCADA watches, on a schedule or before first energization.",
+        "groups": [
+          {
+            "title": "[TH] Preventive maintenance",
+            "items": [
+              "[TH] Scheduled and annual electrical equipment inspection",
+              "[TH] Diagnostic testing that catches faults before they trip the plant",
+              "[TH] Emergency callout and fault investigation"
+            ]
+          },
+          {
+            "title": "[TH] Test and commissioning",
+            "items": [
+              "[TH] Power transformers: insulation resistance, power factor, turns ratio, winding resistance",
+              "[TH] 115 kV SF6 breakers, current and voltage transformers, disconnect switches",
+              "[TH] Protection relays: characteristic and operation-function testing",
+              "[TH] Medium and low-voltage switchgear acceptance and energization"
+            ]
+          }
+        ]
+      },
+      "ctaHeading": "[TH] Scoping a SCADA or BESS plant?",
+      "ctaBody": "[TH] Tell us the assets and the control centre you report to, and our engineers will scope the SCADA, EMS, and HMI to match."
     }
   },
   "common": {
