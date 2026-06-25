@@ -77,11 +77,11 @@ export function Footer({
             <ul className="text-body mt-3 flex flex-col gap-1.5 text-mist-200">
               <li>
                 <a
-                  href="tel:+66000000000"
+                  href="tel:+66870538668"
                   className="inline-flex items-center gap-2 transition-colors hover:text-gold-500"
                 >
                   <IconPhone size={16} stroke={1.5} />
-                  <span>+66 (0) 0 0000 0000</span>
+                  <span>+66 87 053 8668</span>
                 </a>
               </li>
               <li>
@@ -95,7 +95,7 @@ export function Footer({
               </li>
               <li>
                 <a
-                  href="https://line.me/"
+                  href="https://line.me/R/ti/p/@ws.energy"
                   className="inline-flex items-center gap-2 transition-colors hover:text-gold-500"
                 >
                   <IconBrandLine size={16} stroke={1.5} />

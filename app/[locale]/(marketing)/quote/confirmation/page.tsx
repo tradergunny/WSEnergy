@@ -57,10 +57,10 @@ export default async function ConfirmationPage({
             {t.fastTrackHeading}
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button variant="outline-primary" size="sm" href="tel:+66-xx-xxx-xxxx">
+            <Button variant="outline-primary" size="sm" href="tel:+66870538668">
               {dict.actions.callUs}
             </Button>
-            <Button variant="outline-primary" size="sm" href="https://lin.ee/placeholder">
+            <Button variant="outline-primary" size="sm" href="https://line.me/R/ti/p/@ws.energy">
               {dict.actions.lineOA}
             </Button>
           </div>
