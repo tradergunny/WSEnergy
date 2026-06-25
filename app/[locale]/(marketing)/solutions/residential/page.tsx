@@ -12,7 +12,7 @@ import {
 import {
   type SolutionProductRow,
   type SolutionProjectRow,
-} from "@/components/solution/SolutionPage";
+} from "@/components/solution/types";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { MonoLabel } from "@/components/ui/MonoLabel";
@@ -31,8 +31,8 @@ import { alternates } from "@/lib/seo";
  * Residential & small commercial — bespoke, warm solution page for installers.
  * Cinematic hero → "kit scale" strip (5/15/30 kW sizes on the shelf) → EV-ready
  * band → why-installers benefits → live Sanity products → references → a
- * LINE-forward quote close. Reuses SolutionHero + the GSAP/Lenis kit; does NOT
- * use the shared SolutionPage template.
+ * LINE-forward quote close. Reuses SolutionHero + the GSAP/Lenis kit; fully
+ * bespoke (no shared page template).
  *
  * Drop a home/villa rooftop photo at /solutions/residential-hero.jpg and set
  * `heroImage` below (a graded CSS backdrop carries it until then).

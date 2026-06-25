@@ -13,7 +13,7 @@ import {
 import {
   type SolutionProductRow,
   type SolutionProjectRow,
-} from "@/components/solution/SolutionPage";
+} from "@/components/solution/types";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { MonoLabel } from "@/components/ui/MonoLabel";
@@ -35,7 +35,7 @@ import { alternates } from "@/lib/seo";
  * Cinematic hero → authority stat band → an INTERACTIVE rapid-shutdown one-line
  * diagram (the signature piece) → why-us → compliance documentation → live
  * Sanity products → real factory/warehouse references → RFQ. Built on the site's
- * GSAP/Lenis toolkit; deliberately does NOT use the shared SolutionPage template.
+ * GSAP/Lenis toolkit; fully bespoke (no shared page template).
  *
  * Drop a rooftop photo at /solutions/ci-hero.webp and set `heroImage` below to
  * light up the hero (a graded CSS backdrop carries it until then).
