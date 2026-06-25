@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { hasLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -148,9 +149,11 @@ export default async function ProjoyPartnershipPage({
                   {/* Document preview area */}
                   <div className="flex min-h-[280px] flex-col items-center justify-center border-b border-mist-800 bg-forest-950 px-8 py-12">
                     {doc.thumbnail ? (
-                      <img
+                      <Image
                         src={urlFor(doc.thumbnail).width(400).quality(85).url()}
                         alt={l(doc)}
+                        width={400}
+                        height={220}
                         className="max-h-[220px] w-auto rounded border border-mist-800"
                       />
                     ) : (

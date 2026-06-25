@@ -79,14 +79,14 @@ export async function Header({
             </nav>
             <div className="ml-auto flex items-center gap-4">
               <a
-                href="tel:+66000000000"
+                href="tel:+66870538668"
                 className="hidden items-center gap-1 transition-colors hover:text-gold-500 sm:inline-flex"
               >
                 <IconPhone size={14} stroke={1.5} />
                 <span>{dict.actions.callUs}</span>
               </a>
               <a
-                href="https://line.me/"
+                href="https://line.me/R/ti/p/@ws.energy"
                 className="hidden items-center gap-1 transition-colors hover:text-gold-500 sm:inline-flex"
               >
                 <IconBrandLine size={14} stroke={1.5} />

@@ -39,7 +39,7 @@ import { alternates } from "@/lib/seo";
  */
 
 const heroImage: string | null = "/solutions/residential-hero.jpg";
-const lineHref = "https://line.me/";
+const lineHref = "https://line.me/R/ti/p/@ws.energy";
 
 export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));

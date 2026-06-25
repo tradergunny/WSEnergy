@@ -20,7 +20,7 @@ export async function generateStaticParams() {
 const PHONE = "087-053-8668";
 const PHONE_HREF = "tel:+66870538668";
 const EMAIL = "ws.energy.co.ltd@gmail.com";
-const LINE_HREF = "https://lin.ee/placeholder";
+const LINE_HREF = "https://line.me/R/ti/p/@ws.energy";
 const MAPS_HREF =
   "https://www.google.com/maps/search/?api=1&query=51%2F17+Moo+3+Bangpla+Bangplee+Samut+Prakan+10540+Thailand";
 
