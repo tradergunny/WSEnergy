@@ -12,7 +12,7 @@ import {
 import {
   type SolutionProductRow,
   type SolutionProjectRow,
-} from "@/components/solution/SolutionPage";
+} from "@/components/solution/types";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { MonoLabel } from "@/components/ui/MonoLabel";
@@ -32,7 +32,7 @@ import { alternates } from "@/lib/seo";
  * Cinematic hero → string-design / engineering support → a staged-delivery
  * logistics timeline (the signature) → MW-scale sourcing + Rapid Shutdown band
  * → live Sanity products → utility references → "share your single-line" close.
- * Reuses SolutionHero + the GSAP/Lenis kit; does NOT use the shared template.
+ * Reuses SolutionHero + the GSAP/Lenis kit; fully bespoke (no shared template).
  *
  * Drop a wide ground-mount photo at /solutions/solar-farm-hero.jpg and set
  * `heroImage` below (a graded CSS backdrop carries it until then).
