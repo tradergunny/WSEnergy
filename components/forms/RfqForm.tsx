@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/config";
+import {
+  isCompanyRequired,
+  projectSizeFromKwp,
+  projectTypeFromSegment,
+  type RfqSeed,
+} from "@/lib/estimator/lead";
 import { RfqStep1ProjectType } from "./RfqStep1ProjectType";
 import { RfqStep2Size } from "./RfqStep2Size";
 import { RfqStep3Products } from "./RfqStep3Products";
@@ -44,7 +50,7 @@ type Action =
   | { type: "SET_ERRORS"; errors: Record<string, string> }
   | { type: "SET_SUBMITTING"; value: boolean };
 
-const initialState: State = {
+const baseInitialState: State = {
   step: 1,
   projectType: "",
   projectSize: "",
@@ -62,6 +68,17 @@ const initialState: State = {
   errors: {},
   submitting: false,
 };
+
+/** When seeded from the estimator, pre-fill type/size and jump to the contact step. */
+function makeInitialState(seed: RfqSeed | undefined): State {
+  if (!seed) return baseInitialState;
+  return {
+    ...baseInitialState,
+    step: TOTAL_STEPS,
+    projectType: projectTypeFromSegment(seed.estimate.segment),
+    projectSize: projectSizeFromKwp(seed.estimate.recommendedKwp),
+  };
+}
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -84,22 +101,24 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-const contactSchema = z.object({
-  name: z.string().min(1),
-  company: z.string().min(1),
-  email: z.string().email(),
-  phone: z.string().min(1),
-});
-
 type Props = {
   dict: Dictionary;
   locale: Locale;
+  seed?: RfqSeed;
 };
 
-export function RfqForm({ dict, locale }: Props) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+export function RfqForm({ dict, locale, seed }: Props) {
+  const [state, dispatch] = useReducer(reducer, seed, makeInitialState);
   const router = useRouter();
   const t = dict.rfq;
+
+  const companyRequired = isCompanyRequired(seed?.source, seed?.estimate.segment);
+  const contactSchema = z.object({
+    name: z.string().min(1),
+    company: companyRequired ? z.string().min(1) : z.string().optional(),
+    email: z.string().email(),
+    phone: z.string().min(1),
+  });
 
   function goNext() {
     dispatch({ type: "SET_STEP", step: Math.min(state.step + 1, TOTAL_STEPS) });
@@ -144,6 +163,8 @@ export function RfqForm({ dict, locale }: Props) {
           phone: state.contact.phone,
           role: state.contact.role || undefined,
           notes: state.contact.notes || undefined,
+          source: seed?.source,
+          estimate: seed?.estimate,
         }),
       });
 
@@ -174,6 +195,8 @@ export function RfqForm({ dict, locale }: Props) {
 
   return (
     <div className="flex flex-col gap-8">
+      {seed ? <EstimateBanner seed={seed} dict={dict} locale={locale} /> : null}
+
       {/* Progress indicator */}
       <div className="flex items-center gap-2">
         {Array.from({ length: TOTAL_STEPS }, (_, i) => {
@@ -256,8 +279,49 @@ export function RfqForm({ dict, locale }: Props) {
           onSubmit={handleSubmit}
           onBack={goBack}
           submitting={state.submitting}
+          companyRequired={companyRequired}
         />
       )}
+    </div>
+  );
+}
+
+function EstimateBanner({
+  seed,
+  dict,
+  locale,
+}: {
+  seed: RfqSeed;
+  dict: Dictionary;
+  locale: Locale;
+}) {
+  const t = dict.rfq.fromEstimate;
+  const e = seed.estimate;
+  const fmt = (n: number) =>
+    new Intl.NumberFormat(locale === "th" ? "th-TH" : "en-US", {
+      maximumFractionDigits: 0,
+    }).format(n);
+  const verdictLabel =
+    e.verdict === "recommended"
+      ? t.recommended
+      : e.verdict === "worth_considering"
+        ? t.worthConsidering
+        : t.notYet;
+
+  const parts = [
+    e.recommendedKwp > 0 ? `${e.recommendedKwp} ${t.kw}` : null,
+    e.priceThb != null ? `฿${fmt(e.priceThb)}` : null,
+    e.paybackYears != null ? `~${e.paybackYears} ${t.payback}` : null,
+  ].filter(Boolean);
+
+  return (
+    <div className="rounded-xl border border-gold-500/30 bg-gold-500/5 p-4">
+      <p className="text-caption font-mono uppercase tracking-wider text-gold-500">{t.eyebrow}</p>
+      <p className="mt-2 text-body text-mist-100">
+        <span className="font-medium">{verdictLabel}</span>
+        {parts.length > 0 ? <span className="text-mist-400">{` · ${parts.join(" · ")}`}</span> : null}
+      </p>
+      <p className="mt-2 text-caption text-mist-400">{t.note}</p>
     </div>
   );
 }

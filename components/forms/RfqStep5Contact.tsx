@@ -22,6 +22,7 @@ type Props = {
   onSubmit: () => void;
   onBack: () => void;
   submitting: boolean;
+  companyRequired?: boolean;
 };
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -40,6 +41,7 @@ export function RfqStep5Contact({
   onSubmit,
   onBack,
   submitting,
+  companyRequired = true,
 }: Props) {
   const t = dict.rfq.step5;
   const fileRef = useRef<HTMLInputElement>(null);
@@ -79,7 +81,7 @@ export function RfqStep5Contact({
         />
         <Input
           label={t.companyLabel}
-          required
+          required={companyRequired}
           value={value.company}
           onChange={(e) => set("company", e.target.value)}
           error={errors.company}

@@ -610,6 +610,23 @@ export const installerProvincesQuery = groq`
 `;
 
 /**
+ * Solar Rooftop Estimator — active package tiers the estimator snaps the
+ * recommended size onto (ROADMAP feature 3). Inactive packages are excluded.
+ */
+export const allSolarPackagesQuery = groq`
+  *[_type == "solarPackage" && active == true && !(_id in path("drafts.**"))]
+    | order(sizeKw asc, orderRank asc) {
+    _id,
+    sizeKw,
+    phase,
+    segment,
+    price,
+    panelCount,
+    includedComponents
+  }
+`;
+
+/**
  * Brand-in-category route data — used by the dedicated
  * /products/[category]/[brand] page.
  */

@@ -588,6 +588,50 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </div>
         </section>
 
+        {/* ── 6.5 · Solar rooftop estimator ───────────────────────── */}
+        <section className="bg-forest-950">
+          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+            <ScrollReveal>
+              <div className="rounded-2xl bg-card-50 p-10 text-card-ink md:p-14">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-center">
+                  <div className="md:col-span-7">
+                    <MonoLabel tone="forest">
+                      {locale === "th" ? "คำนวณโซลาร์รูฟท็อป" : "Solar rooftop calculator"}
+                    </MonoLabel>
+                    <h2 className="mt-3 font-medium tracking-tight" style={headlineClamp}>
+                      {locale === "th"
+                        ? "โซลาร์คุ้มกับหลังคาคุณไหม? รู้ผลใน 30 วินาที"
+                        : "Will solar pay off on your roof?"}
+                    </h2>
+                    <p className="text-body-lg mt-4 max-w-xl text-forest-900/70">
+                      {locale === "th"
+                        ? "กรอกค่าไฟและขนาดหลังคา รับขนาดระบบที่แนะนำ เงินที่ประหยัด ระยะคืนทุน และคำแนะนำว่าควรติดตั้งหรือไม่ — ฟรี ไม่ต้องลงทะเบียน"
+                        : "Enter your bill and roof size for an instant estimate of system size, savings, payback, and whether we'd recommend installing — free, no sign-up."}
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-caption font-mono uppercase tracking-wider text-forest-900/55">
+                      <span>{locale === "th" ? "ฟรี" : "Free"}</span>
+                      <span>{locale === "th" ? "ไม่ต้องลงทะเบียน" : "No sign-up"}</span>
+                      <span>{locale === "th" ? "≈ 30 วินาที" : "≈ 30 seconds"}</span>
+                    </div>
+                  </div>
+                  <div className="md:col-span-5 md:flex md:justify-end">
+                    <Magnetic>
+                      <Button
+                        variant="on-card"
+                        size="lg"
+                        href={withLocale(locale, "/solar-calculator")}
+                      >
+                        {locale === "th" ? "ลองคำนวณเลย" : "Try the calculator"}
+                        <IconArrowRight size={16} stroke={2} />
+                      </Button>
+                    </Magnetic>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
         {/* ── 7 · Recent projects ─────────────────────────────────── */}
         {projects.length > 0 ? (
           <section className="bg-forest-950">
