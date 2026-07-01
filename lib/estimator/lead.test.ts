@@ -11,21 +11,20 @@ import {
   buildEstimatePayload,
   encodeEstimateParam,
   parseEstimateParam,
-  projectTypeFromSegment,
+  projectTypeFromKwp,
   projectSizeFromKwp,
   isCompanyRequired,
   ESTIMATOR_SOURCE,
 } from "./lead.ts";
 
 const PACKAGES: EnginePackage[] = [
-  { _id: "p-3", sizeKw: 3, price: 117_000, phase: "single", segment: "residential" },
-  { _id: "p-5", sizeKw: 5, price: 163_900, phase: "single", segment: "residential" },
+  { _id: "p-3", sizeKw: 3, price: 118_500, phase: "single" },
+  { _id: "p-5", sizeKw: 5, price: 139_000, phase: "single" },
 ];
 
 test("build → encode → parse round-trips a recommended estimate", () => {
   const input = {
     monthlyBillThb: 5000,
-    segment: "residential" as const,
     phase: "single" as const,
     dayUsageFraction: 0.5,
     roofAreaSqm: null,
@@ -35,7 +34,7 @@ test("build → encode → parse round-trips a recommended estimate", () => {
 
   assert.equal(payload.recommendedKwp, 5);
   assert.equal(payload.packageId, "p-5");
-  assert.equal(payload.priceThb, 163_900);
+  assert.equal(payload.priceThb, 139_000);
   assert.equal(payload.verdict, "recommended");
 
   const round = parseEstimateParam(encodeEstimateParam(payload));
@@ -45,7 +44,6 @@ test("build → encode → parse round-trips a recommended estimate", () => {
 test("Not-yet estimate carries nulls safely (no NaN/Infinity)", () => {
   const input = {
     monthlyBillThb: 5000,
-    segment: "residential" as const,
     phase: "single" as const,
     dayUsageFraction: 0.5,
     roofAreaSqm: 10, // too small → not_yet, no package
@@ -64,19 +62,19 @@ test("parseEstimateParam rejects malformed input", () => {
   assert.equal(parseEstimateParam(""), null);
   assert.equal(parseEstimateParam("not json"), null);
   assert.equal(parseEstimateParam(["a", "b"]), null);
-  assert.equal(parseEstimateParam(JSON.stringify({ segment: "mars" })), null, "schema-invalid → null");
+  assert.equal(parseEstimateParam(JSON.stringify({ phase: "mars" })), null, "schema-invalid → null");
 });
 
 test("vocab maps", () => {
-  assert.equal(projectTypeFromSegment("residential"), "residential");
-  assert.equal(projectTypeFromSegment("business"), "ci-rooftop");
+  assert.equal(projectTypeFromKwp(5), "residential");
+  assert.equal(projectTypeFromKwp(10), "residential");
+  assert.equal(projectTypeFromKwp(20), "ci-rooftop");
   assert.equal(projectSizeFromKwp(5), "<10kw");
   assert.equal(projectSizeFromKwp(10), "<10kw");
   assert.equal(projectSizeFromKwp(30), "10-100kw");
 });
 
-test("company is required except for residential estimator leads", () => {
-  assert.equal(isCompanyRequired(ESTIMATOR_SOURCE, "residential"), false);
-  assert.equal(isCompanyRequired(ESTIMATOR_SOURCE, "business"), true);
-  assert.equal(isCompanyRequired(undefined, undefined), true, "plain quote form still requires it");
+test("company is required except for estimator leads", () => {
+  assert.equal(isCompanyRequired(ESTIMATOR_SOURCE), false);
+  assert.equal(isCompanyRequired(undefined), true, "plain quote form still requires it");
 });

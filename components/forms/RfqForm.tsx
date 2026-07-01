@@ -8,7 +8,7 @@ import type { Locale } from "@/lib/i18n/config";
 import {
   isCompanyRequired,
   projectSizeFromKwp,
-  projectTypeFromSegment,
+  projectTypeFromKwp,
   type RfqSeed,
 } from "@/lib/estimator/lead";
 import { RfqStep1ProjectType } from "./RfqStep1ProjectType";
@@ -75,7 +75,7 @@ function makeInitialState(seed: RfqSeed | undefined): State {
   return {
     ...baseInitialState,
     step: TOTAL_STEPS,
-    projectType: projectTypeFromSegment(seed.estimate.segment),
+    projectType: projectTypeFromKwp(seed.estimate.recommendedKwp),
     projectSize: projectSizeFromKwp(seed.estimate.recommendedKwp),
   };
 }
@@ -112,7 +112,7 @@ export function RfqForm({ dict, locale, seed }: Props) {
   const router = useRouter();
   const t = dict.rfq;
 
-  const companyRequired = isCompanyRequired(seed?.source, seed?.estimate.segment);
+  const companyRequired = isCompanyRequired(seed?.source);
   const contactSchema = z.object({
     name: z.string().min(1),
     company: companyRequired ? z.string().min(1) : z.string().optional(),

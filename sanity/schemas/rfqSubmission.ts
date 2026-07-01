@@ -20,7 +20,6 @@ export const rfqSubmission = defineType({
       description: "Captured from the Solar Rooftop Estimator when the lead started there.",
       options: { collapsible: true, collapsed: false },
       fields: [
-        defineField({ name: "segment", title: "Segment", type: "string" }),
         defineField({ name: "phase", title: "Phase", type: "string" }),
         defineField({ name: "monthlyBillThb", title: "Monthly bill (฿)", type: "number" }),
         defineField({ name: "dayUsageFraction", title: "Daytime usage fraction", type: "number" }),

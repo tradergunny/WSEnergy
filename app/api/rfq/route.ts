@@ -35,7 +35,7 @@ const rfqSchema = z
     estimate: estimatePayloadSchema.optional(),
   })
   .superRefine((data, ctx) => {
-    if (isCompanyRequired(data.source, data.estimate?.segment) && !data.company?.trim()) {
+    if (isCompanyRequired(data.source) && !data.company?.trim()) {
       ctx.addIssue({ code: "custom", path: ["company"], message: "Company is required" });
     }
   });
@@ -105,11 +105,11 @@ export async function POST(request: Request) {
         "— Solar estimate —",
         `Verdict: ${est.verdict}`,
         `Recommended size: ${est.recommendedKwp} kWp${est.priceThb != null ? ` (฿${est.priceThb.toLocaleString()})` : ""}`,
-        `Segment / phase: ${est.segment} / ${est.phase}`,
+        `Phase: ${est.phase}`,
         `Monthly bill: ฿${est.monthlyBillThb.toLocaleString()} · daytime use ${Math.round(est.dayUsageFraction * 100)}%`,
         est.roofAreaSqm != null ? `Roof area: ${est.roofAreaSqm} m²` : null,
         est.paybackYears != null ? `Payback: ${est.paybackYears} yr` : null,
-        `Est. savings: ฿${est.monthlySavingsThb.toLocaleString()}/mo · ฿${est.annualSavingsThb.toLocaleString()}/yr`,
+        `Est. savings: ฿${est.monthlySavingsThb.toLocaleString()}/mo · ฿${est.annualSavingsThb.toLocaleString()}/yr${est.monthlyBillThb > 0 ? ` (≈${Math.round((est.monthlySavingsThb / est.monthlyBillThb) * 100)}% of bill)` : ""}`,
       ].filter(Boolean)
     : [];
 

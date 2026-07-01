@@ -24,7 +24,6 @@ import type { EstimatorInput, EstimatorResult } from "./engine.ts";
  * sales has full context on why the tool said "not yet".
  */
 export const estimatePayloadSchema = z.object({
-  segment: z.enum(["residential", "business"]),
   phase: z.enum(["single", "three"]),
   monthlyBillThb: z.number(),
   dayUsageFraction: z.number(),
@@ -63,7 +62,6 @@ export function buildEstimatePayload(
   result: EstimatorResult,
 ): EstimatePayload {
   return {
-    segment: input.segment,
     phase: input.phase,
     monthlyBillThb: r0(Math.max(0, input.monthlyBillThb)),
     dayUsageFraction: r2(input.dayUsageFraction),
@@ -115,9 +113,13 @@ export function parseEstimateParam(raw: string | string[] | undefined): Estimate
 
 // ──────────────────────── Estimator → RFQ vocab maps ────────────────────
 
-/** Estimator segment → RFQ step-1 projectType value. */
-export function projectTypeFromSegment(segment: EstimatePayload["segment"]): string {
-  return segment === "business" ? "ci-rooftop" : "residential";
+/**
+ * Recommended kWp → RFQ step-1 projectType value. With the segment toggle gone
+ * (PEA-style, phase-only), we infer the install type from system size: small
+ * systems read as residential rooftops, larger ones as C&I rooftops.
+ */
+export function projectTypeFromKwp(kwp: number): string {
+  return kwp <= 10 ? "residential" : "ci-rooftop";
 }
 
 /** Recommended kWp → RFQ step-2 projectSize bucket. */
@@ -130,12 +132,11 @@ export function projectSizeFromKwp(kwp: number): string {
 }
 
 /**
- * Whether the company field should stay required for this lead. Relaxed only for
- * residential estimator leads (homeowners) — business leads still give a company.
+ * Whether the company field should stay required for this lead. Relaxed for all
+ * estimator leads — the calculator is a consumer-facing tool (PEA-style, no
+ * segment), so homeowners arriving from it shouldn't be forced to enter one.
+ * The plain quote form still requires a company.
  */
-export function isCompanyRequired(
-  source: string | undefined,
-  segment: EstimatePayload["segment"] | undefined,
-): boolean {
-  return !(source === ESTIMATOR_SOURCE && segment === "residential");
+export function isCompanyRequired(source: string | undefined): boolean {
+  return source !== ESTIMATOR_SOURCE;
 }

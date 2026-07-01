@@ -3,13 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   IconBolt,
-  IconBuildingFactory2,
   IconCalendarStats,
   IconCircleCheck,
   IconClockHour4,
   IconCoin,
   IconDroplet,
-  IconHome,
   IconInfoCircle,
   IconLeaf,
   IconRulerMeasure,
@@ -18,7 +16,7 @@ import {
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/Button";
 import { MonoLabel } from "@/components/ui/MonoLabel";
-import { estimate, type Phase, type Segment } from "@/lib/estimator/engine";
+import { estimate, type Phase } from "@/lib/estimator/engine";
 import {
   buildEstimatePayload,
   encodeEstimateParam,
@@ -44,7 +42,6 @@ export function SolarEstimator({
   packages: SolarPackageRow[];
   locale: Locale;
 }) {
-  const [segment, setSegment] = useState<Segment>("residential");
   const [phase, setPhase] = useState<Phase>("single");
   const [billInput, setBillInput] = useState("5000");
   const [dayUsageFraction, setDayUsageFraction] = useState(0.5);
@@ -54,20 +51,13 @@ export function SolarEstimator({
   const roofAreaSqm = roofInput.trim() === "" ? null : Math.max(0, Number(roofInput) || 0);
 
   const result = useMemo(
-    () =>
-      estimate(
-        { monthlyBillThb, segment, phase, dayUsageFraction, roofAreaSqm },
-        packages,
-      ),
-    [monthlyBillThb, segment, phase, dayUsageFraction, roofAreaSqm, packages],
+    () => estimate({ monthlyBillThb, phase, dayUsageFraction, roofAreaSqm }, packages),
+    [monthlyBillThb, phase, dayUsageFraction, roofAreaSqm, packages],
   );
 
   // Carry the current estimate into the quote form (Step 5 handoff).
   const quoteHref = `/${locale}/quote?source=${ESTIMATOR_SOURCE}&estimate=${encodeEstimateParam(
-    buildEstimatePayload(
-      { monthlyBillThb, segment, phase, dayUsageFraction, roofAreaSqm },
-      result,
-    ),
+    buildEstimatePayload({ monthlyBillThb, phase, dayUsageFraction, roofAreaSqm }, result),
   )}`;
 
   const t = strings[locale];
@@ -78,7 +68,7 @@ export function SolarEstimator({
       verdict: result.verdict,
       verdictReason: result.verdictReason,
       recommendedKwp: result.recommendedKwp,
-      segment,
+      phase,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result.verdict, result.verdictReason]);
@@ -98,21 +88,6 @@ export function SolarEstimator({
     <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
       {/* ── Inputs ──────────────────────────────────────────────── */}
       <div className="flex flex-col gap-7 rounded-2xl border border-mist-800 bg-forest-950/60 p-6 md:p-8">
-        <FieldGroup label={t.segment}>
-          <PillToggle
-            value={segment}
-            onChange={(v) => {
-              setSegment(v);
-              // Business connections are three-phase in practice.
-              if (v === "business") setPhase("three");
-            }}
-            options={[
-              { value: "residential", label: t.residential, icon: <IconHome size={16} stroke={1.75} /> },
-              { value: "business", label: t.business, icon: <IconBuildingFactory2 size={16} stroke={1.75} /> },
-            ]}
-          />
-        </FieldGroup>
-
         <FieldGroup label={t.billLabel} hint={t.billHint}>
           <div className="relative">
             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-body text-mist-400">
@@ -229,8 +204,8 @@ export function SolarEstimator({
                 />
                 <EnvTile
                   icon={<IconDroplet size={18} stroke={1.5} />}
-                  value={`${fmt0(locale, result.annualWaterSavedLitres)} L`}
-                  label={t.water}
+                  value={`${fmt0(locale, result.annualFuelOilSavedLitres)} L`}
+                  label={t.fuelOil}
                 />
                 <EnvTile
                   icon={<IconTrees size={18} stroke={1.5} />}
@@ -343,6 +318,15 @@ function HeadlineCard({
           </div>
         </div>
       </div>
+      {result.billOffsetPercent > 0 ? (
+        <p className="mt-4 text-caption text-card-ink/65">
+          {t.offsetPre}{" "}
+          <span className="font-medium text-card-ink/90">
+            ≈{Math.round(result.billOffsetPercent)}%
+          </span>{" "}
+          {t.offsetPost}
+        </p>
+      ) : null}
       {components.length > 0 ? (
         <div className="mt-5 flex flex-wrap gap-2 border-t border-forest-900/10 pt-4">
           {components.map((c) => (
@@ -508,9 +492,6 @@ const fmt1 = (n: number) => (Math.round(n * 10) / 10).toString();
 
 const strings = {
   en: {
-    segment: "Property type",
-    residential: "Home",
-    business: "Business",
     billLabel: "Average monthly electricity bill",
     billHint: "Your typical bill across the year.",
     perMonth: "/ month",
@@ -518,7 +499,7 @@ const strings = {
     single: "Single-phase",
     three: "Three-phase",
     phaseHintSingle: "Most homes. Caps the system at about 5 kW.",
-    phaseHintThree: "Larger homes & businesses. Allows about 10 kW+.",
+    phaseHintThree: "Larger homes & businesses. Up to about 20 kW.",
     dayUsage: "When do you use power?",
     dayUsageHint: "Without a battery, solar only offsets daytime use.",
     day: "daytime",
@@ -537,10 +518,12 @@ const strings = {
     years: "yr",
     lifetimeSavings: "Saved over 25 yr",
     yourSystem: "Your system",
+    offsetPre: "Covers",
+    offsetPost: "of your monthly bill",
     environmentalImpact: "Environmental impact",
     co2: "CO₂ avoided / yr",
-    water: "Water saved / yr",
-    trees: "Trees-worth of CO₂",
+    fuelOil: "Fuel oil avoided / yr",
+    trees: "Trees (10-yr equiv.)",
     lifetimeCo2Pre: "≈",
     lifetimeCo2Post: "tonnes of CO₂ avoided over 25 years",
     disclaimer: "This is an estimate based on typical conditions, not a binding quote. A site survey gives the exact figures.",
@@ -556,17 +539,14 @@ const strings = {
     } as Record<string, string>,
     reasons: {
       great_payback: "Strong payback. Solar makes clear financial sense for this roof.",
-      ok_payback: "Solar pays back over the medium term — worth a closer look with our team.",
-      slow_payback: "Payback is long at these numbers. Talk to us about options before committing.",
+      ok_payback: "Solid long-term savings — a comfortable payback for a 25-year system.",
+      slow_payback: "Solar still pays for itself over its lifetime — ask us about financing to shorten the payback.",
       roof_too_small: "Your roof is too small for a worthwhile system right now.",
-      low_daytime_offset: "Too little daytime usage to offset — solar would be oversized for how you use power.",
+      low_daytime_offset: "Add your monthly bill (and some daytime usage) and we'll size a system for you.",
       no_package: "No standard package fits these inputs — our team can design a custom system.",
     } as Record<string, string>,
   },
   th: {
-    segment: "ประเภทอาคาร",
-    residential: "บ้าน",
-    business: "ธุรกิจ",
     billLabel: "ค่าไฟเฉลี่ยต่อเดือน",
     billHint: "ค่าไฟโดยทั่วไปตลอดทั้งปี",
     perMonth: "/ เดือน",
@@ -574,7 +554,7 @@ const strings = {
     single: "1 เฟส",
     three: "3 เฟส",
     phaseHintSingle: "บ้านทั่วไป จำกัดระบบที่ประมาณ 5 kW",
-    phaseHintThree: "บ้านหลังใหญ่และธุรกิจ รองรับประมาณ 10 kW ขึ้นไป",
+    phaseHintThree: "บ้านหลังใหญ่และธุรกิจ รองรับสูงสุดประมาณ 20 kW",
     dayUsage: "ใช้ไฟช่วงไหนมากที่สุด?",
     dayUsageHint: "หากไม่มีแบตเตอรี่ โซลาร์ช่วยลดค่าไฟเฉพาะช่วงกลางวัน",
     day: "กลางวัน",
@@ -593,10 +573,12 @@ const strings = {
     years: "ปี",
     lifetimeSavings: "ประหยัดใน 25 ปี",
     yourSystem: "ระบบของคุณ",
+    offsetPre: "ครอบคลุมประมาณ",
+    offsetPost: "ของค่าไฟต่อเดือน",
     environmentalImpact: "ผลต่อสิ่งแวดล้อม",
     co2: "ลด CO₂ / ปี",
-    water: "ประหยัดน้ำ / ปี",
-    trees: "เทียบเท่าจำนวนต้นไม้",
+    fuelOil: "ลดน้ำมันเตา / ปี",
+    trees: "เทียบเท่าต้นไม้ (10 ปี)",
     lifetimeCo2Pre: "≈",
     lifetimeCo2Post: "ตัน CO₂ ใน 25 ปี",
     disclaimer: "เป็นการประเมินเบื้องต้นจากสภาพทั่วไป ไม่ใช่ใบเสนอราคา การสำรวจหน้างานจะให้ตัวเลขที่แม่นยำ",
@@ -612,10 +594,10 @@ const strings = {
     } as Record<string, string>,
     reasons: {
       great_payback: "คืนทุนเร็ว โซลาร์คุ้มค่าอย่างชัดเจนสำหรับหลังคานี้",
-      ok_payback: "คืนทุนในระยะกลาง น่าพิจารณาและปรึกษาทีมงานเพิ่มเติม",
-      slow_payback: "ระยะคืนทุนค่อนข้างนานจากตัวเลขนี้ ปรึกษาเราเพื่อหาทางเลือกก่อนตัดสินใจ",
+      ok_payback: "ประหยัดระยะยาวคุ้มค่า คืนทุนในระดับที่สบายสำหรับระบบอายุ 25 ปี",
+      slow_payback: "โซลาร์ยังคืนทุนได้ภายในอายุการใช้งาน ปรึกษาเราเรื่องแผนผ่อนเพื่อให้คืนทุนเร็วขึ้น",
       roof_too_small: "หลังคาของคุณเล็กเกินไปสำหรับระบบที่คุ้มค่าในตอนนี้",
-      low_daytime_offset: "ใช้ไฟกลางวันน้อยเกินไป โซลาร์จะมีขนาดเกินความจำเป็น",
+      low_daytime_offset: "กรอกค่าไฟต่อเดือน (และสัดส่วนการใช้ไฟกลางวัน) แล้วเราจะคำนวณระบบให้",
       no_package: "ไม่มีแพ็กเกจมาตรฐานที่เหมาะกับข้อมูลนี้ ทีมงานออกแบบระบบเฉพาะให้ได้",
     } as Record<string, string>,
   },

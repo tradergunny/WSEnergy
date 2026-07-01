@@ -7,11 +7,20 @@
  * silently editable from a marketing login. Business numbers (package prices,
  * tariffs the team wants to override) live in Sanity.
  *
- * Every value below was sourced and adversarially verified by the
- * `estimator-constants-research` workflow (2026-06-25): one research agent per
- * cluster + an independent skeptic that re-checked each value against
- * different sources. Verdicts are noted inline. The one ADJUSTED value is the
- * water factor (researcher 2.0 → verifier 1.3 L/kWh; see below).
+ * ── PEA PARITY (2026-06-26) ──────────────────────────────────────────────
+ * This estimator is a faithful re-implementation of PEA's public Solar
+ * Calculator (peasolar.pea.co.th). We reverse-engineered its model from four
+ * benchmark runs the team captured (see ADR 0002 + engine.test.ts). PEA's
+ * outputs are perfectly LINEAR in system size — every per-kWp coefficient
+ * below is calibrated to reproduce those benchmarks exactly:
+ *
+ *     savings   = ฿480 / kWp / month        (= ฿5,760/yr, ฿144,000 over 25 yr)
+ *     CO₂       = 498.8 kg / kWp / yr
+ *     fuel oil  = ~219.95 L / kWp / yr
+ *     trees     = ~8.05 / kWp   (10-year-equivalent)
+ *
+ * Where a value previously diverged from PEA on principle (CO₂ factor, the
+ * water metric), replication now takes priority — noted inline.
  *
  * Units are explicit in each name/comment. Currency is THB throughout.
  */
@@ -19,117 +28,120 @@
 // ───────────────────────────── Solar yield ─────────────────────────────
 
 /**
- * Delivered annual energy per kWp installed, Thailand national average.
- * Verdict: confirmed (high). Global Solar Atlas / Solargis optimum-tilt PVOUT
- * spans 1,314 (south/east) → 1,534 (NE/central) kWh/kWp; 1,400 sits mid-band
- * and conservatively accounts for real rooftop losses (heat derating, soiling,
- * non-ideal tilt/azimuth). Measured Thai rooftops bracket it (~1,387–1,589).
- * Source: World Bank/ESMAP Global Solar Atlas; MDPI Sustainability 2025.
+ * Delivered annual energy per kWp installed (kWh/kWp/yr) — the REPORTING yield.
+ * Drives production → savings, CO₂, fuel oil, trees. CALIBRATED to PEA: at the
+ * ฿4.2/kWh tariff below it yields PEA's headline ฿480/kWp·month of savings
+ * (1,371.43 × 4.2 = ฿5,760/yr). Sits at the conservative end of Thailand's real
+ * PVOUT band (1,314–1,534 kWh/kWp, Global Solar Atlas).
  */
-export const PV_SPECIFIC_YIELD_KWH_PER_KWP_YEAR = 1400;
+export const PV_SPECIFIC_YIELD_KWH_PER_KWP_YEAR = 1371.43;
+
+/**
+ * Production assumed when SIZING the system (kWh/kWp/yr) — the DESIGN yield.
+ * PEA sizes more optimistically than it reports, and it picks the package whose
+ * size is NEAREST to daytimeKwh / this yield (round-to-nearest tier, NOT snap-
+ * down — see `pickPackage`). Calibrated against every confirmed three-phase
+ * benchmark: ฿6,000/฿8,000 → 5 kW, ฿9,000/฿12,000 → 10, ฿14,500/฿15,000/฿16,000
+ * → 15, ฿19,232 → 15. Those bracket the yield to (1,570, 1,657); 1,600 sits at
+ * the centre and reproduces all of them. Kept separate from the reporting yield
+ * on purpose ("size generously, promise conservatively"): the chosen tier can
+ * out-produce the daytime load, and savings then cap at the load. If a future
+ * tier-boundary case diverges from PEA, nudge THIS value within that window.
+ */
+export const PV_SIZING_YIELD_KWH_PER_KWP_YEAR = 1600;
 
 /**
  * Peak sun hours (= daily GHI, kWh/m²/day), Thailand average.
- * Verdict: confirmed (high). DEDE: ~50% of the country at 5.00–5.28; range
- * 4.5 (rainier/lower-potential) → 6.0 (sunniest NE/central). Informational —
- * the yield figure above already encodes this; kept for display/explanation.
+ * Informational only — the yield figure above already encodes irradiance and
+ * losses; kept for display/explanation. DEDE: ~50% of the country at 5.0–5.3.
  */
 export const PEAK_SUN_HOURS_PER_DAY = 5;
 
 // ──────────────────────────── Grid emissions ───────────────────────────
 
 /**
- * Grid CO₂e displaced per kWh of solar (kg/kWh).
- * Verdict: confirmed (high). Official TGO Scope-2 grid emission factor (fuel
- * combustion + T&D losses), effective 1 Jan 2026. Independently corroborated
- * (lowcarbonpower/Ember: 472 g/kWh for 2025). Range 0.399 (generation-only) →
- * 0.4999 (prior TGO LCI). Note: this is higher than the older factor PEA's
- * page appears to use, so our CO₂ figures run above PEA's — but they reflect
- * the current official value.
- * Source: TGO (with Ministry of Energy, EGAT, MEA, PEA), 2025.
+ * Grid CO₂ displaced per kWh of solar (kg/kWh).
+ * CALIBRATED to PEA: 0.3637 × 1,371.43 kWh/kWp = 498.8 kg/kWp·yr, matching
+ * every benchmark (5 kW→2,494 · 15 kW→7,482 · 20 kW→9,976). This OVERRIDES the
+ * official TGO Scope-2 factor (0.475) we used before — replicating PEA's
+ * calculator takes priority over our own sourcing here. (For reference, TGO's
+ * current grid factor is higher, ~0.475; PEA's calculator runs lower.)
  */
-export const GRID_CO2_KG_PER_KWH = 0.475;
+export const GRID_CO2_KG_PER_KWH = 0.3637;
 
 // ───────────────────────────── Electricity tariff ──────────────────────
 
 /**
- * Effective all-in retail tariff (THB/kWh, incl. Ft + 7% VAT), by segment.
- * Verdict: confirmed (high). ERC-set, identical for MEA/PEA: May–Aug 2026
- * average 3.95 before VAT → ~4.23 with VAT. Range residential 3.88–4.5,
- * business 3.95–4.5. We use one blended rate per segment for both bill→kWh
- * and savings (PEA-style). NOTE: solar offsets a household's *marginal*
- * (top-tier) consumption, which runs higher (~4.7–4.9), so 4.2 is conservative
- * — it slightly understates savings rather than overstating them.
- * Source: ERC / MEA / PEA 2026 tariff schedules; BOI Schedule 2 (business).
+ * Effective all-in retail tariff (THB/kWh, incl. Ft + 7% VAT). One blended
+ * rate, used both for bill→kWh (sizing) and savings (PEA-style — PEA's public
+ * calculator has no residential/business split). 4.2 is the ERC/MEA/PEA 2026
+ * VAT-inclusive average; paired with the yield above it reproduces PEA's
+ * ฿480/kWp·month exactly.
+ * Source: ERC / MEA / PEA 2026 tariff schedules.
  */
-export const TARIFF_THB_PER_KWH: Record<"residential" | "business", number> = {
-  residential: 4.2,
-  business: 4.2,
-};
+export const TARIFF_THB_PER_KWH = 4.2;
 
 // ──────────────────────────── Roof → capacity ──────────────────────────
 
 /**
  * Gross module footprint per kWp (m²/kWp) for current ~450–600W mono-Si.
  * Verdict: confirmed (high). Pure geometry: 1/(efficiency·1kW/m²); 4.5 ≈ 22.2%
- * efficient modules that dominate sales. Range 4.0 (best-in-class) → 5.5
- * (budget ~20% PERC). Module-only — roof spacing is handled via the usable
- * fraction below, not baked in here.
- * Source: Jinko/Trina/Canadian Solar datasheets; industry rule-of-thumb.
+ * efficient modules that dominate sales. Range 4.0 (best-in-class) → 5.5.
+ * Module-only — roof spacing is handled via the usable fraction below.
  */
 export const AREA_PER_KWP_SQM = 4.5;
 
 /**
  * Fraction of a measured roof footprint actually mountable after setbacks,
- * obstructions, access paths, and bad orientations.
- * Verdict: confirmed (medium). Industry "75% rule"; range 0.70 (complex/hip
- * roofs) → 0.80. Verifier note: clean flat C&I roofs can reach ~0.85 and Thai
- * roofs aren't bound by US fire-setback codes, so 0.75 is a safe, slightly
- * conservative default. Apply as:
- *   maxPanelKwp = measuredRoofArea_m² · USABLE_ROOF_FRACTION / AREA_PER_KWP_SQM
- * Source: NY Solar Map / PVWatts roof models; SolarMathLab.
+ * obstructions, access paths, inter-row spacing, and bad orientations.
+ * Apply as: maxPanelKwp = roofArea_m² · USABLE_ROOF_FRACTION / AREA_PER_KWP_SQM
+ *
+ * PEA-CALIBRATED to an EFFECTIVE ~7.5 m²/kWp gross (0.6 · area / 4.5 = area/7.5),
+ * tighter than the industry "75% rule" (6 m²/kWp). Pinned by a roof-area sweep at
+ * a fixed ฿40,000 3-phase bill (so the roof, not load, binds): 60 m² → 5 kW,
+ * 75 m² → 10, 120 m² → 15, 180 m² → 20 — all reproduced exactly at 0.6. The sweep
+ * bounds the effective figure to (6, 7.5]; 0.6 sits at the top, where 75 m² is
+ * exactly the 10 kWp threshold PEA returns. Roof cap = largest tier ≤ this (a
+ * hard physical limit — never rounded up past the roof).
  */
-export const USABLE_ROOF_FRACTION = 0.75;
+export const USABLE_ROOF_FRACTION = 0.6;
 
 // ─────────────────────── Environmental conversions ─────────────────────
 
 /**
- * Cooling water consumption avoided per kWh of solar (litres/kWh).
- * Verdict: ADJUSTED by the skeptic — researcher proposed 2.0, verifier
- * recomputed against Thailand's gas-DOMINATED grid (~68% gas @ ~0.8 L/kWh,
- * ~16% coal @ ~3.0 L/kWh) to ~1.0–1.3 L/kWh and flagged 2.0 as 55–95% too
- * high. We use the verifier's 1.3 (conservative within its own derivation).
- * Range 1.2–2.0. This makes our water figure much lower than PEA's display,
- * but it is the defensible number for a gas-heavy grid.
- * Source: UCS / Macknick 2012 (NREL) water-intensity factors; Thai fuel mix.
+ * Fuel-oil-equivalent generation avoided per kWh of solar (litres/kWh).
+ * CALIBRATED to PEA: 0.16039 × 1,371.43 = ~219.96 L/kWp·yr, matching every
+ * benchmark size (5 kW→1,100 · 10 kW→2,200 · 15 kW→3,299 · 20 kW→4,399). The
+ * 10 kW point pins the per-kWp factor to [219.95, 219.975]. 0.16 L/kWh is also
+ * the standard thermal-generation figure, so this is physically sound.
+ * NOTE: PEA's calculator reports FUEL OIL avoided — this REPLACES the "water
+ * saved" metric the engine shipped with (which PEA does not display).
  */
-export const WATER_SAVED_LITRES_PER_KWH = 1.3;
+export const FUEL_OIL_LITRES_PER_KWH = 0.16039;
 
 /**
- * CO₂ absorbed by one mature tree per year (kg/tree/yr) — for the
- * "equivalent to planting N trees" metric.
- * Verdict: confirmed (medium). 21.77 kg/yr (48 lb) is the standard USDA Forest
- * Service / Arbor Day "mature tree" figure. Range 6 (EPA seedling-over-10yr
- * basis) → 27 (large deciduous). Copy should say "mature trees". If EPA
- * equivalency rigor is ever required, switch to ~6.
- * Source: USDA "The Power of One Tree"; Arbor Day Foundation; EPA equivalencies.
+ * CO₂ absorbed by one tree over a 10-YEAR window (kg/tree), for PEA's
+ * "trees (10-year equivalent)" metric.
+ * CALIBRATED to PEA: annualCO₂ × 10 ÷ 618.5 reproduces the tree count of EVERY
+ * benchmark to PEA's displayed integer (3 kW→24 · 5 kW→40 · 10 kW→76/81 ·
+ * 15 kW→121 · 20 kW→161). Trees is PEA's noisiest output (small integers, heavy
+ * rounding); the window that rounds all benchmarks correctly is [617.7, 619.4]
+ * and 618.5 sits at its centre. (Implies ~62 kg/tree·yr — a large mature tree;
+ * PEA's basis, not ours.)
  */
-export const TREE_CO2_SEQUESTRATION_KG_PER_TREE_YEAR = 21.77;
+export const CO2_KG_PER_TREE_10YR = 618.5;
 
 // ─────────────────────── Electrical connection limits ──────────────────
 
 /**
- * Max system size by connection phase (kWp). These are the Thai
- * Solar ภาคประชาชน / net-billing program caps (PEA/MEA), which double as the
- * common installer rule-of-thumb. Verdict: confirmed (high). Applied to size
- * residential systems; business C&I sizing is bounded by roof + available
- * packages, not these caps. (Single-phase can physically exceed 5 kWp on a
- * 30(100)A meter, but 5 is the practical/program ceiling.)
- * Source: MEA โครงการ Solar ประชาชน; SolarHub; Excellent Solar.
+ * Max system size by connection phase (kWp). PEA's public calculator is
+ * driven purely by phase (no customer-segment input): single-phase tops out
+ * at 5 kWp, three-phase at 20 kWp — confirmed by the benchmarks, where a
+ * ฿52,000/mo three-phase bill (ideal ~68 kWp) still caps at 20 kWp.
  */
 export const PHASE_MAX_KWP: Record<"single" | "three", number> = {
   single: 5,
-  three: 10,
+  three: 20,
 };
 
 // ───────────────────────── System & financial model ────────────────────
@@ -142,14 +154,13 @@ export const SYSTEM_LIFETIME_YEARS = 25;
 
 /**
  * Annual output degradation applied over the lifetime (fraction/yr).
- * Kept at 0 for PEA parity (PEA shows lifetime = annual × 25, flat). Real
- * mono-Si degrades ~0.4–0.5%/yr; revisit if we want a more conservative model.
+ * Kept at 0 for PEA parity (PEA shows lifetime = annual × 25, flat).
  */
 export const ANNUAL_DEGRADATION_FRACTION = 0;
 
 // ───────────────────────── Verdict thresholds (policy) ──────────────────
-// Not researched — these are WS Energy's recommendation policy, decided in the
-// grilling session (3-tier, payback-driven). Tunable.
+// Not from PEA (PEA gives no verdict) — WS Energy's recommendation policy,
+// decided in the grilling session (3-tier, payback-driven). Tunable.
 
 /** Payback at or below this (years) → "Recommended" (great fit). */
 export const VERDICT_PAYBACK_GREAT_YEARS = 7;
@@ -157,7 +168,7 @@ export const VERDICT_PAYBACK_GREAT_YEARS = 7;
 /** Payback above GREAT but at/below this (years) → "Worth considering". */
 export const VERDICT_PAYBACK_OK_YEARS = 12;
 
-/** Smallest system worth installing (kWp). Below this → "Not yet" (roof too small). */
+/** Smallest system worth installing (kWp). Below this → "Not yet". */
 export const MIN_VIABLE_KWP = 3;
 
 // ──────────────────────────────── UI default ───────────────────────────

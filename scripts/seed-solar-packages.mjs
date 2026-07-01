@@ -1,14 +1,29 @@
 #!/usr/bin/env node
 /**
  * Seed script for the Solar Rooftop Estimator package tiers (ROADMAP feature 3).
- * Creates a starter ladder of solarPackage docs spanning residential + business.
  *
- * PRICES ARE PLACEHOLDERS — indicative ballparks anchored on PEA's published
- * 5 kW figure (163,900 THB). The business edits real prices in Studio; nothing
- * here is a quote.
+ * Ladder mirrors PEA's public Solar Calculator, which is phase-driven (no
+ * customer-segment split). Single-phase tops out at 5 kW; three-phase spans
+ * 5–20 kW. Every tier is PEA-CONFIRMED from the team's benchmark runs:
  *
- * Idempotent: createOrReplace with predictable dashed _id values (dashed, not
- * dotted — the public CDN hides dotted ids), so re-running overwrites in place.
+ *   1-phase   3 kW = ฿118,500   ← PEA benchmark
+ *   1-phase   5 kW = ฿139,000   ← PEA benchmark
+ *   3-phase   5 kW = ฿163,900   ← PEA benchmark (฿40,000 / 60 m² roof-capped case)
+ *   3-phase  10 kW = ฿214,400   ← PEA benchmark
+ *   3-phase  15 kW = ฿316,500   ← PEA benchmark
+ *   3-phase  20 kW = ฿388,200   ← PEA benchmark
+ *
+ * NOTE: sizing rounds a bill to the NEAREST tier, so the 3-phase 5 kW tier is a
+ * normal bill-reachable option (small three-phase bills land on it: ฿6,000 →
+ * 5 kW, ฿9,000 → 10) as well as the roof-capped fallback. See the engine +
+ * ADR 0002 for the round-to-nearest sizing rule and the ~7.5 m²/kWp roof model.
+ *
+ * ⚠️ PRICES ARE PEA-BENCHMARK FIGURES — NOT official WS Energy pricing. The team
+ * overrides real turn-key prices in Studio later. The UI shows "from ฿X" with an
+ * "estimate, not a binding quote" disclaimer.
+ *
+ * Idempotent: deletes every existing solarPackage, then recreates the ladder
+ * with predictable dashed _id values (the public CDN hides dotted ids).
  *
  * Run with: node scripts/seed-solar-packages.mjs
  */
@@ -50,76 +65,57 @@ const kit = (kw, phase) => [
   "Wi-Fi monitoring",
 ];
 
+// segment is "both" — the estimator is phase-driven and ignores segment now,
+// but the Sanity field is still required, so every tier serves either customer.
 const packages = [
-  // ---- Residential ----
+  // ---- Single-phase (caps at 5 kW) ----
   {
-    _id: "seed-package-res-3kw-1ph",
+    _id: "seed-package-1ph-3kw",
     sizeKw: 3,
     phase: "single",
-    segment: "residential",
-    price: 117_000,
+    price: 118_500, // PEA benchmark
     orderRank: 10,
   },
   {
-    _id: "seed-package-res-5kw-1ph",
+    _id: "seed-package-1ph-5kw",
     sizeKw: 5,
     phase: "single",
-    segment: "residential",
-    price: 163_900, // PEA reference anchor
+    price: 139_000, // PEA benchmark
     orderRank: 20,
   },
+  // ---- Three-phase (5 kW is roof-only; bill-sizing floors at 10, caps at 20) ----
   {
-    _id: "seed-package-res-5kw-3ph",
+    _id: "seed-package-3ph-5kw",
     sizeKw: 5,
     phase: "three",
-    segment: "residential",
-    price: 169_000,
-    orderRank: 30,
+    price: 163_900, // PEA benchmark (roof-constrained 3-phase 5 kW)
+    orderRank: 25,
   },
   {
-    _id: "seed-package-res-10kw-3ph",
+    _id: "seed-package-3ph-10kw",
     sizeKw: 10,
     phase: "three",
-    segment: "residential",
-    price: 305_000,
+    price: 214_400, // PEA benchmark
     orderRank: 40,
   },
-  // ---- Business ----
   {
-    _id: "seed-package-biz-10kw-3ph",
-    sizeKw: 10,
+    _id: "seed-package-3ph-15kw",
+    sizeKw: 15,
     phase: "three",
-    segment: "business",
-    price: 295_000,
+    price: 316_500, // PEA benchmark
     orderRank: 50,
   },
   {
-    _id: "seed-package-biz-20kw-3ph",
+    _id: "seed-package-3ph-20kw",
     sizeKw: 20,
     phase: "three",
-    segment: "business",
-    price: 560_000,
+    price: 388_200, // PEA benchmark
     orderRank: 60,
-  },
-  {
-    _id: "seed-package-biz-30kw-3ph",
-    sizeKw: 30,
-    phase: "three",
-    segment: "business",
-    price: 810_000,
-    orderRank: 70,
-  },
-  {
-    _id: "seed-package-biz-50kw-3ph",
-    sizeKw: 50,
-    phase: "three",
-    segment: "business",
-    price: 1_300_000,
-    orderRank: 80,
   },
 ].map((p) => ({
   ...p,
   _type: "solarPackage",
+  segment: "both",
   panelCount: panels(p.sizeKw),
   includedComponents: kit(p.sizeKw, p.phase),
   active: true,
@@ -127,12 +123,14 @@ const packages = [
 
 async function seed() {
   console.log(`\n→ Project: ${projectId} / Dataset: ${dataset}\n`);
-  console.log(`Creating ${packages.length} solar packages (placeholder prices)...`);
+  console.log("Removing existing solar packages...");
+  await client.delete({ query: '*[_type == "solarPackage"]' });
+  console.log(`Creating ${packages.length} solar packages (PEA ladder, benchmark prices)...`);
   const tx = client.transaction();
   for (const doc of packages) tx.createOrReplace(doc);
   await tx.commit();
   console.log("✓ Solar packages created\n");
-  console.log("Done. Edit real prices in /studio. These are indicative only.");
+  console.log("Done. Prices are PEA-benchmark/estimated — edit real prices in /studio.");
 }
 
 seed().catch((err) => {

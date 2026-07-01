@@ -1,61 +1,71 @@
 /**
- * Solar Rooftop Estimator — pure computation engine (ROADMAP feature 3, Step 2).
+ * Solar Rooftop Estimator — pure computation engine (ROADMAP feature 3).
  *
- * Mirrors PEA's calculator chain, then adds the install/skip verdict PEA lacks:
+ * A faithful re-implementation of PEA's public Solar Calculator
+ * (peasolar.pea.co.th), reverse-engineered from four benchmark runs (see
+ * constants.ts + engine.test.ts), plus the install/skip verdict PEA lacks:
  *
  *   monthly bill → annual kWh → daytime-offsettable kWh → ideal system size
- *     → cap by roof area + connection phase → snap to a real package tier
+ *     → cap by roof area + connection phase → round to the NEAREST package tier
  *     → production → self-consumed savings → payback + 25-yr + environmental
  *     → 3-tier verdict (Recommended / Worth considering / Not yet).
+ *
+ * PEA's model is driven purely by PHASE (no customer-segment input). Single-phase
+ * spans 3–5 kWp, three-phase 5–20 kWp; the ideal size (daytime kWh ÷ design yield)
+ * is rounded to the NEAREST available tier — ฿6,000 3-phase → 5 kW, ฿9,000 → 10,
+ * ฿15,000 → 15. Outputs are linear in system size ONLY while the system is the
+ * binding constraint (production ≤ daytime load): ฿480/kWp·mo saved, 498.8
+ * kg/kWp·yr CO₂, ~220 L/kWp·yr fuel oil, ~8.05 trees/kWp (10-yr). When the chosen
+ * tier out-produces the daytime load (e.g. ฿9,000 3-phase → 10 kW), savings/CO₂/
+ * fuel instead track the *daytime load* — the offset is min(production, daytime
+ * kWh). This self-consumption cap is the whole model; both sides are benchmarked.
  *
  * Design rules (ADR 0002):
  *  - PURE. The only import is `./constants`. Packages are passed IN as an
  *    argument, so this module never touches Sanity, the network, or env — which
- *    is what lets the React island run it on every slider tick AND lets the unit
- *    test inject fixtures and run under `node --test` with no mocking.
+ *    lets the React island run it on every keystroke AND lets the unit test
+ *    inject fixtures and run under `node --test` with no mocking.
  *  - CONSERVATIVE. No battery, so solar only offsets *daytime* load; we never
- *    credit grid export (PEA-parity). Snapping is to the largest tier at or
- *    below the ideal size, so a recommended system is always fully self-consumed.
- *
- * The reference case the test pins (PEA screenshot): ฿5,000/mo bill, 50% daytime,
- * residential single-phase → 5.0 kW, ~฿28,800/yr, ~5.7-yr payback, ~฿720k/25yr.
+ *    credit grid export. The chosen tier may out-produce that load (nearest-tier
+ *    rounding can round up), but savings/env are always capped at the daytime
+ *    load — never crediting exported surplus.
  */
 
 import {
   ANNUAL_DEGRADATION_FRACTION,
   AREA_PER_KWP_SQM,
+  CO2_KG_PER_TREE_10YR,
+  FUEL_OIL_LITRES_PER_KWH,
   GRID_CO2_KG_PER_KWH,
   MIN_VIABLE_KWP,
   PHASE_MAX_KWP,
+  PV_SIZING_YIELD_KWH_PER_KWP_YEAR,
   PV_SPECIFIC_YIELD_KWH_PER_KWP_YEAR,
   SYSTEM_LIFETIME_YEARS,
   TARIFF_THB_PER_KWH,
-  TREE_CO2_SEQUESTRATION_KG_PER_TREE_YEAR,
   USABLE_ROOF_FRACTION,
   VERDICT_PAYBACK_GREAT_YEARS,
   VERDICT_PAYBACK_OK_YEARS,
-  WATER_SAVED_LITRES_PER_KWH,
   // Explicit .ts extension so this module (and its test) run under Node's
   // native TypeScript loader; bundler resolution still accepts it for the app.
 } from "./constants.ts";
 
 // ──────────────────────────────── Types ────────────────────────────────
 
-export type Segment = "residential" | "business";
 export type Phase = "single" | "three";
 
 /**
  * The minimal package shape the engine needs. Structurally compatible with
  * `SolarPackageRow` (lib/sanity/packages.ts) — the client island passes those
  * straight in — but declared locally so the engine stays Sanity-free and pure.
- * `phase`/`segment` may be "both" (a tier valid for either) in Sanity data.
+ * `phase` may be "both" (a tier valid for either connection). The estimator is
+ * phase-driven (PEA-style), so a package's `segment`, if present, is ignored.
  */
 export type EnginePackage = {
   _id?: string;
   sizeKw: number;
   price: number;
   phase: Phase | "both";
-  segment: Segment | "both";
   panelCount?: number | null;
   /** Display-only passthrough (the engine doesn't compute on it). */
   includedComponents?: string[] | null;
@@ -64,7 +74,7 @@ export type EnginePackage = {
 export type EstimatorInput = {
   /** Average monthly electricity bill, THB. */
   monthlyBillThb: number;
-  segment: Segment;
+  /** Electrical connection — the only thing that caps system size (PEA-style). */
   phase: Phase;
   /** Share of consumption used during daylight (0–1) — the offsettable portion. */
   dayUsageFraction: number;
@@ -83,7 +93,7 @@ export type VerdictReason =
   | "slow_payback" // payback > OK → not yet
   | "roof_too_small" // roof can't hold a viable (≥ MIN_VIABLE) system
   | "low_daytime_offset" // daytime load too small to justify a viable system
-  | "no_package"; // no package matches segment/phase (config gap)
+  | "no_package"; // no package matches the phase (config gap)
 
 export type EstimatorResult = {
   // —— sizing ——
@@ -95,8 +105,8 @@ export type EstimatorResult = {
   idealKwp: number;
   /** Largest system the roof allows, kWp (null when no roof given). */
   roofCapKwp: number | null;
-  /** Largest system the connection phase allows, kWp (null for business). */
-  phaseCapKwp: number | null;
+  /** Largest system the connection phase allows, kWp. */
+  phaseCapKwp: number;
   /** True when the roof (not load or phase) was the binding constraint. */
   roofLimited: boolean;
 
@@ -109,13 +119,17 @@ export type EstimatorResult = {
   priceThb: number | null;
   monthlySavingsThb: number;
   annualSavingsThb: number;
+  /** Share of the monthly bill the savings cover (0–100). */
+  billOffsetPercent: number;
   /** Years to recoup price from savings; Infinity when there are no savings. */
   paybackYears: number;
   lifetimeSavingsThb: number;
 
   // —— environment ——
   annualCo2SavedKg: number;
-  annualWaterSavedLitres: number;
+  /** Fuel-oil-equivalent generation avoided per year, litres (PEA metric). */
+  annualFuelOilSavedLitres: number;
+  /** Trees-planted equivalent on PEA's 10-year basis. */
   treesEquivalent: number;
   lifetimeCo2SavedKg: number;
 
@@ -128,10 +142,10 @@ export type EstimatorResult = {
 
 const EPS = 1e-6;
 
-/** Bill (THB/mo) → annual consumption (kWh), via the segment's all-in tariff. */
-export function billToAnnualKwh(monthlyBillThb: number, segment: Segment): number {
+/** Bill (THB/mo) → annual consumption (kWh), via the all-in tariff. */
+export function billToAnnualKwh(monthlyBillThb: number): number {
   const bill = Math.max(0, monthlyBillThb);
-  return (bill * 12) / TARIFF_THB_PER_KWH[segment];
+  return (bill * 12) / TARIFF_THB_PER_KWH;
 }
 
 /** Largest system the roof footprint can hold, kWp. */
@@ -149,27 +163,20 @@ function lifetimeFactor(): number {
   return sum;
 }
 
-/** Packages valid for this segment + phase, with a relaxed fallback by segment. */
-function compatiblePackages(
-  packages: EnginePackage[],
-  segment: Segment,
-  phase: Phase,
-): EnginePackage[] {
-  const bySegment = (p: EnginePackage) => p.segment === segment || p.segment === "both";
-  const byPhase = (p: EnginePackage) => p.phase === phase || p.phase === "both";
-  const exact = packages.filter((p) => bySegment(p) && byPhase(p));
-  // Fall back to segment-only if the phase filter empties (e.g. business+single,
-  // where the catalogue only carries three-phase tiers).
-  return exact.length > 0 ? exact : packages.filter(bySegment);
+/** Packages valid for this connection phase ("both" matches either). */
+function compatiblePackages(packages: EnginePackage[], phase: Phase): EnginePackage[] {
+  return packages.filter((p) => p.phase === phase || p.phase === "both");
 }
 
 /**
  * Pick the package to recommend.
  *  - Reject anything above the hard cap (roof ∧ phase) — never recommend a
  *    system that physically won't fit or connect.
- *  - Among what fits, prefer the largest tier at or below the ideal size (full
- *    self-consumption, best payback); if every fitting tier is above ideal, take
- *    the smallest (it will be slightly oversized vs daytime load).
+ *  - Among what fits, pick the tier NEAREST to the ideal size. PEA rounds a bill
+ *    to the closest package, not down: ฿9,000 3-phase / 50% (ideal ~8 kWp) → 10,
+ *    but ฿6,000 (ideal ~5.4) → 5. Ties break DOWN (conservative).
+ *  - When the ideal is far above every fitting tier (roof- or phase-limited),
+ *    "nearest" naturally lands on the largest fitting tier.
  *  - Return null when nothing fits the hard cap.
  */
 function pickPackage(
@@ -182,10 +189,17 @@ function pickPackage(
     .sort((a, b) => a.sizeKw - b.sizeKw);
   if (fitting.length === 0) return null;
 
-  const atOrBelowIdeal = fitting.filter((p) => p.sizeKw <= idealKwp + EPS);
-  return atOrBelowIdeal.length > 0
-    ? atOrBelowIdeal[atOrBelowIdeal.length - 1] // largest ≤ ideal
-    : fitting[0]; // smallest fitting (slightly oversized)
+  // Ascending order + strict-less comparison ⇒ on a tie the smaller tier wins.
+  let best = fitting[0];
+  let bestDist = Math.abs(fitting[0].sizeKw - idealKwp);
+  for (let i = 1; i < fitting.length; i++) {
+    const dist = Math.abs(fitting[i].sizeKw - idealKwp);
+    if (dist < bestDist - EPS) {
+      best = fitting[i];
+      bestDist = dist;
+    }
+  }
+  return best;
 }
 
 // ──────────────────────────────── Engine ───────────────────────────────
@@ -195,60 +209,63 @@ function pickPackage(
  */
 export function estimate(input: EstimatorInput, packages: EnginePackage[]): EstimatorResult {
   const dayFraction = Math.min(1, Math.max(0, input.dayUsageFraction));
-  const tariff = TARIFF_THB_PER_KWH[input.segment];
+  const monthlyBillThb = Math.max(0, input.monthlyBillThb);
 
-  // 1. Demand → the slice solar can offset (daytime only; no battery).
-  const annualKwh = billToAnnualKwh(input.monthlyBillThb, input.segment);
+  // 1. Demand → the slice solar can offset (daytime only; no battery). Sizing
+  //    uses the optimistic DESIGN yield (PEA sizes generously) and rounds to the
+  //    nearest tier; production + savings below use the conservative REPORTING
+  //    yield.
+  const annualKwh = billToAnnualKwh(monthlyBillThb);
   const daytimeKwh = annualKwh * dayFraction;
-  const idealKwp = daytimeKwh / PV_SPECIFIC_YIELD_KWH_PER_KWP_YEAR;
+  const idealKwp = daytimeKwh / PV_SIZING_YIELD_KWH_PER_KWP_YEAR;
 
-  // 2. Caps. Phase caps only bind residential (business C&I is bounded by roof
-  //    + catalogue, not the program phase limits — see constants).
-  const phaseCapKwp = input.segment === "residential" ? PHASE_MAX_KWP[input.phase] : null;
+  // 2. Caps. Phase always caps (PEA is phase-driven: 1-phase ≤ 5, 3-phase ≤ 20).
+  const phaseCapKwp = PHASE_MAX_KWP[input.phase];
   const roofCapKwp =
     input.roofAreaSqm != null && input.roofAreaSqm > 0
       ? roofAreaToMaxKwp(input.roofAreaSqm)
       : null;
-  const hardCapKwp = Math.min(roofCapKwp ?? Infinity, phaseCapKwp ?? Infinity);
+  const hardCapKwp = Math.min(roofCapKwp ?? Infinity, phaseCapKwp);
 
-  // 3. Snap to a real tier.
-  const pool = compatiblePackages(packages, input.segment, input.phase);
+  // 3. Round to the nearest real tier within the hard cap.
+  const pool = compatiblePackages(packages, input.phase);
   const chosen = pickPackage(pool, idealKwp, hardCapKwp);
 
   const recommendedKwp = chosen?.sizeKw ?? 0;
   const priceThb = chosen?.price ?? null;
   const panelCount = chosen?.panelCount ?? null;
 
-  // Roof is the *binding* constraint when it's both below the ideal size and
-  // tighter than the phase cap.
+  // Roof is the *binding* constraint when it forces a smaller tier than the load
+  // (phase-capped only) would otherwise get — compare the two picks directly, so
+  // it's correct even when nearest-rounding lifts the load pick above the ideal.
+  const loadChoice = pickPackage(pool, idealKwp, phaseCapKwp);
   const roofLimited =
-    roofCapKwp != null &&
-    roofCapKwp < idealKwp - EPS &&
-    roofCapKwp <= (phaseCapKwp ?? Infinity) + EPS;
+    chosen != null && loadChoice != null && chosen.sizeKw < loadChoice.sizeKw - EPS;
 
   // 4. Energy + money. Self-consumption is capped by daytime load (no export
   //    credit); a snapped-down system self-consumes everything it makes.
   const annualProductionKwh = recommendedKwp * PV_SPECIFIC_YIELD_KWH_PER_KWP_YEAR;
   const annualOffsetKwh = Math.min(annualProductionKwh, daytimeKwh);
 
-  const annualSavingsThb = annualOffsetKwh * tariff;
+  const annualSavingsThb = annualOffsetKwh * TARIFF_THB_PER_KWH;
   const monthlySavingsThb = annualSavingsThb / 12;
+  const billOffsetPercent =
+    monthlyBillThb > 0 ? (monthlySavingsThb / monthlyBillThb) * 100 : 0;
   const lifetimeSavingsThb = annualSavingsThb * lifetimeFactor();
   const paybackYears =
     priceThb != null && annualSavingsThb > 0 ? priceThb / annualSavingsThb : Infinity;
 
-  // 5. Environment — based on grid energy actually displaced.
+  // 5. Environment — based on grid energy actually displaced (PEA metrics).
   const annualCo2SavedKg = annualOffsetKwh * GRID_CO2_KG_PER_KWH;
-  const annualWaterSavedLitres = annualOffsetKwh * WATER_SAVED_LITRES_PER_KWH;
-  const treesEquivalent = annualCo2SavedKg / TREE_CO2_SEQUESTRATION_KG_PER_TREE_YEAR;
+  const annualFuelOilSavedLitres = annualOffsetKwh * FUEL_OIL_LITRES_PER_KWH;
+  const treesEquivalent = (annualCo2SavedKg * 10) / CO2_KG_PER_TREE_10YR;
   const lifetimeCo2SavedKg = annualCo2SavedKg * SYSTEM_LIFETIME_YEARS;
 
   // 6. Verdict.
   const { verdict, verdictReason } = decideVerdict({
     chosen,
-    recommendedKwp,
-    idealKwp,
     roofCapKwp,
+    annualSavingsThb,
     paybackYears,
   });
 
@@ -265,10 +282,11 @@ export function estimate(input: EstimatorInput, packages: EnginePackage[]): Esti
     priceThb,
     monthlySavingsThb,
     annualSavingsThb,
+    billOffsetPercent,
     paybackYears,
     lifetimeSavingsThb,
     annualCo2SavedKg,
-    annualWaterSavedLitres,
+    annualFuelOilSavedLitres,
     treesEquivalent,
     lifetimeCo2SavedKg,
     verdict,
@@ -277,42 +295,44 @@ export function estimate(input: EstimatorInput, packages: EnginePackage[]): Esti
 }
 
 /**
- * The 3-tier verdict. Structural blockers first (nothing fits / roof too small /
- * daytime load too small to justify a viable system), then payback bands.
+ * The verdict. Lean-to-recommend, PEA-style: this is a sales tool, so whenever a
+ * real system can be offered AND it saves money, we RECOMMEND it — no soft "not
+ * yet" for a small home or a longish payback. We only hold back when a system
+ * genuinely can't be offered: nothing fits the roof/phase, or there's no daytime
+ * load to offset (no/zero bill, or all-night usage → solar saves nothing).
+ *
+ * The payback bands no longer change the verdict (always "recommended"); they
+ * only pick the honest sub-copy (`verdictReason`) shown under the banner.
  */
 function decideVerdict(args: {
   chosen: EnginePackage | null;
-  recommendedKwp: number;
-  idealKwp: number;
   roofCapKwp: number | null;
+  annualSavingsThb: number;
   paybackYears: number;
 }): { verdict: Verdict; verdictReason: VerdictReason } {
-  const { chosen, recommendedKwp, idealKwp, roofCapKwp, paybackYears } = args;
+  const { chosen, roofCapKwp, annualSavingsThb, paybackYears } = args;
 
-  // No tier matched the segment/phase — a catalogue gap, not a customer "no".
+  // Nothing physically fits — a roof that can't hold a viable system, or no
+  // package for the phase. Honest "let's talk", not a recommendation.
   if (!chosen) {
     const reason: VerdictReason =
       roofCapKwp != null && roofCapKwp < MIN_VIABLE_KWP ? "roof_too_small" : "no_package";
     return { verdict: "not_yet", verdictReason: reason };
   }
 
-  // Roof can't hold a viable system.
-  if (roofCapKwp != null && roofCapKwp < MIN_VIABLE_KWP - EPS) {
-    return { verdict: "not_yet", verdictReason: "roof_too_small" };
-  }
-
-  // Daytime-offsettable load is too small to justify even a minimum system —
-  // solar would be oversized for how little is used in daylight.
-  if (idealKwp < MIN_VIABLE_KWP - EPS || recommendedKwp < MIN_VIABLE_KWP - EPS) {
+  // No daytime load to offset (no/zero bill, or all consumption at night) →
+  // solar saves nothing, so there's nothing to recommend yet.
+  if (annualSavingsThb <= 0) {
     return { verdict: "not_yet", verdictReason: "low_daytime_offset" };
   }
 
-  // Payback bands.
-  if (paybackYears <= VERDICT_PAYBACK_GREAT_YEARS) {
-    return { verdict: "recommended", verdictReason: "great_payback" };
-  }
-  if (paybackYears <= VERDICT_PAYBACK_OK_YEARS) {
-    return { verdict: "worth_considering", verdictReason: "ok_payback" };
-  }
-  return { verdict: "not_yet", verdictReason: "slow_payback" };
+  // A system fits and saves money → recommend it. Reason tracks payback only to
+  // pick the right sub-copy.
+  const verdictReason: VerdictReason =
+    paybackYears <= VERDICT_PAYBACK_GREAT_YEARS
+      ? "great_payback"
+      : paybackYears <= VERDICT_PAYBACK_OK_YEARS
+        ? "ok_payback"
+        : "slow_payback";
+  return { verdict: "recommended", verdictReason };
 }
