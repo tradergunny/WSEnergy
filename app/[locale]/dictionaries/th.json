@@ -44,6 +44,7 @@
     "residential": "บ้านที่อยู่อาศัย",
     "solarFarm": "โซลาร์ฟาร์ม",
     "scada": "SCADA & การมอนิเตอร์",
+    "solarCalculator": "คำนวณโซลาร์",
     "datasheets": "Datasheets",
     "wiringDiagrams": "ไดอะแกรมและคู่มือ",
     "standards": "มาตรฐานและการรับรอง",
@@ -708,6 +709,15 @@
     "submit": "[TH] Submit request",
     "submitting": "[TH] Submitting…",
     "stepOf": "[TH] Step {current} of {total}",
+    "fromEstimate": {
+      "eyebrow": "จากผลประเมินของคุณ",
+      "note": "เรากรอกรายละเอียดโครงการให้แล้ว เพียงเพิ่มข้อมูลติดต่อด้านล่าง",
+      "kw": "kW",
+      "payback": "ปีคืนทุน",
+      "recommended": "แนะนำให้ติดตั้ง",
+      "worthConsidering": "น่าพิจารณา",
+      "notYet": "ปรึกษาเรา"
+    },
     "step1": {
       "heading": "[TH] Project type",
       "subhead": "[TH] What kind of installation is this? Skip if you're not sure yet.",

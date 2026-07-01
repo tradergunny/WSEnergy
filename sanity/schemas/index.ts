@@ -12,6 +12,7 @@ import { rfqSubmission } from "./rfqSubmission";
 import { trainingSession } from "./trainingSession";
 import { serviceType } from "./serviceType";
 import { installer } from "./installer";
+import { solarPackage } from "./solarPackage";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   product,
@@ -27,4 +28,5 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   trainingSession,
   serviceType,
   installer,
+  solarPackage,
 ];

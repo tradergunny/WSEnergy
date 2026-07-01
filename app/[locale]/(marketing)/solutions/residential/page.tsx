@@ -331,6 +331,20 @@ export default async function ResidentialPage({
               <div className="max-w-xl">
                 <h2 className="text-h2 font-medium">{t.ctaHeading}</h2>
                 <p className="text-body-lg text-card-ink/70 mt-2">{t.ctaBody}</p>
+                <Link
+                  href={withLocale(locale, "/solar-calculator")}
+                  className="group/est text-gold-600 hover:text-gold-500 mt-4 inline-flex items-center gap-1.5 text-body font-medium transition-colors"
+                >
+                  {locale === "th"
+                    ? "ไม่แน่ใจว่าต้องใช้ขนาดไหน? ลองคำนวณหลังคาของคุณ"
+                    : "Not sure what size? Estimate your roof first"}
+                  <IconArrowRight
+                    size={14}
+                    stroke={2}
+                    className="transition-transform group-hover/est:translate-x-0.5"
+                    aria-hidden
+                  />
+                </Link>
               </div>
               <div className="flex flex-wrap items-center gap-4">
                 <Magnetic>

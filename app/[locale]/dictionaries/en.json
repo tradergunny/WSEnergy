@@ -44,6 +44,7 @@
     "residential": "Residential",
     "solarFarm": "Solar Farm / Utility",
     "scada": "SCADA & Monitoring",
+    "solarCalculator": "Solar Calculator",
     "datasheets": "Datasheets",
     "wiringDiagrams": "Wiring Diagrams & Manuals",
     "standards": "Standards & Compliance",
@@ -756,6 +757,15 @@
     "submit": "Submit request",
     "submitting": "Submitting…",
     "stepOf": "Step {current} of {total}",
+    "fromEstimate": {
+      "eyebrow": "From your estimate",
+      "note": "We've pre-filled your project details — just add your contact info below.",
+      "kw": "kW",
+      "payback": "yr payback",
+      "recommended": "Recommended",
+      "worthConsidering": "Worth considering",
+      "notYet": "Worth a chat"
+    },
     "step1": {
       "heading": "Project type",
       "subhead": "What kind of installation is this? Skip if you're not sure yet.",

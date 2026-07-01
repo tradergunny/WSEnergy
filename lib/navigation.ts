@@ -44,6 +44,7 @@ export const mainNav: NavItem[] = [
     key: "solutions",
     href: "/solutions",
     children: [
+      { key: "solarCalculator", href: "/solar-calculator" },
       { key: "ci", href: "/solutions/commercial-industrial" },
       { key: "residential", href: "/solutions/residential" },
       { key: "solarFarm", href: "/solutions/solar-farm" },

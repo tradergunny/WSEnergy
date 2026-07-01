@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { sanityWriteClient } from "@/lib/sanity/client";
+import {
+  ESTIMATOR_SOURCE,
+  estimatePayloadSchema,
+  isCompanyRequired,
+} from "@/lib/estimator/lead";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -11,18 +16,29 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = "onboarding@resend.dev";
 const NOTIFICATION_EMAIL = "gbteamworking@gmail.com";
 
-const rfqSchema = z.object({
-  projectType: z.string().optional(),
-  projectSize: z.string().optional(),
-  productsOfInterest: z.array(z.string()).optional(),
-  timeline: z.string().optional(),
-  name: z.string().min(1, "Name is required"),
-  company: z.string().min(1, "Company is required"),
-  email: z.string().email("Please enter a valid email"),
-  phone: z.string().min(1, "Phone is required"),
-  role: z.string().optional(),
-  notes: z.string().optional(),
-});
+const rfqSchema = z
+  .object({
+    projectType: z.string().optional(),
+    projectSize: z.string().optional(),
+    productsOfInterest: z.array(z.string()).optional(),
+    timeline: z.string().optional(),
+    name: z.string().min(1, "Name is required"),
+    // Company is conditionally required (see superRefine) — homeowners arriving
+    // from the estimator don't have one.
+    company: z.string().optional(),
+    email: z.string().email("Please enter a valid email"),
+    phone: z.string().min(1, "Phone is required"),
+    role: z.string().optional(),
+    notes: z.string().optional(),
+    // Estimator handoff (Step 5).
+    source: z.literal(ESTIMATOR_SOURCE).optional(),
+    estimate: estimatePayloadSchema.optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (isCompanyRequired(data.source) && !data.company?.trim()) {
+      ctx.addIssue({ code: "custom", path: ["company"], message: "Company is required" });
+    }
+  });
 
 function generateReference(): string {
   const year = new Date().getFullYear();
@@ -61,6 +77,8 @@ export async function POST(request: Request) {
       _type: "rfqSubmission",
       reference,
       submittedAt: new Date().toISOString(),
+      source: data.source ?? "",
+      ...(data.estimate ? { estimate: data.estimate } : {}),
       projectType: data.projectType ?? "",
       projectSize: data.projectSize ?? "",
       productsOfInterest: data.productsOfInterest ?? [],
@@ -80,10 +98,26 @@ export async function POST(request: Request) {
     );
   }
 
+  const est = data.estimate;
+  const estimateLines = est
+    ? [
+        "",
+        "— Solar estimate —",
+        `Verdict: ${est.verdict}`,
+        `Recommended size: ${est.recommendedKwp} kWp${est.priceThb != null ? ` (฿${est.priceThb.toLocaleString()})` : ""}`,
+        `Phase: ${est.phase}`,
+        `Monthly bill: ฿${est.monthlyBillThb.toLocaleString()} · daytime use ${Math.round(est.dayUsageFraction * 100)}%`,
+        est.roofAreaSqm != null ? `Roof area: ${est.roofAreaSqm} m²` : null,
+        est.paybackYears != null ? `Payback: ${est.paybackYears} yr` : null,
+        `Est. savings: ฿${est.monthlySavingsThb.toLocaleString()}/mo · ฿${est.annualSavingsThb.toLocaleString()}/yr${est.monthlyBillThb > 0 ? ` (≈${Math.round((est.monthlySavingsThb / est.monthlyBillThb) * 100)}% of bill)` : ""}`,
+      ].filter(Boolean)
+    : [];
+
   const summaryLines = [
     `Reference: ${reference}`,
+    data.source ? `Source: ${data.source}` : null,
     `Name: ${data.name}`,
-    `Company: ${data.company}`,
+    data.company ? `Company: ${data.company}` : null,
     `Email: ${data.email}`,
     `Phone: ${data.phone}`,
     data.role ? `Role: ${data.role}` : null,
@@ -94,6 +128,7 @@ export async function POST(request: Request) {
       : null,
     data.timeline ? `Timeline: ${data.timeline}` : null,
     data.notes ? `Notes: ${data.notes}` : null,
+    ...estimateLines,
   ]
     .filter(Boolean)
     .join("\n");
@@ -103,7 +138,7 @@ export async function POST(request: Request) {
       resend.emails.send({
         from: FROM_EMAIL,
         to: NOTIFICATION_EMAIL,
-        subject: `New RFQ: ${reference} — ${data.company}`,
+        subject: `New RFQ: ${reference} — ${data.company || data.name}${data.source === ESTIMATOR_SOURCE ? " (estimator)" : ""}`,
         text: `New quote request received.\n\n${summaryLines}`,
       }),
       resend.emails.send({
