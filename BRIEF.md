@@ -503,7 +503,7 @@ The GSAP experience layer. All five respect `prefers-reduced-motion` (collapse t
 - **`<PinnedScene length={n}>`** — scroll-runway orchestrator (`components/ui/PinnedScene.tsx`). Renders an `n`-viewport-tall runway with a sticky full-screen stage and publishes 0→1 scroll progress via `usePinnedScene()` (ref-based, no re-renders). ScrollVideo auto-subscribes when nested inside one. Use for pinned story "acts"; keep to one or two per page.
 - **`<SplitTextReveal as="h1|h2|…">`** — headline reveal (`components/ui/SplitTextReveal.tsx`). Splits into masked lines and staggers the words up on first viewport entry (GSAP SplitText, font-load-safe, SSR keeps full text in markup). Use for section headlines; body copy stays on `<ScrollReveal>`. Thai copy degrades to a per-line rise.
 - **`<Magnetic strength={0..1}>`** — magnetic cursor pull (`components/ui/Magnetic.tsx`). Wraps a single child — typically `<Button>` — easing it toward the pointer on hover with an elastic return. Transform-only on the wrapper, so §8.1 button styling is untouched. Inert on coarse pointers. Reserve for primary CTAs.
-- **`<CountUp to={n} prefix suffix>`** — stat number animation (`components/ui/CountUp.tsx`). Counts 0→n on first viewport entry; SSR renders the final value; tabular-nums prevents layout wobble. Drop into a `StatBlock` `value` slot (which now accepts a ReactNode).
+- **`<CountUp to={n} prefix suffix decimals>`** — stat number animation (`components/ui/CountUp.tsx`). Counts 0→n on first viewport entry; SSR renders the final value; tabular-nums prevents layout wobble. Drop into a `StatBlock` `value` slot (which now accepts a ReactNode). `decimals` (default 0) renders fraction digits — e.g. `decimals={1}` for a 3.7-yr payback.
 
 ---
 
@@ -572,12 +572,15 @@ Never combine more than 3 badges on a single component.
   required
   state="default" | "focused" | "filled" | "error"
   error="Please enter a valid email."
+  prefix="฿"        // optional in-field adornments (2026-07, estimator redesign)
+  suffix="/ month"  // decorative only — pointer-transparent, aria-hidden
 />
 ```
 
 - Default: 0.5px Graphite 600 border
 - Focused: Brand 600 border + 2px Brand 200 focus ring
 - Error: Danger 600 border + error message below
+- `prefix`/`suffix` render inside the field (฿, /month, m² — text or a small icon); the input pads itself (pl-9 / pr-16) when they're present
 
 ### 8.5 Spec table
 
@@ -658,6 +661,24 @@ SVG-based, 5 nodes (Modules · PEFS · DC string · Control box · Inverter), Si
 - Positioning is the caller's responsibility — pass `className="absolute top-3 left-3"` to overlay on a product image, or place inline.
 - Renders nothing when `logo` is missing, so callers can pass `brand?.logo` unconditionally and the badge falls away for brands without an uploaded asset.
 - Currently used as the top-left overlay inside `<ProductCard>`. Reuse anywhere else a brand needs visual claim (product detail header, related-products strip, brand-pillar sections) rather than recreating an image-in-pill inline.
+
+### 8.11 Slider
+
+```tsx
+<Slider
+  value={dayPct} min={0} max={100} step={5}
+  onChange={(v) => setDayPct(v)}
+  ariaLabel="When do you use power?"
+  fillClassName="bg-gradient-to-r from-gold-500 to-gold-400" // optional reskin
+  railClassName="bg-forest-950 ring-1 ring-inset ring-mist-800"
+  thumbIcon={<IconSun size={14} />}
+/>
+```
+
+- Branded range input (2026-07, estimator redesign): gold fill on a mist-800 rail, 28px warm-bone thumb with a 2px gold border — a real touch target — and a gold focus ring.
+- The native `<input type="range">` stays in the tree as an invisible overlay, so keyboard, screen-reader, and drag behaviour are the platform's own; the visible rail/fill/thumb mirror its value.
+- `fillClassName`/`railClassName` reskin the track (e.g. the estimator's gold-day → dark-night "sun-arc" control); `thumbIcon` renders inside the thumb disc.
+- Reach for this for any continuous/percentage input (filters, financing terms, sizing tools) instead of styling a native range inline.
 
 ---
 

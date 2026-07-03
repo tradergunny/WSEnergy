@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  IconBolt,
-  IconCalendarStats,
+  IconArrowRight,
   IconCircleCheck,
   IconClockHour4,
   IconCoin,
@@ -15,8 +14,20 @@ import {
   IconTrees,
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/Button";
+import { CountUp } from "@/components/ui/CountUp";
+import { Input } from "@/components/ui/Input";
+import { Magnetic } from "@/components/ui/Magnetic";
 import { MonoLabel } from "@/components/ui/MonoLabel";
-import { estimate, type Phase } from "@/lib/estimator/engine";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { Slider } from "@/components/ui/Slider";
+import { StatBlock } from "@/components/ui/StatBlock";
+import {
+  billToAnnualKwh,
+  estimate,
+  type EstimatorInput,
+  type Phase,
+} from "@/lib/estimator/engine";
+import { SYSTEM_LIFETIME_YEARS } from "@/lib/estimator/constants.ts";
 import {
   buildEstimatePayload,
   encodeEstimateParam,
@@ -27,13 +38,21 @@ import { track } from "@/lib/analytics";
 
 type Locale = "en" | "th";
 
+const BILL_PRESETS = [3000, 6000, 12000, 25000, 50000];
+const TICKER_STAGE_MS = 200;
+
 /**
  * SolarEstimator — the interactive client island for /solar-calculator
- * (ROADMAP feature 3, Step 3). Holds the input state, runs the pure engine on
- * every change for instant feedback, and renders the verdict-first result.
+ * (ROADMAP feature 3). A guided journey, PEA-shaped: inputs → an explicit
+ * "Calculate" moment → the results narrative reveals below and the page
+ * scrolls to the verdict. Results FREEZE to the submitted inputs; edits mark
+ * them stale until the user recalculates (honest page-flip, no half-live UI).
+ *
+ * The island owns its <section> bands (inputs / verdict+system / environment /
+ * payback) so the forest-900/950 rhythm can alternate below the server hero.
  *
  * Roof area is TYPED here (the map is Step 8 — it will swap this one input).
- * Copy is inline th/en for now; the dictionary namespace lands in Step 7.
+ * Copy is inline th/en, matching the pre-redesign pattern.
  */
 export function SolarEstimator({
   packages,
@@ -47,202 +66,397 @@ export function SolarEstimator({
   const [dayUsageFraction, setDayUsageFraction] = useState(0.5);
   const [roofInput, setRoofInput] = useState("");
 
+  // Freeze + recalculate: results always derive from `submitted`, never from
+  // the live fields. `runId` keys the results tree so CountUps re-run per calc.
+  const [submitted, setSubmitted] = useState<EstimatorInput | null>(null);
+  const [revealState, setRevealState] = useState<"idle" | "calculating" | "revealed">("idle");
+  const [runId, setRunId] = useState(0);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const revealTimer = useRef<number | null>(null);
+
   const monthlyBillThb = Number(billInput) || 0;
   const roofAreaSqm = roofInput.trim() === "" ? null : Math.max(0, Number(roofInput) || 0);
+  const dayPct = Math.round(dayUsageFraction * 100);
 
   const result = useMemo(
-    () => estimate({ monthlyBillThb, phase, dayUsageFraction, roofAreaSqm }, packages),
-    [monthlyBillThb, phase, dayUsageFraction, roofAreaSqm, packages],
+    () => (submitted ? estimate(submitted, packages) : null),
+    [submitted, packages],
   );
 
-  // Carry the current estimate into the quote form (Step 5 handoff).
-  const quoteHref = `/${locale}/quote?source=${ESTIMATOR_SOURCE}&estimate=${encodeEstimateParam(
-    buildEstimatePayload({ monthlyBillThb, phase, dayUsageFraction, roofAreaSqm }, result),
-  )}`;
+  const stale =
+    submitted != null &&
+    (submitted.monthlyBillThb !== monthlyBillThb ||
+      submitted.phase !== phase ||
+      submitted.dayUsageFraction !== dayUsageFraction ||
+      (submitted.roofAreaSqm ?? null) !== roofAreaSqm);
+
+  // Quote handoff carries the FROZEN estimate the user is looking at.
+  const quoteHref =
+    submitted && result
+      ? `/${locale}/quote?source=${ESTIMATOR_SOURCE}&estimate=${encodeEstimateParam(
+          buildEstimatePayload(submitted, result),
+        )}`
+      : `/${locale}/quote?source=${ESTIMATOR_SOURCE}`;
 
   const t = strings[locale];
 
-  // Analytics: ping once per verdict transition, not on every keystroke.
+  useEffect(
+    () => () => {
+      if (revealTimer.current != null) window.clearTimeout(revealTimer.current);
+    },
+    [],
+  );
+
+  // Scroll to the verdict once the results exist in the DOM.
   useEffect(() => {
+    if (revealState !== "revealed" || runId === 0) return;
+    const el = resultsRef.current;
+    if (!el) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lenis = (window as unknown as { lenis?: { scrollTo: (t: Element, o?: object) => void } })
+      .lenis;
+    if (!reduced && lenis) lenis.scrollTo(el, { offset: -16 });
+    else el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  }, [revealState, runId]);
+
+  const handleCalculate = () => {
+    if (revealState === "calculating") return;
+    const input: EstimatorInput = { monthlyBillThb, phase, dayUsageFraction, roofAreaSqm };
+    const r = estimate(input, packages);
+    setSubmitted(input);
+    setRunId((n) => n + 1);
     track("estimator_result_viewed", {
-      verdict: result.verdict,
-      verdictReason: result.verdictReason,
-      recommendedKwp: result.recommendedKwp,
+      verdict: r.verdict,
+      verdictReason: r.verdictReason,
+      recommendedKwp: r.recommendedKwp,
       phase,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [result.verdict, result.verdictReason]);
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setRevealState("revealed");
+      return;
+    }
+    setRevealState("calculating");
+    const stages = tickerStages(t, locale, input, r);
+    revealTimer.current = window.setTimeout(
+      () => setRevealState("revealed"),
+      stages.length * TICKER_STAGE_MS + 300,
+    );
+  };
+
+  const scrollToForm = () => {
+    const el = formRef.current;
+    if (!el) return;
+    const lenis = (window as unknown as { lenis?: { scrollTo: (t: Element, o?: object) => void } })
+      .lenis;
+    if (lenis) lenis.scrollTo(el, { offset: -24 });
+    else el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   // Defensive: the tool can't size anything without packages (e.g. Sanity
   // misconfigured / empty). Show a clear "unavailable" state, not a misleading
   // "your roof is too small".
   if (packages.length === 0) {
     return (
-      <div className="rounded-2xl border border-mist-800 bg-forest-950/40 p-8 text-mist-300">
-        {t.unavailable}
-      </div>
+      <section className="bg-forest-900">
+        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+          <div className="rounded-2xl border border-mist-800 bg-forest-950/40 p-8 text-mist-300">
+            {t.unavailable}
+          </div>
+        </div>
+      </section>
     );
   }
 
+  const showResults = revealState === "revealed" && submitted != null && result != null;
+
   return (
-    <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
-      {/* ── Inputs ──────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-7 rounded-2xl border border-mist-800 bg-forest-950/60 p-6 md:p-8">
-        <FieldGroup label={t.billLabel} hint={t.billHint}>
-          <div className="relative">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-body text-mist-400">
-              ฿
-            </span>
-            <input
-              type="number"
-              inputMode="numeric"
-              min={0}
-              value={billInput}
-              onChange={(e) => setBillInput(e.target.value)}
-              className="block w-full rounded-md border border-mist-800 bg-forest-800 py-2 pl-8 pr-3 text-body text-mist-50 transition-colors duration-150 placeholder:text-mist-400 focus:border-gold-500 focus:outline-none"
-              placeholder="5000"
-              aria-label={t.billLabel}
-            />
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-caption text-mist-400">
-              {t.perMonth}
-            </span>
-          </div>
-        </FieldGroup>
+    <>
+      {/* ── Act 1 — inputs ─────────────────────────────────────── */}
+      <section className="bg-forest-900">
+        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+          <div ref={formRef} className="mx-auto max-w-xl scroll-mt-24">
+            <ScrollReveal>
+              <MonoLabel tone="mist">{t.formEyebrow}</MonoLabel>
+              <h2 className="text-h2 mt-3 font-medium text-mist-50">{t.formTitle}</h2>
+            </ScrollReveal>
 
-        <FieldGroup label={t.phase} hint={phase === "single" ? t.phaseHintSingle : t.phaseHintThree}>
-          <PillToggle
-            value={phase}
-            onChange={setPhase}
-            options={[
-              { value: "single", label: t.single, icon: <IconBolt size={16} stroke={1.75} /> },
-              { value: "three", label: t.three, icon: <IconBolt size={16} stroke={1.75} /> },
-            ]}
-          />
-        </FieldGroup>
+            <ScrollReveal delay={0.08}>
+              <div className="mt-8 flex flex-col gap-7 rounded-2xl border border-mist-800 bg-forest-950/60 p-6 md:p-8">
+                <div className="flex flex-col gap-3">
+                  <Input
+                    label={t.billLabel}
+                    hint={t.billHint}
+                    prefix="฿"
+                    suffix={t.perMonth}
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    value={billInput}
+                    onChange={(e) => setBillInput(e.target.value)}
+                    placeholder="5000"
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    {BILL_PRESETS.map((amount) => {
+                      const active = monthlyBillThb === amount;
+                      return (
+                        <button
+                          key={amount}
+                          type="button"
+                          onClick={() => setBillInput(String(amount))}
+                          aria-pressed={active}
+                          className={`rounded-full border px-3 py-1.5 text-caption tabular-nums transition-colors duration-200 ${
+                            active
+                              ? "border-gold-500 bg-gold-500 font-medium text-forest-900"
+                              : "border-mist-400/30 text-mist-200 hover:border-mist-400/60 hover:bg-mist-50/5"
+                          }`}
+                        >
+                          {fmtThb(locale, amount)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-        <FieldGroup label={t.dayUsage} hint={t.dayUsageHint}>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={5}
-            value={Math.round(dayUsageFraction * 100)}
-            onChange={(e) => setDayUsageFraction(Number(e.target.value) / 100)}
-            className="w-full accent-gold-500"
-            aria-label={t.dayUsage}
-          />
-          <div className="mt-2 flex items-center justify-between text-caption text-mist-400">
-            <span>
-              <IconSun size={13} stroke={1.75} className="mr-1 inline align-[-2px] text-gold-500" />
-              {Math.round(dayUsageFraction * 100)}% {t.day}
-            </span>
-            <span>
-              {100 - Math.round(dayUsageFraction * 100)}% {t.night}
-            </span>
-          </div>
-        </FieldGroup>
+                <FieldGroup
+                  label={t.phase}
+                  hint={phase === "single" ? t.phaseHintSingle : t.phaseHintThree}
+                >
+                  <PillToggle
+                    value={phase}
+                    onChange={setPhase}
+                    options={[
+                      { value: "single", label: t.single },
+                      { value: "three", label: t.three },
+                    ]}
+                  />
+                </FieldGroup>
 
-        <FieldGroup label={t.roofLabel} hint={t.roofHint}>
-          <div className="relative">
-            <IconRulerMeasure
-              size={16}
-              stroke={1.75}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-mist-400"
-            />
-            <input
-              type="number"
-              inputMode="numeric"
-              min={0}
-              value={roofInput}
-              onChange={(e) => setRoofInput(e.target.value)}
-              className="block w-full rounded-md border border-mist-800 bg-forest-800 py-2 pl-9 pr-12 text-body text-mist-50 transition-colors duration-150 placeholder:text-mist-400 focus:border-gold-500 focus:outline-none"
-              placeholder={t.roofPlaceholder}
-              aria-label={t.roofLabel}
-            />
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-caption text-mist-400">
-              m²
-            </span>
-          </div>
-        </FieldGroup>
-      </div>
+                <FieldGroup label={t.dayUsage} hint={t.dayUsageHint}>
+                  {/* Sun-arc: gold = daytime share, dark rail = night; the sun
+                      thumb sits on the horizon between them. */}
+                  <Slider
+                    value={dayPct}
+                    min={0}
+                    max={100}
+                    step={5}
+                    onChange={(v) => setDayUsageFraction(v / 100)}
+                    ariaLabel={t.dayUsage}
+                    fillClassName="bg-gradient-to-r from-gold-500 to-gold-400"
+                    railClassName="bg-forest-950 ring-1 ring-inset ring-mist-800"
+                    thumbIcon={<IconSun size={14} stroke={2} />}
+                  />
+                  <div className="mt-2 flex items-center justify-between font-mono text-caption uppercase tracking-wider">
+                    <span className="text-gold-500">
+                      {dayPct}% {t.day}
+                    </span>
+                    <span className="text-mist-400">
+                      {100 - dayPct}% {t.night}
+                    </span>
+                  </div>
+                </FieldGroup>
 
-      {/* ── Results ─────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-6">
-        <VerdictBanner result={result} locale={locale} />
-
-        {result.verdict !== "not_yet" ? (
-          <>
-            <section className="flex flex-col gap-4">
-              <MonoLabel tone="mist">{t.yourSystem}</MonoLabel>
-              <HeadlineCard result={result} locale={locale} />
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <StatTile
-                  icon={<IconCoin size={20} stroke={1.5} />}
-                  value={fmtThb(locale, result.monthlySavingsThb)}
-                  label={t.monthlySavings}
+                <Input
+                  label={t.roofLabel}
+                  hint={t.roofHint}
+                  prefix={<IconRulerMeasure size={16} stroke={1.75} />}
+                  suffix="m²"
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  value={roofInput}
+                  onChange={(e) => setRoofInput(e.target.value)}
+                  placeholder={t.roofPlaceholder}
                 />
-                <StatTile
-                  icon={<IconClockHour4 size={20} stroke={1.5} />}
-                  value={`${fmt1(result.paybackYears)} ${t.years}`}
-                  label={t.payback}
-                />
-                <StatTile
-                  icon={<IconCalendarStats size={20} stroke={1.5} />}
-                  value={fmtThb(locale, result.lifetimeSavingsThb)}
-                  label={t.lifetimeSavings}
-                />
+
+                <div className="flex flex-col gap-3 pt-1">
+                  <Magnetic className="block" strength={0.25}>
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      className="w-full"
+                      onClick={handleCalculate}
+                      disabled={revealState === "calculating"}
+                    >
+                      {submitted ? t.recalculate : t.calculate}
+                      <IconArrowRight
+                        size={18}
+                        stroke={2}
+                        className="transition-transform duration-200 group-hover/btn:translate-x-px"
+                      />
+                    </Button>
+                  </Magnetic>
+                  {revealState === "calculating" && submitted && result ? (
+                    <CalcTicker stages={tickerStages(t, locale, submitted, result)} />
+                  ) : null}
+                  {stale && revealState === "revealed" ? (
+                    <p className="text-caption text-gold-500/90" role="status">
+                      {t.staleNote}
+                    </p>
+                  ) : null}
+                </div>
               </div>
-            </section>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
 
-            <section className="flex flex-col gap-3">
-              <MonoLabel tone="mist">{t.environmentalImpact}</MonoLabel>
-              <div className="grid grid-cols-3 gap-3">
-                <EnvTile
-                  icon={<IconLeaf size={18} stroke={1.5} />}
-                  value={`${fmt0(locale, result.annualCo2SavedKg)} kg`}
-                  label={t.co2}
-                />
-                <EnvTile
-                  icon={<IconDroplet size={18} stroke={1.5} />}
-                  value={`${fmt0(locale, result.annualFuelOilSavedLitres)} L`}
-                  label={t.fuelOil}
-                />
-                <EnvTile
-                  icon={<IconTrees size={18} stroke={1.5} />}
-                  value={fmt0(locale, result.treesEquivalent)}
-                  label={t.trees}
-                />
+      {/* ── The results narrative ──────────────────────────────── */}
+      {showResults ? (
+        <div
+          key={runId}
+          ref={resultsRef}
+          className={`scroll-mt-16 transition-opacity duration-300 ${stale ? "opacity-50" : ""}`}
+        >
+          {/* Act 2 — verdict + your system */}
+          <section className="bg-forest-950">
+            <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+              <div className="mx-auto flex max-w-2xl flex-col gap-10">
+                <ScrollReveal>
+                  <VerdictBanner result={result} locale={locale} />
+                </ScrollReveal>
+
+                {result.verdict !== "not_yet" ? (
+                  <div className="flex flex-col gap-5">
+                    <ScrollReveal>
+                      <MonoLabel tone="mist">{t.yourSystem}</MonoLabel>
+                      <h2 className="text-h2 mt-3 font-medium text-mist-50">{t.systemTitle}</h2>
+                    </ScrollReveal>
+                    <ScrollReveal delay={0.05}>
+                      <HeadlineCard result={result} locale={locale} />
+                    </ScrollReveal>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <ScrollReveal delay={0.1}>
+                        <StatBlock
+                          value={
+                            <CountUp to={Math.round(result.monthlySavingsThb)} prefix="฿" />
+                          }
+                          label={t.monthlySavings}
+                          icon={<IconCoin size={22} stroke={1.5} />}
+                          className="h-full"
+                        />
+                      </ScrollReveal>
+                      <ScrollReveal delay={0.15}>
+                        <StatBlock
+                          value={
+                            <CountUp to={Math.round(result.billOffsetPercent)} prefix="≈" suffix="%" />
+                          }
+                          label={t.offsetLabel}
+                          icon={<IconSun size={22} stroke={1.5} />}
+                          className="h-full"
+                        />
+                      </ScrollReveal>
+                    </div>
+                  </div>
+                ) : (
+                  <EmptyState locale={locale} href={quoteHref} />
+                )}
               </div>
-              {result.lifetimeCo2SavedKg > 0 ? (
-                <p className="text-caption text-mist-500">
-                  {t.lifetimeCo2Pre} {fmt0(locale, result.lifetimeCo2SavedKg / 1000)} {t.lifetimeCo2Post}
-                </p>
-              ) : null}
-            </section>
-
-            <div className="flex flex-col gap-3 rounded-xl border border-mist-800 bg-forest-950/40 p-4">
-              <p className="text-caption text-mist-400">{t.disclaimer}</p>
-              <Button
-                href={quoteHref}
-                variant="primary"
-                size="md"
-                className="self-start"
-                onClick={() =>
-                  track("estimator_quote_click", {
-                    verdict: result.verdict,
-                    recommendedKwp: result.recommendedKwp,
-                  })
-                }
-              >
-                {t.ctaQuote}
-              </Button>
             </div>
-          </>
-        ) : (
-          <EmptyState locale={locale} href={quoteHref} />
-        )}
-      </div>
-    </div>
+          </section>
+
+          {result.verdict !== "not_yet" ? (
+            <>
+              {/* Act 3 — environment */}
+              <section className="bg-forest-900">
+                <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+                  <div className="mx-auto flex max-w-2xl flex-col gap-5">
+                    <ScrollReveal>
+                      <MonoLabel tone="mist">{t.environmentalImpact}</MonoLabel>
+                      <h2 className="text-h2 mt-3 font-medium text-mist-50">{t.envTitle}</h2>
+                    </ScrollReveal>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                      <ScrollReveal delay={0.05}>
+                        <EnvTile
+                          icon={<IconLeaf size={18} stroke={1.5} />}
+                          value={<CountUp to={Math.round(result.annualCo2SavedKg)} suffix=" kg" />}
+                          label={t.co2}
+                        />
+                      </ScrollReveal>
+                      <ScrollReveal delay={0.1}>
+                        <EnvTile
+                          icon={<IconDroplet size={18} stroke={1.5} />}
+                          value={
+                            <CountUp to={Math.round(result.annualFuelOilSavedLitres)} suffix=" L" />
+                          }
+                          label={t.fuelOil}
+                        />
+                      </ScrollReveal>
+                      <ScrollReveal delay={0.15}>
+                        <EnvTile
+                          icon={<IconTrees size={18} stroke={1.5} />}
+                          value={<CountUp to={Math.round(result.treesEquivalent)} />}
+                          label={t.trees}
+                        />
+                      </ScrollReveal>
+                    </div>
+                    {result.lifetimeCo2SavedKg > 0 ? (
+                      <ScrollReveal delay={0.2}>
+                        <p className="text-caption text-mist-500">
+                          ≈ {fmt0(locale, result.lifetimeCo2SavedKg / 1000)} {t.lifetimeCo2Post}
+                        </p>
+                      </ScrollReveal>
+                    ) : null}
+                  </div>
+                </div>
+              </section>
+
+              {/* Act 4 — payback */}
+              <section className="bg-forest-950">
+                <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
+                  <div className="mx-auto flex max-w-2xl flex-col gap-8">
+                    <ScrollReveal>
+                      <MonoLabel tone="gold">{t.paybackEyebrow}</MonoLabel>
+                      <h2 className="text-h2 mt-3 font-medium text-mist-50">{t.paybackTitle}</h2>
+                    </ScrollReveal>
+                    <ScrollReveal delay={0.05}>
+                      <PaybackCard result={result} locale={locale} />
+                    </ScrollReveal>
+                    <ScrollReveal delay={0.1}>
+                      <div>
+                        <p className="text-caption font-medium text-mist-300">{t.notesTitle}</p>
+                        <ul className="mt-2 flex list-disc flex-col gap-1.5 pl-4 text-caption text-mist-500">
+                          {t.notes.map((note) => (
+                            <li key={note}>{note}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </ScrollReveal>
+                    <ScrollReveal delay={0.15}>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Button
+                          href={quoteHref}
+                          variant="primary"
+                          size="md"
+                          onClick={() =>
+                            track("estimator_quote_click", {
+                              verdict: result.verdict,
+                              recommendedKwp: result.recommendedKwp,
+                            })
+                          }
+                        >
+                          {t.ctaQuote}
+                          <IconArrowRight
+                            size={16}
+                            stroke={2}
+                            className="transition-transform duration-200 group-hover/btn:translate-x-px"
+                          />
+                        </Button>
+                        <Button variant="secondary" size="md" onClick={scrollToForm}>
+                          {t.ctaAdjust}
+                        </Button>
+                      </div>
+                    </ScrollReveal>
+                  </div>
+                </div>
+              </section>
+            </>
+          ) : null}
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -290,15 +504,13 @@ function HeadlineCard({
   const components = result.package?.includedComponents ?? [];
 
   return (
-    <div className="rounded-2xl bg-card-50 p-6 text-card-ink" style={{ boxShadow: "var(--shadow-card)" }}>
+    <div className="rounded-2xl bg-card-50 p-6 text-card-ink md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-caption font-mono uppercase tracking-wider text-card-ink/55">
-            {t.recommendedSystem}
-          </p>
-          <div className="mt-1 flex items-baseline gap-2">
+          <MonoLabel tone="forest">{t.recommendedSystem}</MonoLabel>
+          <div className="mt-2 flex items-baseline gap-2">
             <span className="font-medium tracking-tight" style={{ fontSize: 44, lineHeight: 1 }}>
-              {fmt1(result.recommendedKwp)}
+              <CountUp to={result.recommendedKwp} decimals={1} />
             </span>
             <span className="text-body-lg text-card-ink/70">kW</span>
           </div>
@@ -314,19 +526,10 @@ function HeadlineCard({
             {t.fromPrice}
           </p>
           <div className="mt-1 font-medium tracking-tight" style={{ fontSize: 28, lineHeight: 1 }}>
-            {result.priceThb != null ? fmtThb(locale, result.priceThb) : "—"}
+            {result.priceThb != null ? <CountUp to={result.priceThb} prefix="฿" /> : "—"}
           </div>
         </div>
       </div>
-      {result.billOffsetPercent > 0 ? (
-        <p className="mt-4 text-caption text-card-ink/65">
-          {t.offsetPre}{" "}
-          <span className="font-medium text-card-ink/90">
-            ≈{Math.round(result.billOffsetPercent)}%
-          </span>{" "}
-          {t.offsetPost}
-        </p>
-      ) : null}
       {components.length > 0 ? (
         <div className="mt-5 flex flex-wrap gap-2 border-t border-forest-900/10 pt-4">
           {components.map((c) => (
@@ -339,6 +542,77 @@ function HeadlineCard({
           ))}
         </div>
       ) : null}
+    </div>
+  );
+}
+
+/**
+ * The payback act's centerpiece — PEA's strongest section rebuilt in brand
+ * language: headline years, a 25-year timeline (gold until breakeven, quiet
+ * after), itemized savings lines, and the package recap in mono.
+ */
+function PaybackCard({
+  result,
+  locale,
+}: {
+  result: ReturnType<typeof estimate>;
+  locale: Locale;
+}) {
+  const t = strings[locale];
+  const payback = result.paybackYears;
+  const pct = Number.isFinite(payback)
+    ? Math.min(96, Math.max(4, (payback / SYSTEM_LIFETIME_YEARS) * 100))
+    : 100;
+  const phaseLabel = result.package?.phase === "single" ? t.single : t.three;
+
+  return (
+    <div className="rounded-2xl bg-card-50 p-6 text-card-ink md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
+      <MonoLabel tone="forest">{t.paybackLabel}</MonoLabel>
+      <div className="mt-2 flex items-baseline gap-2">
+        <span className="font-medium tracking-tight" style={{ fontSize: 44, lineHeight: 1 }}>
+          {Number.isFinite(payback) ? <CountUp to={payback} decimals={1} /> : "—"}
+        </span>
+        <span className="text-body-lg text-card-ink/70">{t.yearsLong}</span>
+      </div>
+      <p className="mt-2 font-mono text-caption uppercase tracking-wider text-card-ink/55">
+        {phaseLabel} · {fmt1(result.recommendedKwp)} kW · {t.fromPrice}{" "}
+        {result.priceThb != null ? fmtThb(locale, result.priceThb) : "—"}
+      </p>
+
+      {/* 25-year timeline: gold = paying itself off, quiet = pure savings */}
+      <div className="mt-6" aria-hidden="true">
+        <div className="relative">
+          <div className="flex h-2.5 overflow-hidden rounded-full">
+            <div className="rounded-l-full bg-gold-500" style={{ width: `${pct}%` }} />
+            <div className="flex-1 bg-forest-900/10" />
+          </div>
+          <div
+            className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-card-50 bg-forest-900"
+            style={{ left: `${pct}%` }}
+          />
+        </div>
+        <div className="mt-2 flex items-baseline justify-between gap-4 text-caption">
+          <span className="font-medium text-card-ink/80">{t.tlPayoff}</span>
+          <span className="text-right text-card-ink/60">{t.tlProfit}</span>
+        </div>
+      </div>
+
+      <div className="mt-6 flex flex-col divide-y divide-forest-900/10 border-t border-forest-900/10">
+        <PaybackRow label={t.savedPerYear} value={fmtThb(locale, result.annualSavingsThb)} />
+        <PaybackRow label={t.savedLifetime} value={fmtThb(locale, result.lifetimeSavingsThb)} />
+      </div>
+    </div>
+  );
+}
+
+function PaybackRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 py-3">
+      <span className="flex items-center gap-2 text-body text-card-ink/80">
+        <IconCircleCheck size={18} stroke={1.5} className="shrink-0 text-gold-600" />
+        {label}
+      </span>
+      <span className="font-mono text-body font-medium tabular-nums text-card-ink">{value}</span>
     </div>
   );
 }
@@ -364,28 +638,17 @@ function EmptyState({ locale, href }: { locale: Locale; href: string }) {
   );
 }
 
-function StatTile({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
+function EnvTile({
+  icon,
+  value,
+  label,
+}: {
+  icon: React.ReactNode;
+  value: React.ReactNode;
+  label: string;
+}) {
   return (
-    <div
-      className="relative flex flex-col justify-between rounded-xl bg-card-50 p-5 text-card-ink"
-      style={{ boxShadow: "var(--shadow-card)" }}
-    >
-      <div className="font-medium tracking-tight" style={{ fontSize: 26, lineHeight: 1.1 }}>
-        {value}
-      </div>
-      <div className="mt-3 flex items-end justify-between gap-2">
-        <span className="text-caption text-card-ink/65">{label}</span>
-        <span className="text-gold-600/70" aria-hidden="true">
-          {icon}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function EnvTile({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
-  return (
-    <div className="flex flex-col gap-1 rounded-xl border border-mist-800 bg-forest-800/40 p-4">
+    <div className="flex h-full flex-col gap-1 rounded-xl border border-mist-800 bg-forest-800/40 p-4">
       <span className="text-gold-500/80" aria-hidden="true">
         {icon}
       </span>
@@ -408,9 +671,9 @@ function FieldGroup({
 }) {
   return (
     <div className="flex flex-col gap-2.5">
-      <span className="text-caption font-mono uppercase tracking-wider text-mist-400">{label}</span>
+      <span className="text-caption font-medium text-mist-200">{label}</span>
       {children}
-      {hint ? <p className="text-caption text-mist-400/80">{hint}</p> : null}
+      {hint ? <p className="text-caption text-mist-400">{hint}</p> : null}
     </div>
   );
 }
@@ -422,7 +685,7 @@ function PillToggle<T extends string>({
 }: {
   value: T;
   onChange: (v: T) => void;
-  options: { value: T; label: string; icon?: React.ReactNode }[];
+  options: { value: T; label: string }[];
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -434,19 +697,64 @@ function PillToggle<T extends string>({
             type="button"
             onClick={() => onChange(opt.value)}
             aria-pressed={active}
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-body font-medium transition-colors ${
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-body font-medium transition-colors duration-200 ${
               active
                 ? "bg-gold-500 text-forest-900"
                 : "border border-mist-400/30 text-mist-50 hover:border-mist-400/60 hover:bg-mist-50/5"
             }`}
           >
-            {opt.icon}
             {opt.label}
           </button>
         );
       })}
     </div>
   );
+}
+
+/**
+ * The calculation ticker — the honest pipeline (bill → kWh → daytime share →
+ * size → payback) with REAL intermediate numbers, typed out mono while the
+ * reveal is pending. Skipped entirely under reduced motion (the reveal is
+ * instant there, so this never renders).
+ */
+function CalcTicker({ stages }: { stages: string[] }) {
+  const [visible, setVisible] = useState(1);
+  useEffect(() => {
+    const id = window.setInterval(
+      () => setVisible((n) => Math.min(n + 1, stages.length)),
+      TICKER_STAGE_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [stages.length]);
+
+  return (
+    <p className="font-mono text-caption text-mist-400" role="status" aria-live="polite">
+      {stages.slice(0, visible).join(" → ")}
+      <span aria-hidden="true" className="ml-0.5 animate-pulse text-gold-500">
+        ▍
+      </span>
+    </p>
+  );
+}
+
+function tickerStages(
+  t: (typeof strings)[Locale],
+  locale: Locale,
+  input: EstimatorInput,
+  result: ReturnType<typeof estimate>,
+): string[] {
+  const annualKwh = billToAnnualKwh(input.monthlyBillThb);
+  const dayPct = Math.round(input.dayUsageFraction * 100);
+  const stages = [
+    `฿${fmt0(locale, input.monthlyBillThb)}/${t.monthShort}`,
+    `${fmt0(locale, annualKwh)} kWh/${t.yearShort}`,
+    `${dayPct}% ${t.day}`,
+    result.recommendedKwp > 0 ? `${fmt1(result.recommendedKwp)} kW` : t.tickerNoFit,
+  ];
+  if (result.recommendedKwp > 0 && Number.isFinite(result.paybackYears)) {
+    stages.push(`${fmt1(result.paybackYears)} ${t.years}`);
+  }
+  return stages;
 }
 
 /* ─────────────────────────── Theme + format ────────────────────────── */
@@ -492,6 +800,8 @@ const fmt1 = (n: number) => (Math.round(n * 10) / 10).toString();
 
 const strings = {
   en: {
+    formEyebrow: "The inputs",
+    formTitle: "Three questions, thirty seconds",
     billLabel: "Average monthly electricity bill",
     billHint: "Your typical bill across the year.",
     perMonth: "/ month",
@@ -502,35 +812,53 @@ const strings = {
     phaseHintThree: "Larger homes & businesses. Up to about 20 kW.",
     dayUsage: "When do you use power?",
     dayUsageHint: "Without a battery, solar only offsets daytime use.",
-    day: "daytime",
+    day: "day",
     night: "night",
     roofLabel: "Usable roof area (optional)",
     roofHint: "Leave blank and we'll size to your usage. Add it to cap by what your roof can hold. (Roof drawing on a map is coming soon.)",
     roofPlaceholder: "e.g. 40",
+    calculate: "Calculate my system",
+    recalculate: "Recalculate",
+    staleNote: "Inputs changed — recalculate to refresh the results below.",
+    monthShort: "mo",
+    yearShort: "yr",
+    tickerNoFit: "no standard fit",
     verdictEyebrow: "Our recommendation",
+    yourSystem: "Your system",
+    systemTitle: "Sized to your daytime usage",
     recommendedSystem: "Recommended system",
     panels: "panels",
     roofLimited: "limited by your roof",
-    noSystem: "No standard system fits these inputs yet.",
     fromPrice: "From",
-    monthlySavings: "Saved / month",
-    payback: "Payback",
-    years: "yr",
-    lifetimeSavings: "Saved over 25 yr",
-    yourSystem: "Your system",
-    offsetPre: "Covers",
-    offsetPost: "of your monthly bill",
+    monthlySavings: "Saved per month",
+    offsetLabel: "of your monthly bill covered",
     environmentalImpact: "Environmental impact",
+    envTitle: "What your roof gives back",
     co2: "CO₂ avoided / yr",
     fuelOil: "Fuel oil avoided / yr",
     trees: "Trees (10-yr equiv.)",
-    lifetimeCo2Pre: "≈",
     lifetimeCo2Post: "tonnes of CO₂ avoided over 25 years",
+    paybackEyebrow: "Payback",
+    paybackTitle: "When it pays for itself",
+    paybackLabel: "Payback period",
+    years: "yr",
+    yearsLong: "years",
+    tlPayoff: "paying itself off",
+    tlProfit: "pure savings to year 25",
+    savedPerYear: "Electricity saved per year",
+    savedLifetime: "Saved over 25 years",
+    notesTitle: "Notes",
+    notes: [
+      "This is an estimate based on typical conditions, not a binding quote — a site survey gives the exact figures.",
+      "Package prices are indicative and confirmed after a site visit.",
+      "Payback varies with weather, roof orientation and shading, usage pattern, and maintenance.",
+    ],
     disclaimer: "This is an estimate based on typical conditions, not a binding quote. A site survey gives the exact figures.",
     emptyStateBody: "We couldn't size a worthwhile standard system from these inputs — but a site survey often surfaces options. Tell us about your site and our team will explore what's possible.",
     unavailable:
       "The calculator is being set up — please check back shortly, or contact our team for a manual estimate.",
     ctaQuote: "Get a detailed quote",
+    ctaAdjust: "Adjust inputs",
     ctaTalk: "Talk to our team",
     verdictTitle: {
       recommended: "Recommended — install solar",
@@ -547,6 +875,8 @@ const strings = {
     } as Record<string, string>,
   },
   th: {
+    formEyebrow: "ข้อมูลของคุณ",
+    formTitle: "3 คำถาม ใน 30 วินาที",
     billLabel: "ค่าไฟเฉลี่ยต่อเดือน",
     billHint: "ค่าไฟโดยทั่วไปตลอดทั้งปี",
     perMonth: "/ เดือน",
@@ -562,30 +892,48 @@ const strings = {
     roofLabel: "พื้นที่หลังคาที่ใช้ได้ (ไม่บังคับ)",
     roofHint: "เว้นว่างไว้เพื่อให้เราคำนวณตามการใช้ไฟ หรือกรอกเพื่อจำกัดตามขนาดหลังคา (การวาดหลังคาบนแผนที่กำลังจะมา)",
     roofPlaceholder: "เช่น 40",
+    calculate: "คำนวณขนาดติดตั้ง",
+    recalculate: "คำนวณอีกครั้ง",
+    staleNote: "ข้อมูลเปลี่ยนแล้ว — กดคำนวณอีกครั้งเพื่ออัปเดตผลด้านล่าง",
+    monthShort: "เดือน",
+    yearShort: "ปี",
+    tickerNoFit: "ไม่มีขนาดมาตรฐานที่พอดี",
     verdictEyebrow: "คำแนะนำของเรา",
+    yourSystem: "ระบบของคุณ",
+    systemTitle: "ขนาดที่พอดีกับการใช้ไฟกลางวันของคุณ",
     recommendedSystem: "ระบบที่แนะนำ",
     panels: "แผง",
     roofLimited: "จำกัดด้วยขนาดหลังคา",
-    noSystem: "ยังไม่มีระบบมาตรฐานที่เหมาะกับข้อมูลนี้",
     fromPrice: "เริ่มต้น",
-    monthlySavings: "ประหยัด / เดือน",
-    payback: "ระยะคืนทุน",
-    years: "ปี",
-    lifetimeSavings: "ประหยัดใน 25 ปี",
-    yourSystem: "ระบบของคุณ",
-    offsetPre: "ครอบคลุมประมาณ",
-    offsetPost: "ของค่าไฟต่อเดือน",
+    monthlySavings: "ประหยัดต่อเดือน",
+    offsetLabel: "ของค่าไฟต่อเดือนที่ครอบคลุม",
     environmentalImpact: "ผลต่อสิ่งแวดล้อม",
+    envTitle: "สิ่งที่หลังคาของคุณตอบแทน",
     co2: "ลด CO₂ / ปี",
     fuelOil: "ลดน้ำมันเตา / ปี",
     trees: "เทียบเท่าต้นไม้ (10 ปี)",
-    lifetimeCo2Pre: "≈",
     lifetimeCo2Post: "ตัน CO₂ ใน 25 ปี",
+    paybackEyebrow: "ความคุ้มทุน",
+    paybackTitle: "จุดที่ระบบคืนทุน",
+    paybackLabel: "ระยะเวลาคืนทุน",
+    years: "ปี",
+    yearsLong: "ปี",
+    tlPayoff: "ช่วงคืนทุน",
+    tlProfit: "ประหยัดล้วน ๆ ถึงปีที่ 25",
+    savedPerYear: "ค่าไฟที่ประหยัดได้ต่อปี",
+    savedLifetime: "ค่าไฟที่ประหยัดไปได้ใน 25 ปี",
+    notesTitle: "หมายเหตุ",
+    notes: [
+      "เป็นการประเมินเบื้องต้นจากสภาพทั่วไป ไม่ใช่ใบเสนอราคา การสำรวจหน้างานจะให้ตัวเลขที่แม่นยำ",
+      "ราคาแพ็กเกจเป็นราคาประเมินเบื้องต้น ยืนยันหลังสำรวจหน้างาน",
+      "ความคุ้มทุนขึ้นอยู่กับสภาพอากาศ ทิศทางและเงาบนหลังคา พฤติกรรมการใช้ไฟ และการบำรุงรักษา",
+    ],
     disclaimer: "เป็นการประเมินเบื้องต้นจากสภาพทั่วไป ไม่ใช่ใบเสนอราคา การสำรวจหน้างานจะให้ตัวเลขที่แม่นยำ",
     emptyStateBody: "เรายังไม่สามารถจัดระบบมาตรฐานที่คุ้มค่าจากข้อมูลนี้ได้ แต่การสำรวจหน้างานมักพบทางเลือกเพิ่มเติม แจ้งรายละเอียดหน้างานของคุณ แล้วทีมงานจะช่วยหาแนวทางที่เป็นไปได้",
     unavailable:
       "เครื่องคำนวณกำลังตั้งค่า โปรดกลับมาใหม่อีกครั้ง หรือติดต่อทีมงานเพื่อขอประเมินด้วยตนเอง",
     ctaQuote: "ขอใบเสนอราคาแบบละเอียด",
+    ctaAdjust: "ปรับข้อมูลใหม่",
     ctaTalk: "ปรึกษาทีมงาน",
     verdictTitle: {
       recommended: "แนะนำให้ติดตั้งโซลาร์",

@@ -20,16 +20,23 @@ export function CountUp({
   prefix = "",
   suffix = "",
   duration = 1.8,
+  decimals = 0,
   className = "",
 }: {
   to: number;
   prefix?: string;
   suffix?: string;
   duration?: number;
+  /** Fraction digits to render (e.g. 1 for a 3.7-yr payback). */
+  decimals?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const format = (n: number) => `${prefix}${n.toLocaleString("en-US")}${suffix}`;
+  const format = (n: number) =>
+    `${prefix}${n.toLocaleString("en-US", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    })}${suffix}`;
 
   useGSAP(
     () => {
@@ -47,7 +54,7 @@ export function CountUp({
         ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 88%", once: true },
         onUpdate: () => {
-          el.textContent = format(Math.round(state.v));
+          el.textContent = format(state.v);
         },
       });
     },
