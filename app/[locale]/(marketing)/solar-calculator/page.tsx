@@ -66,14 +66,9 @@ export default async function SolarCalculatorPage({
         </div>
       </section>
 
-      {/* ── The estimator ─────────────────────────────────────── */}
-      <section className="bg-forest-900">
-        <div className="mx-auto max-w-6xl px-6 pb-24 md:pb-28">
-          <ScrollReveal>
-            <SolarEstimator packages={packages} locale={locale} />
-          </ScrollReveal>
-        </div>
-      </section>
+      {/* ── The estimator (owns its own section bands: inputs →
+             verdict/system → environment → payback) ─────────────── */}
+      <SolarEstimator packages={packages} locale={locale} />
     </>
   );
 }
