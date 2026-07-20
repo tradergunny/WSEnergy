@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Sans_Thai, JetBrains_Mono } from "next/font/google";
+import { Inter, Anuphan, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -16,9 +16,9 @@ const inter = Inter({
   display: "swap",
 });
 
-const notoSansThai = Noto_Sans_Thai({
-  subsets: ["thai"],
-  variable: "--font-noto-thai",
+const anuphan = Anuphan({
+  subsets: ["thai", "latin"],
+  variable: "--font-anuphan",
   display: "swap",
 });
 
@@ -58,7 +58,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${notoSansThai.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${anuphan.variable} ${jetbrainsMono.variable}`}
     >
       <body className="flex min-h-dvh flex-col bg-forest-900 text-mist-50">
         <SmoothScroll />

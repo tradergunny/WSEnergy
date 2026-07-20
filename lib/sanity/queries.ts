@@ -686,20 +686,33 @@ export const categoryBrandTuplesQuery = groq`
 `;
 
 /**
- * Drives the third level of the Products nav dropdown.
- * Returns one row per (category, brand) pair — duplicates per product
- * are deduped on the consumer side via a Map keyed by brand slug.
- * Filters out safety subcategories (those live under /safety) and drafts.
+ * Products mega-panel data for the header nav (components/layout/Header.tsx
+ * → NavBar). One row per product category under the "products" parent, each
+ * carrying its heroImage + bilingual one-liner + the brands present in it
+ * (deduped consumer-side by slug).
+ *
+ * `heroImage` is null until an editor uploads one in Studio; the panel
+ * falls back to an icon tile, then upgrades itself once the asset lands.
  */
-export const productNavBrandsQuery = groq`
-  *[_type == "product"
-    && defined(category->slug.current)
-    && defined(brand->slug.current)
-    && category->parent->slug.current != "safety"
-    && !(_id in path("drafts.**"))]
-  {
-    "category": category->slug.current,
-    "brand": brand->{ name, "slug": slug.current }
+export const productNavPanelQuery = groq`
+  *[_type == "category"
+      && parent->slug.current == "products"
+      && !(_id in path("drafts.**"))]
+    | order(orderRank asc) {
+    "slug": slug.current,
+    title_en,
+    title_th,
+    description_en,
+    description_th,
+    "heroImage": select(defined(heroImage.asset->_id) => heroImage, null),
+    "brands": *[_type == "product"
+        && category._ref == ^._id
+        && defined(brand->slug.current)]
+      | order(brand->name asc) {
+        "name": brand->name,
+        "slug": brand->slug.current,
+        "logo": select(defined(brand->logo.asset->_id) => brand->logo, null)
+      }
   }
 `;
 
