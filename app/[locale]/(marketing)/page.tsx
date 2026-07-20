@@ -40,8 +40,12 @@ import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
 import { StatBlock } from "@/components/ui/StatBlock";
 import { GsapBridge } from "@/components/marketing/GsapBridge";
 import { HeroAct } from "@/components/marketing/HeroAct";
+import { ProductSchematic } from "@/components/product/ProductSchematic";
 import { SafetyAct } from "@/components/marketing/SafetyAct";
-import { SolutionsTabs, type SolutionTab } from "@/components/marketing/SolutionsTabs";
+import {
+  SolutionsTabs,
+  type SolutionTab,
+} from "@/components/marketing/SolutionsTabs";
 import { TestimonialsMarquee } from "@/components/marketing/TestimonialsMarquee";
 
 /**
@@ -91,10 +95,18 @@ type BusinessPartner = {
 
 const BUSINESS_PARTNERS: readonly BusinessPartner[] = [
   { name: "PEA ENCOM", slug: "pea-encom", logoSrc: "/partners/pea-encom.png" },
-  { name: "Godung Faifaa", slug: "godung-faifaa", logoSrc: "/partners/godung-faifaa.png" },
+  {
+    name: "Godung Faifaa",
+    slug: "godung-faifaa",
+    logoSrc: "/partners/godung-faifaa.png",
+  },
   { name: "Gunkul", slug: "gunkul", logoSrc: "/partners/gunkul.png" },
   { name: "SolaX Power", slug: "solax", logoSrc: "/partners/solax.png" },
-  { name: "Prime Road Power", slug: "prime-road", logoSrc: "/partners/prime-road.png" },
+  {
+    name: "Prime Road Power",
+    slug: "prime-road",
+    logoSrc: "/partners/prime-road.png",
+  },
   { name: "Huawei", slug: "huawei", logoSrc: "/partners/huawei.png" },
   { name: "Projoy Electric", slug: "projoy", logoSrc: "/partners/projoy.png" },
   // Per-user order: Sigenergy takes the "closing" slot of row 1; Greenergy
@@ -112,7 +124,10 @@ export async function generateMetadata({
     title: dict.home.hero.headline,
     description: dict.home.hero.subhead,
     alternates: alternates("/"),
-    openGraph: { title: dict.home.hero.headline, description: dict.home.hero.subhead },
+    openGraph: {
+      title: dict.home.hero.headline,
+      description: dict.home.hero.subhead,
+    },
   };
 }
 
@@ -199,7 +214,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       body: t.solutions.residentialDesc,
       bullets: [
         locale === "th" ? "ออกแบบตามรูปทรงหลังคา" : "Designed around your roof",
-        locale === "th" ? "ระบบ Rapid Shutdown ในตัว" : "Rapid Shutdown built-in",
+        locale === "th"
+          ? "ระบบ Rapid Shutdown ในตัว"
+          : "Rapid Shutdown built-in",
         locale === "th" ? "ติดตั้ง 4–8 สัปดาห์" : "Installed in 4–8 weeks",
       ],
       href: withLocale(locale, "/solutions/residential"),
@@ -207,13 +224,18 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
     },
     {
       key: "ci",
-      label: locale === "th" ? "พาณิชย์และอุตสาหกรรม" : "Commercial & Industrial",
+      label:
+        locale === "th" ? "พาณิชย์และอุตสาหกรรม" : "Commercial & Industrial",
       title: t.solutions.ci,
       body: t.solutions.ciDesc,
       bullets: [
         locale === "th" ? "ROI 3–5 ปี" : "Typical 3–5 year ROI",
-        locale === "th" ? "ตรวจสอบทางวิศวกรรมเต็มรูปแบบ" : "Full engineering review",
-        locale === "th" ? "การปฏิบัติตามมาตรฐานความปลอดภัย" : "Compliance with TIS / IEC",
+        locale === "th"
+          ? "ตรวจสอบทางวิศวกรรมเต็มรูปแบบ"
+          : "Full engineering review",
+        locale === "th"
+          ? "การปฏิบัติตามมาตรฐานความปลอดภัย"
+          : "Compliance with TIS / IEC",
       ],
       href: withLocale(locale, "/solutions/commercial-industrial"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
@@ -224,9 +246,13 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       title: t.solutions.solarFarm,
       body: t.solutions.solarFarmDesc,
       bullets: [
-        locale === "th" ? "ตั้งแต่ MW เดียวถึงระดับยูทิลิตี้" : "Single MW to utility-scale",
+        locale === "th"
+          ? "ตั้งแต่ MW เดียวถึงระดับยูทิลิตี้"
+          : "Single MW to utility-scale",
         locale === "th" ? "การบูรณาการ SCADA" : "SCADA integration",
-        locale === "th" ? "การจัดการโครงการแบบครบวงจร" : "End-to-end project delivery",
+        locale === "th"
+          ? "การจัดการโครงการแบบครบวงจร"
+          : "End-to-end project delivery",
       ],
       href: withLocale(locale, "/solutions/solar-farm"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
@@ -237,9 +263,15 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       title: t.solutions.scada,
       body: t.solutions.scadaDesc,
       bullets: [
-        locale === "th" ? "ตรวจสอบประสิทธิภาพแบบเรียลไทม์" : "Real-time performance monitoring",
-        locale === "th" ? "การแจ้งเตือนความผิดพลาด" : "Fault alerting & diagnostics",
-        locale === "th" ? "การรายงานแก่ผู้มีส่วนได้เสีย" : "Stakeholder-grade reporting",
+        locale === "th"
+          ? "ตรวจสอบประสิทธิภาพแบบเรียลไทม์"
+          : "Real-time performance monitoring",
+        locale === "th"
+          ? "การแจ้งเตือนความผิดพลาด"
+          : "Fault alerting & diagnostics",
+        locale === "th"
+          ? "การรายงานแก่ผู้มีส่วนได้เสีย"
+          : "Stakeholder-grade reporting",
       ],
       href: withLocale(locale, "/solutions/scada-monitoring"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
@@ -289,6 +321,61 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           requestQuoteLabel={dict.actions.requestQuote}
         />
 
+        {/* ── 1.5 · Manifesto — the signed safety thesis ──────────── */}
+        {/* Conviction before borrowed authority: this band states, in our
+            own name, why the company exists. Partner logos follow it. */}
+        <section className="bg-forest-950 relative overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 -right-24 hidden w-[560px] -translate-y-1/2 lg:block"
+          >
+            <ProductSchematic variant="switch" dim />
+          </div>
+          <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
+            <ScrollReveal>
+              <MonoLabel tone="gold">
+                {locale === "th" ? "เหตุผลที่เราก่อตั้ง" : "Why we exist"}
+              </MonoLabel>
+            </ScrollReveal>
+            <SplitTextReveal
+              as="h2"
+              className="mt-5 max-w-4xl font-medium tracking-tight text-mist-50"
+            >
+              <span
+                className="block"
+                style={{
+                  fontSize: "clamp(30px, 4.6vw, 54px)",
+                  lineHeight: 1.08,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {locale === "th"
+                  ? "WS Energy ก่อตั้งขึ้นเพื่อให้การเติบโตของโซลาร์ไทย ไม่ต้องแลกด้วยชีวิต"
+                  : "WS Energy exists so Thailand's solar boom never costs a life."}
+              </span>
+            </SplitTextReveal>
+            <ScrollReveal delay={0.15}>
+              <p className="text-body-lg mt-7 max-w-2xl text-mist-300">
+                {locale === "th"
+                  ? "โซลาร์กำลังขยายสู่หลังคาทั่วประเทศ ทั้งบ้าน โรงงาน โกดัง และโรงเรียน ทุกหลังคาล้วนมีไฟฟ้ากระแสตรงแรงดันสูงทำงานอยู่ แต่อุตสาหกรรมส่วนใหญ่กลับมองข้ามเรื่องนี้ เราจึงสร้าง WS Energy ในทิศทางตรงกันข้าม ความปลอดภัยคือผลิตภัณฑ์ของเรา ตั้งแต่ระบบ Rapid Shutdown ที่เราเป็นผู้แทนจำหน่ายแต่เพียงผู้เดียวในไทย การอบรมช่างติดตั้งที่ผ่านการรับรอง ไปจนถึงอุปกรณ์ทุกชิ้นที่เรากล้าติดตั้งบนหลังคาบ้านของครอบครัวเราเอง"
+                  : "Solar is racing onto Thai rooftops: homes, factories, warehouses, schools. Every one of those roofs carries live DC voltage, and much of the industry treats that as a footnote. We built WS Energy the other way around. Safety is the product: exclusive rapid-shutdown distribution, certified installer training, and equipment we would put on our own families' homes."}
+              </p>
+            </ScrollReveal>
+            <ScrollReveal delay={0.25}>
+              <div className="mt-12 max-w-md border-t border-mist-800 pt-6">
+                <p className="text-caption font-mono tracking-wider text-mist-200 uppercase">
+                  {locale === "th" ? "ทีมงาน WS Energy" : "The WS Energy team"}
+                </p>
+                <p className="text-caption mt-1 text-mist-500">
+                  {locale === "th"
+                    ? "สมุทรปราการ ประเทศไทย"
+                    : "Samut Prakan, Thailand"}
+                </p>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
         {/* ── 2 · Business partners (editorial logo grid) ─────────── */}
         <section className="bg-forest-900">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
@@ -307,7 +394,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 {locale === "th" ? (
                   <>
                     ทำงานร่วมกับผู้นำใน{" "}
-                    <span className="text-gold-500">อุตสาหกรรมพลังงานสะอาด</span>
+                    <span className="text-gold-500">
+                      อุตสาหกรรมพลังงานสะอาด
+                    </span>
                   </>
                 ) : (
                   <>
@@ -349,7 +438,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                         <img
                           src={partner.logoSrc}
                           alt={partner.name}
-                          className="max-h-14 w-auto select-none object-contain opacity-90 brightness-0 invert md:max-h-16 lg:max-h-20"
+                          className="max-h-14 w-auto object-contain opacity-90 brightness-0 invert select-none md:max-h-16 lg:max-h-20"
                         />
                       ) : (
                         <span className="text-h4 font-medium tracking-tight text-mist-200">
@@ -378,10 +467,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             <ScrollReveal delay={0.2} className="mt-6 flex justify-end md:mt-8">
               <Link
                 href={withLocale(locale, "/about")}
-                className="group/more inline-flex items-center gap-2 text-body font-medium text-gold-500 transition-colors hover:text-gold-400"
+                className="group/more text-body text-gold-500 hover:text-gold-400 inline-flex items-center gap-2 font-medium transition-colors"
               >
                 <IconPlus size={14} stroke={2.5} />
-                <span>{locale === "th" ? "พันธมิตรเพิ่มเติม" : "more partners"}</span>
+                <span>
+                  {locale === "th" ? "พันธมิตรเพิ่มเติม" : "more partners"}
+                </span>
                 <IconArrowRight
                   size={14}
                   stroke={2}
@@ -426,7 +517,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               <ScrollReveal delay={0.1}>
                 <Link
                   href={withLocale(locale, "/products")}
-                  className="group/btn inline-flex items-center gap-1.5 rounded-full border border-mist-400/30 px-4 py-2 text-body font-medium text-mist-50 hover:bg-mist-50/5 hover:border-mist-400/60"
+                  className="group/btn text-body inline-flex items-center gap-1.5 rounded-full border border-mist-400/30 px-4 py-2 font-medium text-mist-50 hover:border-mist-400/60 hover:bg-mist-50/5"
                 >
                   {dict.actions.viewAll}
                   <IconArrowRight
@@ -441,9 +532,13 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {flagships.map((tile, i) => (
                 <ScrollReveal key={tile.key} delay={i * 0.04}>
-                  <Card surface="forest-deep" href={tile.href} className="h-full">
+                  <Card
+                    surface="forest-deep"
+                    href={tile.href}
+                    className="h-full"
+                  >
                     <div className="flex h-full flex-col">
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-forest-950">
+                      <div className="bg-forest-950 relative aspect-[4/3] w-full overflow-hidden">
                         {tile.photoUrl ? (
                           /* eslint-disable-next-line @next/next/no-img-element */
                           <img
@@ -455,24 +550,31 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                           />
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-caption font-mono uppercase tracking-wider text-mist-500">
+                            <span className="text-caption font-mono tracking-wider text-mist-500 uppercase">
                               _{tile.key.toUpperCase()}
                             </span>
                           </div>
                         )}
                       </div>
-                      <div aria-hidden="true" className="h-px w-full bg-mist-800" />
-                      <div className="flex min-h-[72px] flex-1 items-center justify-between gap-3 bg-forest-900 px-5 py-4">
+                      <div
+                        aria-hidden="true"
+                        className="h-px w-full bg-mist-800"
+                      />
+                      <div className="bg-forest-900 flex min-h-[72px] flex-1 items-center justify-between gap-3 px-5 py-4">
                         <h3
                           className="truncate font-medium tracking-tight text-mist-50 transition-transform duration-300 ease-out group-hover/card:translate-x-0.5"
-                          style={{ fontSize: 17, lineHeight: 1.3, letterSpacing: "-0.01em" }}
+                          style={{
+                            fontSize: 17,
+                            lineHeight: 1.3,
+                            letterSpacing: "-0.01em",
+                          }}
                           title={tile.title}
                         >
                           {tile.title}
                         </h3>
                         <span className="flex shrink-0 items-center gap-2">
                           {tile.brandPill ? (
-                            <span className="text-caption inline-flex items-center rounded-full border border-mist-800 px-2.5 py-1 font-mono uppercase tracking-wider text-mist-300">
+                            <span className="text-caption inline-flex items-center rounded-full border border-mist-800 px-2.5 py-1 font-mono tracking-wider text-mist-300 uppercase">
                               {tile.brandPill}
                             </span>
                           ) : null}
@@ -497,7 +599,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             <div className="mb-10 max-w-3xl">
               <ScrollReveal>
                 <MonoLabel tone="gold">
-                  {locale === "th" ? "ความแตกต่างของ WS ENERGY" : "The WS Energy difference"}
+                  {locale === "th"
+                    ? "ความแตกต่างของ WS ENERGY"
+                    : "The WS Energy difference"}
                 </MonoLabel>
               </ScrollReveal>
               <SplitTextReveal
@@ -505,7 +609,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 className="mt-3 font-medium tracking-tight text-mist-50"
               >
                 <span className="block" style={headlineClamp}>
-                  {locale === "th" ? "ทำไมต้อง WS Energy" : "Why choose WS Energy."}
+                  {locale === "th"
+                    ? "ทำไมต้อง WS Energy"
+                    : "Why choose WS Energy."}
                 </span>
               </SplitTextReveal>
             </div>
@@ -514,17 +620,29 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <StatBlock
                   value={<CountUp to={500} suffix="MW+" />}
-                  label={locale === "th" ? "พลังงานสะอาดที่ส่งมอบ" : "Clean energy delivered"}
+                  label={
+                    locale === "th"
+                      ? "พลังงานสะอาดที่ส่งมอบ"
+                      : "Clean energy delivered"
+                  }
                   icon={<IconBolt size={28} stroke={1.5} />}
                 />
                 <StatBlock
                   value={<CountUp to={15} suffix="+ yrs" />}
-                  label={locale === "th" ? "ประสบการณ์ในวงการ" : "Industry experience"}
+                  label={
+                    locale === "th"
+                      ? "ประสบการณ์ในวงการ"
+                      : "Industry experience"
+                  }
                   icon={<IconCertificate size={28} stroke={1.5} />}
                 />
                 <StatBlock
                   value={<CountUp to={1200} suffix="+" />}
-                  label={locale === "th" ? "ระบบที่ติดตั้งแล้ว" : "Systems installed to date"}
+                  label={
+                    locale === "th"
+                      ? "ระบบที่ติดตั้งแล้ว"
+                      : "Systems installed to date"
+                  }
                   icon={<IconSolarPanel size={28} stroke={1.5} />}
                 />
                 <StatBlock
@@ -592,26 +710,35 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         <section className="bg-forest-950">
           <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
             <ScrollReveal>
-              <div className="rounded-2xl bg-card-50 p-10 text-card-ink md:p-14">
+              <div className="bg-card-50 text-card-ink rounded-2xl p-10 md:p-14">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-center">
                   <div className="md:col-span-7">
                     <MonoLabel tone="forest">
-                      {locale === "th" ? "คำนวณโซลาร์รูฟท็อป" : "Solar rooftop calculator"}
+                      {locale === "th"
+                        ? "คำนวณโซลาร์รูฟท็อป"
+                        : "Solar rooftop calculator"}
                     </MonoLabel>
-                    <h2 className="mt-3 font-medium tracking-tight" style={headlineClamp}>
+                    <h2
+                      className="mt-3 font-medium tracking-tight"
+                      style={headlineClamp}
+                    >
                       {locale === "th"
                         ? "โซลาร์คุ้มกับหลังคาคุณไหม? รู้ผลใน 30 วินาที"
                         : "Will solar pay off on your roof?"}
                     </h2>
-                    <p className="text-body-lg mt-4 max-w-xl text-forest-900/70">
+                    <p className="text-body-lg text-forest-900/70 mt-4 max-w-xl">
                       {locale === "th"
                         ? "กรอกค่าไฟและขนาดหลังคา รับขนาดระบบที่แนะนำ เงินที่ประหยัด ระยะคืนทุน และคำแนะนำว่าควรติดตั้งหรือไม่ — ฟรี ไม่ต้องลงทะเบียน"
                         : "Enter your bill and roof size for an instant estimate of system size, savings, payback, and whether we'd recommend installing — free, no sign-up."}
                     </p>
-                    <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-caption font-mono uppercase tracking-wider text-forest-900/55">
+                    <div className="text-caption text-forest-900/55 mt-6 flex flex-wrap gap-x-6 gap-y-2 font-mono tracking-wider uppercase">
                       <span>{locale === "th" ? "ฟรี" : "Free"}</span>
-                      <span>{locale === "th" ? "ไม่ต้องลงทะเบียน" : "No sign-up"}</span>
-                      <span>{locale === "th" ? "≈ 30 วินาที" : "≈ 30 seconds"}</span>
+                      <span>
+                        {locale === "th" ? "ไม่ต้องลงทะเบียน" : "No sign-up"}
+                      </span>
+                      <span>
+                        {locale === "th" ? "≈ 30 วินาที" : "≈ 30 seconds"}
+                      </span>
                     </div>
                   </div>
                   <div className="md:col-span-5 md:flex md:justify-end">
@@ -655,7 +782,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 <ScrollReveal delay={0.1}>
                   <Link
                     href={withLocale(locale, "/projects")}
-                    className="group/btn inline-flex items-center gap-1.5 rounded-full border border-mist-400/30 px-4 py-2 text-body font-medium text-mist-50 hover:bg-mist-50/5 hover:border-mist-400/60"
+                    className="group/btn text-body inline-flex items-center gap-1.5 rounded-full border border-mist-400/30 px-4 py-2 font-medium text-mist-50 hover:border-mist-400/60 hover:bg-mist-50/5"
                   >
                     {t.projects.cta}
                     <IconArrowRight
@@ -672,10 +799,10 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   <ScrollReveal key={p._id} delay={i * 0.05}>
                     <Link
                       href={withLocale(locale, `/projects/${p.slug}`)}
-                      className="group/proj block overflow-hidden rounded-2xl bg-card-50 text-card-ink transition-all duration-300 hover:-translate-y-0.5"
+                      className="group/proj bg-card-50 text-card-ink block overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-0.5"
                       style={{ boxShadow: "var(--shadow-card)" }}
                     >
-                      <div className="bg-grid-forest relative aspect-[16/9] overflow-hidden bg-card-100">
+                      <div className="bg-grid-forest bg-card-100 relative aspect-[16/9] overflow-hidden">
                         {p.heroImage ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -684,7 +811,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                             className="h-full w-full object-cover transition-transform duration-700 group-hover/proj:scale-105"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center text-forest-900/40">
+                          <div className="text-forest-900/40 flex h-full w-full items-center justify-center">
                             <IconSolarPanel size={56} stroke={1.25} />
                           </div>
                         )}
@@ -697,9 +824,11 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                           {localized(p.title_en, p.title_th)}
                         </h3>
                         {p.customer ? (
-                          <p className="text-body mt-1 text-forest-900/65">{p.customer}</p>
+                          <p className="text-body text-forest-900/65 mt-1">
+                            {p.customer}
+                          </p>
                         ) : null}
-                        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-forest-900/10 pt-4 text-caption font-mono uppercase tracking-wider text-forest-900/70">
+                        <div className="border-forest-900/10 text-caption text-forest-900/70 mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t pt-4 font-mono tracking-wider uppercase">
                           {p.sector ? (
                             <span className="inline-flex items-center gap-1.5">
                               <IconMapPin size={12} stroke={1.75} />
@@ -731,7 +860,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 <div>
                   <ScrollReveal>
                     <MonoLabel tone="gold">
-                      {locale === "th" ? "อบรมที่กำลังจะมาถึง" : "Upcoming training"}
+                      {locale === "th"
+                        ? "อบรมที่กำลังจะมาถึง"
+                        : "Upcoming training"}
                     </MonoLabel>
                   </ScrollReveal>
                   <SplitTextReveal
@@ -748,7 +879,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 <ScrollReveal delay={0.1}>
                   <Link
                     href={withLocale(locale, "/training")}
-                    className="group/btn inline-flex items-center gap-1.5 rounded-full border border-mist-400/30 px-4 py-2 text-body font-medium text-mist-50 hover:bg-mist-50/5 hover:border-mist-400/60"
+                    className="group/btn text-body inline-flex items-center gap-1.5 rounded-full border border-mist-400/30 px-4 py-2 font-medium text-mist-50 hover:border-mist-400/60 hover:bg-mist-50/5"
                   >
                     {locale === "th" ? "ดูตารางทั้งหมด" : "View full calendar"}
                     <IconArrowRight
@@ -780,7 +911,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           <section className="bg-forest-900">
             <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
               <ScrollReveal>
-                <div className="rounded-2xl bg-card-50 p-10 text-card-ink md:p-14">
+                <div className="bg-card-50 text-card-ink rounded-2xl p-10 md:p-14">
                   <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-end">
                     <div className="md:col-span-7">
                       <MonoLabel tone="forest">
@@ -788,12 +919,15 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                           ? "เครือข่ายผู้ติดตั้งของเรา"
                           : "Certified installer directory"}
                       </MonoLabel>
-                      <h2 className="mt-3 font-medium tracking-tight" style={headlineClamp}>
+                      <h2
+                        className="mt-3 font-medium tracking-tight"
+                        style={headlineClamp}
+                      >
                         {locale === "th"
                           ? "ค้นหาช่างติดตั้งโซลาร์ที่ใกล้คุณ"
                           : "Find a certified installer near you."}
                       </h2>
-                      <p className="text-body-lg mt-4 max-w-xl text-forest-900/70">
+                      <p className="text-body-lg text-forest-900/70 mt-4 max-w-xl">
                         {locale === "th"
                           ? "ช่างติดตั้งที่ผ่านการฝึกอบรมและรับรองโดย WS Energy พร้อมให้บริการติดตั้งโซลาร์ ระบบกักเก็บพลังงาน และสถานีชาร์จรถยนต์ไฟฟ้าตามมาตรฐานความปลอดภัย"
                           : "WS Energy–trained partners delivering safety-grade solar, storage, and EV charging across Thailand."}
@@ -806,7 +940,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                     >
                       <label
                         htmlFor="home-installer-province"
-                        className="text-caption font-mono uppercase tracking-wider text-forest-900/55"
+                        className="text-caption text-forest-900/55 font-mono tracking-wider uppercase"
                       >
                         {locale === "th" ? "เลือกจังหวัด" : "Choose a province"}
                       </label>
@@ -815,7 +949,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                           id="home-installer-province"
                           name="province"
                           defaultValue=""
-                          className="flex-1 rounded-full border border-forest-900/20 bg-card-50 px-4 py-3 text-body font-medium text-forest-900 hover:border-forest-900/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                          className="border-forest-900/20 bg-card-50 text-body text-forest-900 hover:border-forest-900/40 focus:ring-gold-500/40 flex-1 rounded-full border px-4 py-3 font-medium focus:ring-2 focus:outline-none"
                         >
                           <option value="">
                             {locale === "th" ? "ทุกจังหวัด" : "All provinces"}
@@ -828,7 +962,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                         </select>
                         <button
                           type="submit"
-                          className="inline-flex items-center justify-center gap-2 rounded-full bg-forest-900 px-6 py-3 text-body font-medium text-mist-50 transition-colors hover:bg-forest-800"
+                          className="bg-forest-900 text-body hover:bg-forest-800 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-medium text-mist-50 transition-colors"
                         >
                           {locale === "th" ? "ค้นหา" : "Find installers"}
                           <IconArrowRight size={16} stroke={2} />
@@ -867,7 +1001,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               <ScrollReveal delay={0.1}>
                 <Link
                   href={withLocale(locale, "/resources")}
-                  className="group/btn inline-flex items-center gap-1.5 text-body font-medium text-gold-500 hover:text-gold-400"
+                  className="group/btn text-body text-gold-500 hover:text-gold-400 inline-flex items-center gap-1.5 font-medium"
                 >
                   {dict.actions.viewAll}
                   <IconArrowUpRight
@@ -885,9 +1019,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   <ScrollReveal key={a._id} delay={i * 0.05}>
                     <Link
                       href={withLocale(locale, `/resources/articles/${a.slug}`)}
-                      className="group/art flex h-full flex-col overflow-hidden rounded-2xl border border-mist-800/60 bg-forest-800/40 transition-all duration-300 hover:-translate-y-0.5 hover:border-mist-800"
+                      className="group/art bg-forest-800/40 flex h-full flex-col overflow-hidden rounded-2xl border border-mist-800/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-mist-800"
                     >
-                      <div className="bg-grid-mist aspect-[16/9] bg-forest-800">
+                      <div className="bg-grid-mist bg-forest-800 aspect-[16/9]">
                         {a.heroImage ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -898,7 +1032,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                         ) : null}
                       </div>
                       <div className="flex flex-1 flex-col gap-3 p-6">
-                        <p className="text-caption font-mono uppercase tracking-wider text-mist-400">
+                        <p className="text-caption font-mono tracking-wider text-mist-400 uppercase">
                           {t.resources.articlesCta}
                         </p>
                         <h3
@@ -910,7 +1044,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                         <p className="text-body line-clamp-3 text-mist-400">
                           {localized(a.excerpt_en, a.excerpt_th)}
                         </p>
-                        <span className="mt-auto inline-flex items-center gap-1.5 text-body font-medium text-gold-500">
+                        <span className="text-body text-gold-500 mt-auto inline-flex items-center gap-1.5 font-medium">
                           {locale === "th" ? "อ่านบทความ" : "Read article"}
                           <IconArrowUpRight size={14} stroke={2} />
                         </span>
@@ -920,7 +1054,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 ))}
               </div>
             ) : (
-              <div className="rounded-xl border border-mist-800/60 bg-forest-800/40 p-8 text-mist-400">
+              <div className="bg-forest-800/40 rounded-xl border border-mist-800/60 p-8 text-mist-400">
                 {t.resources.empty}
               </div>
             )}
@@ -928,8 +1062,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </section>
 
         {/* ── 12 · Closing CTA ────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-forest-950">
-          <div className="bg-grid-mist pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)]" />
+        <section className="bg-forest-950 relative overflow-hidden">
+          <div className="bg-grid-mist pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)] opacity-30" />
           <div className="relative mx-auto max-w-6xl px-6 py-28 md:py-36">
             <div className="flex flex-col items-center text-center">
               <ScrollReveal>
@@ -971,7 +1105,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                       size="lg"
                       href={withLocale(locale, "/contact")}
                     >
-                      {locale === "th" ? "พูดคุยกับวิศวกร" : "Talk to an engineer"}
+                      {locale === "th"
+                        ? "พูดคุยกับวิศวกร"
+                        : "Talk to an engineer"}
                       <IconArrowUpRight size={16} stroke={2} />
                     </Button>
                   </Magnetic>
@@ -991,9 +1127,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               </ScrollReveal>
               {certifications.length > 0 ? (
                 <ScrollReveal delay={0.35}>
-                  <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-caption font-mono uppercase tracking-wider text-mist-400">
+                  <div className="text-caption mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 font-mono tracking-wider text-mist-400 uppercase">
                     {certifications.map((c) => (
-                      <span key={c._id} className="inline-flex items-center gap-1.5">
+                      <span
+                        key={c._id}
+                        className="inline-flex items-center gap-1.5"
+                      >
                         <IconCertificate size={14} stroke={1.5} />
                         {c.name}
                       </span>
@@ -1033,10 +1172,10 @@ function TrainingCard({
   return (
     <Link
       href={href}
-      className="group/train flex h-full flex-col rounded-2xl bg-card-50 p-7 text-card-ink transition-all duration-300 hover:-translate-y-0.5"
+      className="group/train bg-card-50 text-card-ink flex h-full flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-0.5"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
-      <span className="text-caption font-mono uppercase tracking-wider text-forest-900/55">
+      <span className="text-caption text-forest-900/55 font-mono tracking-wider uppercase">
         {dateLabel}
       </span>
       <h3
@@ -1046,28 +1185,28 @@ function TrainingCard({
         {title}
       </h3>
       {session.host ? (
-        <p className="mt-1 text-body text-forest-900/65">{session.host}</p>
+        <p className="text-body text-forest-900/65 mt-1">{session.host}</p>
       ) : null}
       <div className="mt-auto flex flex-wrap items-center gap-2 pt-6">
         <span
-          className={`inline-flex items-center rounded-full px-2.5 py-1 text-caption font-mono uppercase tracking-wider ${
+          className={`text-caption inline-flex items-center rounded-full px-2.5 py-1 font-mono tracking-wider uppercase ${
             session.format === "in-person"
               ? "bg-forest-900 text-mist-50"
               : session.format === "online"
                 ? "bg-gold-500/15 text-forest-900"
-                : "border border-forest-900/25 text-forest-900"
+                : "border-forest-900/25 text-forest-900 border"
           }`}
         >
           {formatLabel}
         </span>
         {session.province ? (
-          <span className="inline-flex items-center gap-1 text-caption text-forest-900/65">
+          <span className="text-caption text-forest-900/65 inline-flex items-center gap-1">
             <IconMapPin size={12} stroke={1.75} />
             {session.province}
           </span>
         ) : null}
         {isFull ? (
-          <span className="inline-flex items-center rounded-full bg-forest-900/10 px-2.5 py-1 text-caption font-mono uppercase tracking-wider text-forest-900/55">
+          <span className="bg-forest-900/10 text-caption text-forest-900/55 inline-flex items-center rounded-full px-2.5 py-1 font-mono tracking-wider uppercase">
             {locale === "th" ? "เต็ม" : "Full"}
           </span>
         ) : null}
@@ -1125,11 +1264,13 @@ function WhyTile({
   desc: string;
 }) {
   return (
-    <div className="rounded-xl border border-mist-800/60 bg-forest-800/40 p-6">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold-500/15 text-gold-500">
+    <div className="bg-forest-800/40 rounded-xl border border-mist-800/60 p-6">
+      <div className="bg-gold-500/15 text-gold-500 flex h-10 w-10 items-center justify-center rounded-full">
         {icon}
       </div>
-      <h3 className="text-h3 mt-5 font-medium tracking-tight text-mist-50">{title}</h3>
+      <h3 className="text-h3 mt-5 font-medium tracking-tight text-mist-50">
+        {title}
+      </h3>
       <p className="text-body mt-2 text-mist-400">{desc}</p>
     </div>
   );
