@@ -37,10 +37,10 @@ import { Magnetic } from "@/components/ui/Magnetic";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
-import { StatBlock } from "@/components/ui/StatBlock";
 import { GsapBridge } from "@/components/marketing/GsapBridge";
 import { HeroAct } from "@/components/marketing/HeroAct";
 import { ProductSchematic } from "@/components/product/ProductSchematic";
+import type { SchematicVariant } from "@/components/product/schematic-variant";
 import { SafetyAct } from "@/components/marketing/SafetyAct";
 import {
   SolutionsTabs,
@@ -156,52 +156,55 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
   const quoteHref = withLocale(locale, "/quote");
 
-  const FLAGSHIP_PLACEHOLDER = "/products/projoy-rapid-shutdown.png";
+  // The Projoy photo is real product photography and stays on the one tile
+  // it depicts. Every other tile renders its category's blueprint schematic —
+  // six copies of the same photo read as unfinished.
   const flagships: {
     key: string;
     title: string;
     brandPill?: "PROJOY" | "T-SUN";
     photoUrl?: string;
+    art?: SchematicVariant;
     href: string;
   }[] = [
     {
       key: "rapid-shutdown",
       title: "Rapid Shutdown",
       brandPill: "PROJOY",
-      photoUrl: FLAGSHIP_PLACEHOLDER,
+      photoUrl: "/products/projoy-rapid-shutdown.png",
       href: withLocale(locale, "/safety/rapid-shutdown"),
     },
     {
       key: "controller-box",
       title: "Controller Box",
       brandPill: "PROJOY",
-      photoUrl: FLAGSHIP_PLACEHOLDER,
+      art: "optimizer",
       href: withLocale(locale, "/safety/rapid-shutdown"),
     },
     {
       key: "firefighter-safety-switches",
       title: "Firefighter Safety Switches",
       brandPill: "PROJOY",
-      photoUrl: FLAGSHIP_PLACEHOLDER,
+      art: "switch",
       href: withLocale(locale, "/safety/firefighter-safety-switches"),
     },
     {
       key: "micro-inverter",
       title: "Micro Inverter",
       brandPill: "T-SUN",
-      photoUrl: FLAGSHIP_PLACEHOLDER,
+      art: "inverter",
       href: withLocale(locale, "/products/micro-inverters"),
     },
     {
       key: "scada-monitoring",
       title: "SCADA & Monitoring",
-      photoUrl: FLAGSHIP_PLACEHOLDER,
+      art: "generic",
       href: withLocale(locale, "/solutions/scada-monitoring"),
     },
     {
       key: "full-catalog",
       title: "Full catalog",
-      photoUrl: FLAGSHIP_PLACEHOLDER,
+      art: "battery",
       href: withLocale(locale, "/products"),
     },
   ];
@@ -548,6 +551,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                             decoding="async"
                             className="absolute inset-0 h-full w-full object-contain p-8 transition-transform duration-700 ease-out group-hover/card:scale-105"
                           />
+                        ) : tile.art ? (
+                          <div className="absolute inset-0 flex items-center justify-center p-6">
+                            <div className="aspect-[252/312] h-full">
+                              <ProductSchematic variant={tile.art} />
+                            </div>
+                          </div>
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center">
                             <span className="text-caption font-mono tracking-wider text-mist-500 uppercase">
@@ -593,10 +602,13 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </div>
         </section>
 
-        {/* ── 5 · Why WS Energy · counted proof ───────────────────── */}
+        {/* ── 5 · Proof band — provable credentials first ─────────── */}
+        {/* The hero claim is the exclusive distributorship (a contractual
+            fact); scale numbers sit in a deliberately quiet row below until
+            audited figures replace the current estimates. */}
         <section className="bg-forest-950">
           <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
-            <div className="mb-10 max-w-3xl">
+            <div className="mb-12 max-w-4xl md:mb-14">
               <ScrollReveal>
                 <MonoLabel tone="gold">
                   {locale === "th"
@@ -606,58 +618,112 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               </ScrollReveal>
               <SplitTextReveal
                 as="h2"
-                className="mt-3 font-medium tracking-tight text-mist-50"
+                className="mt-4 font-medium tracking-tight text-mist-50"
               >
-                <span className="block" style={headlineClamp}>
+                <span
+                  className="block"
+                  style={{
+                    fontSize: "clamp(30px, 4.6vw, 54px)",
+                    lineHeight: 1.08,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
                   {locale === "th"
-                    ? "ทำไมต้อง WS Energy"
-                    : "Why choose WS Energy."}
+                    ? "ผู้แทนจำหน่าย Projoy แต่เพียงผู้เดียวในประเทศไทย"
+                    : "Thailand's exclusive Projoy distributor."}
                 </span>
               </SplitTextReveal>
+              <ScrollReveal delay={0.15}>
+                <p className="text-body-lg mt-5 max-w-2xl text-mist-300">
+                  {locale === "th"
+                    ? "อุปกรณ์ Rapid Shutdown ของ Projoy ทุกชิ้นที่จำหน่ายในประเทศไทยส่งผ่าน WS Energy แหล่งเดียวที่รับผิดชอบทั้งฮาร์ดแวร์ การอบรมช่างติดตั้ง และเอกสารรับรองมาตรฐาน"
+                    : "Every Projoy rapid-shutdown unit sold in Thailand ships through WS Energy: one accountable source for the hardware, the installer training, and the compliance paperwork behind it."}
+                </p>
+              </ScrollReveal>
             </div>
 
+            {/* Credential ledger — claims a skeptic can verify. */}
             <ScrollReveal delay={0.05}>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <StatBlock
-                  value={<CountUp to={500} suffix="MW+" />}
-                  label={
-                    locale === "th"
-                      ? "พลังงานสะอาดที่ส่งมอบ"
-                      : "Clean energy delivered"
-                  }
-                  icon={<IconBolt size={28} stroke={1.5} />}
-                />
-                <StatBlock
-                  value={<CountUp to={15} suffix="+ yrs" />}
-                  label={
-                    locale === "th"
-                      ? "ประสบการณ์ในวงการ"
-                      : "Industry experience"
-                  }
-                  icon={<IconCertificate size={28} stroke={1.5} />}
-                />
-                <StatBlock
-                  value={<CountUp to={1200} suffix="+" />}
-                  label={
-                    locale === "th"
-                      ? "ระบบที่ติดตั้งแล้ว"
-                      : "Systems installed to date"
-                  }
-                  icon={<IconSolarPanel size={28} stroke={1.5} />}
-                />
-                <StatBlock
-                  value="TH"
-                  label={
-                    locale === "th"
-                      ? "ทีมงานท้องถิ่นจากสมุทรปราการ"
-                      : "Local team from Samut Prakan"
-                  }
-                  icon={<IconMapPin size={28} stroke={1.5} />}
-                />
+              <div className="grid grid-cols-1 divide-y divide-mist-800 border-y border-mist-800 md:grid-cols-3 md:divide-x md:divide-y-0">
+                <div className="py-6 md:pr-10">
+                  <p className="text-caption font-mono tracking-wider text-mist-500 uppercase">
+                    {locale === "th"
+                      ? "ผู้แทนจำหน่ายอย่างเป็นทางการ"
+                      : "Authorized distributor for"}
+                  </p>
+                  <p className="mt-2 font-mono text-[17px] text-mist-50">
+                    Huawei · SolaX · T-SUN
+                  </p>
+                </div>
+                <div className="py-6 md:px-10">
+                  <p className="text-caption font-mono tracking-wider text-mist-500 uppercase">
+                    {locale === "th"
+                      ? "ได้รับการรับรองมาตรฐาน"
+                      : "Certified to"}
+                  </p>
+                  {/* Sanity's certification list wins once it holds 2+ named
+                      entries; until then use the user-confirmed baseline
+                      (a lone "TIS" reads weaker than the real coverage). */}
+                  <p className="mt-2 font-mono text-[17px] text-mist-50">
+                    {certifications.filter((c) => c.name).length >= 2
+                      ? certifications
+                          .slice(0, 3)
+                          .map((c) => c.name)
+                          .filter(Boolean)
+                          .join(" · ")
+                      : "IEC · TIS"}
+                  </p>
+                </div>
+                <div className="py-6 md:pl-10">
+                  <p className="text-caption font-mono tracking-wider text-mist-500 uppercase">
+                    {locale === "th" ? "ฐานปฏิบัติการ" : "Base of operations"}
+                  </p>
+                  <p className="mt-2 font-mono text-[17px] text-mist-50">
+                    {locale === "th"
+                      ? "สมุทรปราการ ประเทศไทย"
+                      : "Samut Prakan, Thailand"}
+                  </p>
+                </div>
               </div>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.15} className="mt-5">
+            {/* Scale stats — quiet on purpose; estimates pending real figures. */}
+            <ScrollReveal delay={0.12} className="mt-9">
+              <div className="flex flex-wrap items-end gap-x-12 gap-y-6">
+                <div>
+                  <p className="font-mono text-[24px] leading-none text-mist-100">
+                    <CountUp to={500} suffix=" MW+" />
+                  </p>
+                  <p className="text-caption mt-2 text-mist-500">
+                    {locale === "th"
+                      ? "พลังงานสะอาดที่ส่งมอบ"
+                      : "Clean energy delivered"}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono text-[24px] leading-none text-mist-100">
+                    <CountUp to={1200} suffix="+" />
+                  </p>
+                  <p className="text-caption mt-2 text-mist-500">
+                    {locale === "th"
+                      ? "ระบบที่ติดตั้งแล้ว"
+                      : "Systems installed to date"}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono text-[24px] leading-none text-mist-100">
+                    <CountUp to={15} suffix="+ yrs" />
+                  </p>
+                  <p className="text-caption mt-2 text-mist-500">
+                    {locale === "th"
+                      ? "ประสบการณ์ในวงการ"
+                      : "Industry experience"}
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.15} className="mt-14">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <WhyTile
                   icon={<IconTools size={22} stroke={1.5} />}
@@ -980,40 +1046,42 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         <TestimonialsMarquee locale={locale} />
 
         {/* ── 11 · Latest articles ────────────────────────────────── */}
-        <section className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-              <div>
-                <ScrollReveal>
-                  <MonoLabel tone="mist">
-                    {locale === "th" ? "บทความใหม่ล่าสุด" : "Insights"}
-                  </MonoLabel>
+        {/* Renders only when articles exist — a homepage must never show
+            its own empty state. */}
+        {articles.length > 0 ? (
+          <section className="bg-forest-900">
+            <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+              <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+                <div>
+                  <ScrollReveal>
+                    <MonoLabel tone="mist">
+                      {locale === "th" ? "บทความใหม่ล่าสุด" : "Insights"}
+                    </MonoLabel>
+                  </ScrollReveal>
+                  <SplitTextReveal
+                    as="h2"
+                    className="mt-3 font-medium tracking-tight text-mist-50"
+                  >
+                    <span className="block" style={headlineClamp}>
+                      {t.resources.heading}
+                    </span>
+                  </SplitTextReveal>
+                </div>
+                <ScrollReveal delay={0.1}>
+                  <Link
+                    href={withLocale(locale, "/resources")}
+                    className="group/btn text-body text-gold-500 hover:text-gold-400 inline-flex items-center gap-1.5 font-medium"
+                  >
+                    {dict.actions.viewAll}
+                    <IconArrowUpRight
+                      size={16}
+                      stroke={2}
+                      className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                    />
+                  </Link>
                 </ScrollReveal>
-                <SplitTextReveal
-                  as="h2"
-                  className="mt-3 font-medium tracking-tight text-mist-50"
-                >
-                  <span className="block" style={headlineClamp}>
-                    {t.resources.heading}
-                  </span>
-                </SplitTextReveal>
               </div>
-              <ScrollReveal delay={0.1}>
-                <Link
-                  href={withLocale(locale, "/resources")}
-                  className="group/btn text-body text-gold-500 hover:text-gold-400 inline-flex items-center gap-1.5 font-medium"
-                >
-                  {dict.actions.viewAll}
-                  <IconArrowUpRight
-                    size={16}
-                    stroke={2}
-                    className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
-                  />
-                </Link>
-              </ScrollReveal>
-            </div>
 
-            {articles.length > 0 ? (
               <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                 {articles.slice(0, 3).map((a, i) => (
                   <ScrollReveal key={a._id} delay={i * 0.05}>
@@ -1053,13 +1121,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   </ScrollReveal>
                 ))}
               </div>
-            ) : (
-              <div className="bg-forest-800/40 rounded-xl border border-mist-800/60 p-8 text-mist-400">
-                {t.resources.empty}
-              </div>
-            )}
-          </div>
-        </section>
+            </div>
+          </section>
+        ) : null}
 
         {/* ── 12 · Closing CTA ────────────────────────────────────── */}
         <section className="bg-forest-950 relative overflow-hidden">
@@ -1125,7 +1189,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   </Magnetic>
                 </div>
               </ScrollReveal>
-              {certifications.length > 0 ? (
+              {/* A single lone cert chip reads weaker than none — show the
+                  strip only once Sanity holds 2+ named certifications. */}
+              {certifications.filter((c) => c.name).length >= 2 ? (
                 <ScrollReveal delay={0.35}>
                   <div className="text-caption mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 font-mono tracking-wider text-mist-400 uppercase">
                     {certifications.map((c) => (
