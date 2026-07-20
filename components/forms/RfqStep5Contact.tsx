@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { Input, Textarea } from "@/components/ui/Input";
 
@@ -45,9 +45,16 @@ export function RfqStep5Contact({
 }: Props) {
   const t = dict.rfq.step5;
   const fileRef = useRef<HTMLInputElement>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   function set<K extends keyof ContactData>(key: K, val: ContactData[K]) {
     onChange({ ...value, [key]: val });
+  }
+
+  function rejectFile(message: string) {
+    setFileError(message);
+    if (fileRef.current) fileRef.current.value = "";
+    set("file", null);
   }
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -55,12 +62,15 @@ export function RfqStep5Contact({
     if (file) {
       const ext = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
       if (!ACCEPTED_EXTENSIONS.includes(ext) && !ACCEPTED_TYPES.includes(file.type)) {
+        rejectFile(t.fileErrorType);
         return;
       }
       if (file.size > MAX_FILE_SIZE) {
+        rejectFile(t.fileErrorSize);
         return;
       }
     }
+    setFileError(null);
     set("file", file);
   }
 
@@ -128,6 +138,11 @@ export function RfqStep5Contact({
           className="text-body text-mist-400 file:mr-3 file:rounded-md file:border file:border-mist-800 file:bg-forest-800 file:px-3 file:py-1.5 file:text-caption file:font-medium file:text-mist-50"
         />
         <p className="text-caption text-mist-400">{t.fileHint}</p>
+        {fileError && (
+          <p role="alert" className="text-caption text-[var(--color-safety-400)]">
+            {fileError}
+          </p>
+        )}
       </div>
 
       {errors._form && (
