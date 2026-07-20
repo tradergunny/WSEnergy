@@ -365,15 +365,31 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               </p>
             </ScrollReveal>
             <ScrollReveal delay={0.25}>
-              <div className="mt-12 max-w-md border-t border-mist-800 pt-6">
-                <p className="text-caption font-mono tracking-wider text-mist-200 uppercase">
-                  {locale === "th" ? "ทีมงาน WS Energy" : "The WS Energy team"}
-                </p>
-                <p className="text-caption mt-1 text-mist-500">
-                  {locale === "th"
-                    ? "สมุทรปราการ ประเทศไทย"
-                    : "Samut Prakan, Thailand"}
-                </p>
+              {/* Signed by the founder: a real face and name is the highest-
+                  trust element on the page. The portrait's own white studio
+                  background fills the disc; a hairline ring seats it on the
+                  forest canvas. */}
+              <div className="mt-12 flex max-w-md items-center gap-5 border-t border-mist-800 pt-7">
+                <div className="bg-card-50 relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-1 ring-mist-800">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/team/sittiphol-ngamsangiam.png"
+                    alt="Sittiphol Ngamsangiam, Founder & Managing Director of WS Energy"
+                    className="absolute inset-0 h-full w-full scale-[1.15] object-cover object-top"
+                  />
+                </div>
+                <div>
+                  <p className="font-medium tracking-tight text-mist-50">
+                    {locale === "th"
+                      ? "คุณสิทธิพล งามเสงี่ยม"
+                      : "Sittiphol Ngamsangiam"}
+                  </p>
+                  <p className="text-caption mt-1 font-mono tracking-wider text-mist-400 uppercase">
+                    {locale === "th"
+                      ? "ผู้ก่อตั้งและกรรมการผู้จัดการ"
+                      : "Founder & Managing Director"}
+                  </p>
+                </div>
               </div>
             </ScrollReveal>
           </div>
