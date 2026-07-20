@@ -47,6 +47,7 @@ import {
   type SolutionTab,
 } from "@/components/marketing/SolutionsTabs";
 import { TestimonialsMarquee } from "@/components/marketing/TestimonialsMarquee";
+import { ThailandCoverageMap } from "@/components/marketing/ThailandCoverageMap";
 
 /**
  * Homepage — "The Living Grid" experience.
@@ -758,6 +759,121 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 />
               </div>
             </ScrollReveal>
+          </div>
+        </section>
+
+        {/* ── 5.5 · National footprint ────────────────────────────── */}
+        {/* Reach, not a heatmap: an enterprise distributor based in Samut
+            Prakan whose projects and installer network span the country.
+            Hubs are real Sanity geography — HQ, project sites, installer
+            provinces. This is our answer to WHA's world-map moment. */}
+        <section className="bg-forest-900 relative overflow-hidden border-b border-mist-800/50">
+          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
+              {/* Copy + regional ledger */}
+              <div className="lg:col-span-6">
+                <ScrollReveal>
+                  <MonoLabel tone="gold">
+                    {locale === "th" ? "ขอบเขตการดำเนินงาน" : "National footprint"}
+                  </MonoLabel>
+                </ScrollReveal>
+                <SplitTextReveal
+                  as="h2"
+                  className="mt-4 font-medium tracking-tight text-mist-50"
+                >
+                  <span
+                    className="block"
+                    style={{
+                      fontSize: "clamp(30px, 4.4vw, 52px)",
+                      lineHeight: 1.08,
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    {locale === "th"
+                      ? "ฐานที่สมุทรปราการ ส่งมอบทั่วประเทศไทย"
+                      : "Based in Samut Prakan. Delivered across Thailand."}
+                  </span>
+                </SplitTextReveal>
+                <ScrollReveal delay={0.12}>
+                  <p className="text-body-lg mt-5 max-w-xl text-mist-300">
+                    {locale === "th"
+                      ? "เราจัดหาและออกแบบระบบให้กับโครงการระดับองค์กร โรงงาน คลังสินค้า และโซลาร์ฟาร์ม จากสำนักงานใหญ่ในสมุทรปราการ ผ่านเครือข่ายช่างติดตั้งที่ได้รับการรับรอง ครอบคลุมตั้งแต่ภาคเหนือถึงภาคใต้"
+                      : "We supply and engineer systems for enterprise clients — factories, warehouses, and solar farms — from our Samut Prakan headquarters, through a certified installer network that reaches from the north to the south."}
+                  </p>
+                </ScrollReveal>
+
+                {/* Regional ledger — provable, from Sanity province coverage. */}
+                <ScrollReveal delay={0.18}>
+                  <dl className="mt-9 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-mist-800 pt-8 sm:max-w-md">
+                    <div>
+                      <dt className="text-caption font-mono tracking-wider text-mist-500 uppercase">
+                        {locale === "th" ? "สำนักงานใหญ่" : "Headquarters"}
+                      </dt>
+                      <dd className="mt-1.5 font-mono text-[17px] text-mist-50">
+                        {locale === "th" ? "สมุทรปราการ" : "Samut Prakan"}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-caption font-mono tracking-wider text-mist-500 uppercase">
+                        {locale === "th" ? "ภูมิภาคที่ครอบคลุม" : "Regions covered"}
+                      </dt>
+                      <dd className="mt-1.5 font-mono text-[17px] text-mist-50">
+                        {locale === "th"
+                          ? "เหนือ · กลาง · ตะวันออก · ใต้"
+                          : "North · Central · East · South"}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-caption font-mono tracking-wider text-mist-500 uppercase">
+                        {locale === "th"
+                          ? "จังหวัดที่มีช่างติดตั้ง"
+                          : "Installer provinces"}
+                      </dt>
+                      <dd className="mt-1.5 font-mono text-[17px] text-mist-50">
+                        {installerProvinces.length > 0
+                          ? installerProvinces.join(" · ")
+                          : locale === "th"
+                            ? "เชียงใหม่ · ระยอง · ภูเก็ต · กรุงเทพฯ"
+                            : "Chiang Mai · Rayong · Phuket · Bangkok"}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-caption font-mono tracking-wider text-mist-500 uppercase">
+                        {locale === "th" ? "กลุ่มลูกค้าหลัก" : "Primary focus"}
+                      </dt>
+                      <dd className="mt-1.5 font-mono text-[17px] text-mist-50">
+                        {locale === "th"
+                          ? "องค์กร · อุตสาหกรรม"
+                          : "Enterprise · Industrial"}
+                      </dd>
+                    </div>
+                  </dl>
+                </ScrollReveal>
+
+                {/* Legend */}
+                <ScrollReveal delay={0.22}>
+                  <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+                    <li className="text-caption flex items-center gap-2 text-mist-400">
+                      <span className="ring-gold-500 h-2.5 w-2.5 rounded-full bg-gold-500 ring-2 ring-offset-2 ring-offset-forest-900" />
+                      {locale === "th" ? "สำนักงานใหญ่" : "Headquarters"}
+                    </li>
+                    <li className="text-caption flex items-center gap-2 text-mist-400">
+                      <span className="bg-gold-500/90 h-2.5 w-2.5 rounded-full" />
+                      {locale === "th" ? "โครงการอ้างอิง" : "Project sites"}
+                    </li>
+                    <li className="text-caption flex items-center gap-2 text-mist-400">
+                      <span className="border-gold-500/60 h-2.5 w-2.5 rounded-full border bg-mist-50" />
+                      {locale === "th" ? "เครือข่ายช่างติดตั้ง" : "Installer network"}
+                    </li>
+                  </ul>
+                </ScrollReveal>
+              </div>
+
+              {/* Map */}
+              <div className="flex justify-center lg:col-span-6 lg:justify-end">
+                <ThailandCoverageMap locale={locale} />
+              </div>
+            </div>
           </div>
         </section>
 
