@@ -21,8 +21,9 @@ const PHONE = "087-053-8668";
 const PHONE_HREF = "tel:+66870538668";
 const EMAIL = "ws.energy.co.ltd@gmail.com";
 const LINE_HREF = "https://line.me/R/ti/p/@ws.energy";
-const MAPS_HREF =
-  "https://www.google.com/maps/search/?api=1&query=51%2F17+Moo+3+Bangpla+Bangplee+Samut+Prakan+10540+Thailand";
+const OFFICE_ADDRESS = "51/17 Moo 3, Bangpla, Bang Phli, Samut Prakan 10540, Thailand";
+const MAPS_HREF = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE_ADDRESS)}`;
+const MAPS_EMBED = `https://maps.google.com/maps?q=${encodeURIComponent(OFFICE_ADDRESS)}&z=15&output=embed`;
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/contact">): Promise<Metadata> {
   const { locale } = await params;
@@ -201,7 +202,7 @@ export default async function ContactPage({
             <div className="aspect-[4/3] overflow-hidden rounded-lg border border-mist-800">
               <iframe
                 title="WS Energy office"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3877.6!2d100.7!3d13.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDM2JzAwLjAiTiAxMDDCsDQyJzAwLjAiRQ!5e0!3m2!1sen!2sth!4v1"
+                src={MAPS_EMBED}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

@@ -19,7 +19,12 @@ export function proxy(request: NextRequest) {
     (l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`),
   );
   if (hasLocale) {
-    const res = NextResponse.next();
+    // Forward the pathname as a REQUEST header so server components
+    // (TrainingHighlightBand, not-found boundaries) can read it via
+    // headers(); the response copy is kept for parity.
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname);
+    const res = NextResponse.next({ request: { headers: requestHeaders } });
     res.headers.set("x-pathname", pathname);
     return res;
   }

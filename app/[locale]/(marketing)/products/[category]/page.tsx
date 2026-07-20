@@ -14,21 +14,24 @@ import {
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { MonoLabel } from "@/components/ui/MonoLabel";
-import { BrandLogoBadge } from "@/components/ui/BrandLogoBadge";
-import { ProductCard } from "@/components/product/ProductCard";
+import {
+  CategoryProductExplorer,
+  type ExplorerGroup,
+} from "@/components/product/CategoryProductExplorer";
 import { CaseStudyCard } from "@/components/product/CaseStudyCard";
 import { withLocale } from "@/lib/navigation";
 import { productHref, isSafetyCategorySlug } from "@/lib/product-url";
+import { deriveFacets } from "@/lib/product-facets";
 import type { urlFor } from "@/lib/sanity/client";
 
 /**
  * Product Category template — BRIEF §6.3.
- * Order: breadcrumb → category hero → filter bar (UI only) → product grid
+ * Order: breadcrumb → category hero → filter bar (wired) → product grid
  * → brand band → related case studies → category RFQ block.
  *
- * Filter UI is rendered but inert this week — wiring happens once Sanity
- * holds enough SKUs to make filtering meaningful.
+ * Facets (kW rating, phase) are derived server-side from spec rows and
+ * model numbers (lib/product-facets.ts); CategoryProductExplorer owns the
+ * filter state client-side via URL params.
  */
 
 type CategoryRow = {
@@ -52,6 +55,7 @@ type ProductRow = {
   shortDescription_en?: string;
   shortDescription_th?: string;
   image?: Parameters<typeof urlFor>[0];
+  facetSpecs?: { label?: string | null; value?: string | null }[] | null;
   brand?: { name?: string; slug?: string; logo?: Parameters<typeof urlFor>[0] };
   category?: {
     title_en?: string;
@@ -133,12 +137,53 @@ export default async function CategoryPage({
   const quoteHref = withLocale(locale, "/quote");
 
   // Group products under their brand for the section-by-brand layout below.
-  // Authorized distributors lead, then alphabetical. Brands without products
-  // in this category are filtered out via the `groupProducts.length > 0` check.
-  const brandedGroups = brands
+  // Authorized distributors lead, then alphabetical. Facets and card props
+  // are precomputed here so the client explorer receives plain JSON.
+  const toExplorerProduct = (p: ProductRow) => ({
+    _id: p._id,
+    brandSlug: p.brand?.slug ?? null,
+    facets: deriveFacets({
+      title: p.title,
+      sku: p.sku,
+      shortDescription: p.shortDescription_en,
+      specs: p.facetSpecs,
+    }),
+    card: {
+      brand: p.brand,
+      authorized: p.authorized,
+      exclusive: p.exclusive,
+      safetyCritical: p.safetyCritical,
+      image: p.image,
+      sku: p.sku,
+      title: p.title,
+      description: localized(p.shortDescription_en, p.shortDescription_th),
+      href: productHref(locale, {
+        categorySlug: p.category?.slug,
+        parentSlug: p.category?.parentSlug,
+        brandSlug: p.brand?.slug,
+        productSlug: p.slug,
+      }),
+      specsLabel: dict.actions.viewSpecs,
+      quoteLabel: dict.actions.requestQuote,
+      quoteHref,
+      authorizedLabel: dict.common.authorizedBadge,
+      exclusiveLabel: dict.common.exclusiveBadge,
+      safetyLabel: dict.common.safetyBadge,
+    },
+  });
+
+  const brandedGroups: ExplorerGroup[] = brands
     .map((brand) => ({
-      brand,
-      products: products.filter((p) => p.brand?.slug === brand.slug),
+      brand: {
+        _id: brand._id,
+        name: brand.name,
+        slug: brand.slug,
+        authorizedDistributor: brand.authorizedDistributor,
+        logo: brand.logo,
+      },
+      products: products
+        .filter((p) => p.brand?.slug === brand.slug)
+        .map(toExplorerProduct),
     }))
     .filter((group) => group.products.length > 0)
     .sort((a, b) => {
@@ -147,11 +192,6 @@ export default async function CategoryPage({
       if (aAuth !== bAuth) return aAuth - bAuth;
       return (a.brand.name ?? "").localeCompare(b.brand.name ?? "");
     });
-
-  const productCountLabel = (n: number) =>
-    locale === "th"
-      ? `${n} สินค้า`
-      : `${n} ${n === 1 ? "product" : "products"}`;
 
   return (
     <>
@@ -209,28 +249,10 @@ export default async function CategoryPage({
         </Container>
       </section>
 
-      {/* ── Section 3 · Filter bar (UI only this week) ──────────── */}
-      <section className="border-mist-800 border-y bg-forest-950">
-        <Container className="py-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-eyebrow text-mist-400">
-              {t.filters.heading}
-            </span>
-            <InertFilterChip>{t.filters.brand}</InertFilterChip>
-            <InertFilterChip>{t.filters.kwRange}</InertFilterChip>
-            <InertFilterChip>{t.filters.phase}</InertFilterChip>
-            <InertFilterChip>{t.filters.application}</InertFilterChip>
-            <span className="text-caption text-mist-400 ml-auto">
-              {t.filters.comingSoon}
-            </span>
-          </div>
-        </Container>
-      </section>
-
-      {/* ── Section 4 · Product cards grouped by brand ──────────── */}
-      <section>
-        <Container className="py-12">
-          {products.length === 0 ? (
+      {/* ── Sections 3+4 · Wired filter bar + brand-grouped grid ── */}
+      {products.length === 0 ? (
+        <section>
+          <Container className="py-12">
             <div className="border-mist-800 rounded-xl border bg-forest-800 p-8">
               <h2 className="text-h3 text-mist-50 font-medium">
                 {t.empty.heading}
@@ -244,79 +266,21 @@ export default async function CategoryPage({
                 </Button>
               </div>
             </div>
-          ) : (
-            <div className="flex flex-col gap-16">
-              {brandedGroups.map(({ brand, products: groupProducts }) => (
-                <div key={brand._id}>
-                  {/* Brand group header — logo (or mono+name fallback)
-                      + authorized chip + product count on the right */}
-                  <div className="border-mist-800/40 mb-6 flex flex-wrap items-center justify-between gap-3 border-b pb-4">
-                    <div className="flex flex-wrap items-center gap-3">
-                      {brand.logo ? (
-                        <BrandLogoBadge
-                          logo={brand.logo}
-                          name={brand.name}
-                          size="md"
-                        />
-                      ) : (
-                        <>
-                          <MonoLabel tone="mist">
-                            _{(brand.name ?? "").toUpperCase()}
-                          </MonoLabel>
-                          <span className="text-h3 text-mist-50 font-medium">
-                            {brand.name}
-                          </span>
-                        </>
-                      )}
-                      {brand.authorizedDistributor && (
-                        <Badge variant="authorized">
-                          ★ {dict.common.authorizedBadge}
-                        </Badge>
-                      )}
-                    </div>
-                    <span className="text-caption text-mist-400 font-mono">
-                      {productCountLabel(groupProducts.length)}
-                    </span>
-                  </div>
-
-                  {/* Card grid for this brand */}
-                  <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {groupProducts.map((p) => (
-                      <li key={p._id}>
-                        <ProductCard
-                          brand={p.brand}
-                          authorized={p.authorized}
-                          exclusive={p.exclusive}
-                          safetyCritical={p.safetyCritical}
-                          image={p.image}
-                          sku={p.sku}
-                          title={p.title}
-                          description={localized(
-                            p.shortDescription_en,
-                            p.shortDescription_th,
-                          )}
-                          href={productHref(locale, {
-                            categorySlug: p.category?.slug,
-                            parentSlug: p.category?.parentSlug,
-                            brandSlug: p.brand?.slug,
-                            productSlug: p.slug,
-                          })}
-                          specsLabel={dict.actions.viewSpecs}
-                          quoteLabel={dict.actions.requestQuote}
-                          quoteHref={quoteHref}
-                          authorizedLabel={dict.common.authorizedBadge}
-                          exclusiveLabel={dict.common.exclusiveBadge}
-                          safetyLabel={dict.common.safetyBadge}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
-        </Container>
-      </section>
+          </Container>
+        </section>
+      ) : (
+        <CategoryProductExplorer
+          groups={brandedGroups}
+          locale={locale}
+          labels={{
+            heading: t.filters.heading,
+            brand: t.filters.brand,
+            kwRange: t.filters.kwRange,
+            phase: t.filters.phase,
+          }}
+          authorizedBadgeLabel={dict.common.authorizedBadge}
+        />
+      )}
 
       {/* ── Section 5 · Brand band ──────────────────────────────── */}
       {brands.length > 0 && (
@@ -412,13 +376,5 @@ export default async function CategoryPage({
         </Container>
       </section>
     </>
-  );
-}
-
-function InertFilterChip({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="text-caption border-mist-800 text-mist-400 inline-flex cursor-not-allowed items-center gap-1 rounded-md border bg-forest-800 px-3 py-1.5">
-      {children}
-    </span>
   );
 }

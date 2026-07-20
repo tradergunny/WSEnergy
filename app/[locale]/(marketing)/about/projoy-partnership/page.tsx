@@ -187,7 +187,7 @@ export default async function ProjoyPartnershipPage({
                       </a>
                     ) : (
                       <span className="text-caption text-mist-400">
-                        {t.authorization.viewPdf}
+                        {t.authorization.fileUnavailable}
                       </span>
                     )}
                   </div>
@@ -195,9 +195,17 @@ export default async function ProjoyPartnershipPage({
               ))}
             </div>
           ) : (
-            <p className="text-body text-mist-400">
-              {t.authorization.viewPdf}
-            </p>
+            <div className="rounded-xl border border-mist-800 bg-forest-950 px-8 py-10">
+              <IconFileText
+                size={28}
+                stroke={1.5}
+                className="text-mist-400"
+                aria-hidden
+              />
+              <p className="mt-4 max-w-xl text-body text-mist-400">
+                {t.authorization.empty}
+              </p>
+            </div>
           )}
 
           <div className="mt-5">

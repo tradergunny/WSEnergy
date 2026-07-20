@@ -88,7 +88,8 @@ export default async function WiringDiagramsPage({
                     type={d.documentType === "manual" ? "manual" : "diagram"}
                     title={localized(d.title_en, d.title_th)}
                     meta={d.fileSize}
-                    href={d.url ?? "#"}
+                    href={d.url}
+                    unavailableLabel={dict.resourcePages.fileUnavailable}
                   />
                 </li>
               ))}

@@ -57,6 +57,7 @@ export const productsByCategoryQuery = groq`
     shortDescription_en,
     shortDescription_th,
     "image": gallery[0],
+    "facetSpecs": specs[]{ "label": label_en, value },
     "brand": brand->{ name, "slug": slug.current, logo },
     "category": category->{
       title_en,

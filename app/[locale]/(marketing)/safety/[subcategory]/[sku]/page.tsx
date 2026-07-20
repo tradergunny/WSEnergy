@@ -81,29 +81,25 @@ export default async function SafetyProductDetailPage({
   );
 
   return (
-    /* Counter-zoom: cancels html's global zoom: 0.8125 so this route renders
-       at its original tuning. 1 / 0.8125 ≈ 1.2308. */
-    <div style={{ zoom: 1.2308 }}>
-      <ProductDetail
-        product={product}
-        related={related}
-        projects={projects}
-        breadcrumbs={[
-          { label: t.breadcrumbHome, href: withLocale(locale, "/") },
-          { label: t.breadcrumbSafety, href: withLocale(locale, "/safety") },
-          {
-            label: categoryTitle,
-            href: withLocale(locale, `/safety/${product.category?.slug ?? ""}`),
-          },
-          { label: product.title ?? product.sku ?? "" },
-        ]}
-        locale={locale}
-        dict={{
-          actions: dict.actions as Record<string, string>,
-          common: dict.common as Record<string, string>,
-        }}
-        t={t}
-      />
-    </div>
+    <ProductDetail
+      product={product}
+      related={related}
+      projects={projects}
+      breadcrumbs={[
+        { label: t.breadcrumbHome, href: withLocale(locale, "/") },
+        { label: t.breadcrumbSafety, href: withLocale(locale, "/safety") },
+        {
+          label: categoryTitle,
+          href: withLocale(locale, `/safety/${product.category?.slug ?? ""}`),
+        },
+        { label: product.title ?? product.sku ?? "" },
+      ]}
+      locale={locale}
+      dict={{
+        actions: dict.actions as Record<string, string>,
+        common: dict.common as Record<string, string>,
+      }}
+      t={t}
+    />
   );
 }
