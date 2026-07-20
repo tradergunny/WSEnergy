@@ -169,6 +169,10 @@ function HeroStage({
           {locale === "th" ? "โซลาร์ · พลังงานสำรอง · อีวี" : "Solar · Storage · EV"}
         </span>
 
+        {/* Named thesis, the WHA move: the company stakes its name (gold, the
+            one earned use of accent-on-name) on a specific claim about the
+            country. The generic "powering the transition" line said nothing a
+            competitor couldn't; this one is ours. */}
         <SplitTextReveal
           as="h1"
           delay={0.15}
@@ -182,16 +186,19 @@ function HeroStage({
               letterSpacing: "-0.02em",
             }}
           >
+            <span className="text-gold-500">WS Energy:</span>{" "}
             {locale === "th"
-              ? "เร่งการเปลี่ยนผ่าน สู่พลังงานสะอาดของไทย"
-              : "Powering Thailand's transition to clean energy."}
+              ? "โซลาร์ปลอดภัย เพื่อไทยทั้งประเทศ"
+              : "safe solar for all of Thailand."}
           </span>
         </SplitTextReveal>
 
+        {/* Name lives in the H1 now, so the subhead leads with the credential
+            instead of repeating "WS Energy is…". */}
         <p className="text-body-lg mt-5 max-w-2xl text-mist-200 md:mt-7">
           {locale === "th"
-            ? "WS Energy คือผู้แทนจำหน่ายอย่างเป็นทางการของ Projoy และพันธมิตรครบวงจรของคุณสำหรับโซลาร์ ระบบกักเก็บพลังงาน และอีวี"
-            : "WS Energy is Thailand's authorized Projoy distributor and your full-line partner for solar generation, storage, and EV."}
+            ? "ผู้แทนจำหน่าย Projoy อย่างเป็นทางการในประเทศไทย พร้อมเป็นพันธมิตรครบวงจรสำหรับโซลาร์ ระบบกักเก็บพลังงาน และอีวี"
+            : "Thailand's authorized Projoy distributor. Your full-line partner for solar generation, storage, and EV."}
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 md:mt-10">
