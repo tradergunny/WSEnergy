@@ -184,10 +184,8 @@
       "brand": "แบรนด์",
       "kwRange": "ช่วง kW",
       "phase": "เฟส",
-      "application": "การใช้งาน",
       "searchModel": "ค้นหารุ่น…",
-      "all": "ทั้งหมด",
-      "comingSoon": "ระบบกรองจะเปิดให้ใช้สัปดาห์หน้า"
+      "all": "ทั้งหมด"
     },
     "categoryHero": {
       "breadcrumbHome": "หน้าแรก",
@@ -647,6 +645,8 @@
         "heading": "[TH] Authorization documents",
         "body": "[TH] Projoy has issued WS Energy formal authorization letters confirming exclusive distribution rights for Rapid Shutdown and authorized distribution for the full product line in Thailand.",
         "viewPdf": "[TH] View authorization document",
+        "fileUnavailable": "[TH] Digital copy being prepared",
+        "empty": "[TH] Authorization letters are being digitized and will be published here. Need verification today? Contact us and we'll send the documents directly.",
         "verifyLink": "[TH] Verify with Projoy"
       },
       "aboutProjoy": {
@@ -768,6 +768,8 @@
       "notesLabel": "[TH] Project notes (optional)",
       "fileLabel": "[TH] Attach file (optional)",
       "fileHint": "[TH] .pdf, .dwg, or .xlsx — max 10 MB",
+      "fileErrorType": "[TH] That file type isn't supported. Attach a .pdf, .dwg, or .xlsx file.",
+      "fileErrorSize": "[TH] That file is over 10 MB. Attach a smaller file or send it to us by email.",
       "errorName": "[TH] Please enter your name.",
       "errorCompany": "[TH] Please enter your company.",
       "errorEmail": "[TH] Please enter a valid email.",
@@ -870,6 +872,7 @@
     },
     "breadcrumbHome": "หน้าแรก",
     "breadcrumbResources": "ข้อมูลทางเทคนิค",
+    "fileUnavailable": "ไฟล์กำลังจัดเตรียม",
     "download": "ดาวน์โหลด",
     "viewAll": "ดูทั้งหมด",
     "documents": "เอกสาร",

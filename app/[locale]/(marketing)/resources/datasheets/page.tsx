@@ -84,7 +84,8 @@ export default async function DatasheetsPage({
                     type="datasheet"
                     title={localized(d.title_en, d.title_th)}
                     meta={d.fileSize}
-                    href={d.url ?? "#"}
+                    href={d.url}
+                    unavailableLabel={dict.resourcePages.fileUnavailable}
                   />
                 </li>
               ))}
