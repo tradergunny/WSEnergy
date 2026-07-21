@@ -1134,6 +1134,57 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 </ScrollReveal>
               </div>
 
+              {/* Real session photography, cropped from the company's own
+                  event coverage: place → gear → hands, wide to close. The
+                  calendar below says "upcoming"; these prove "recurring".
+                  On mobile only the lead photo shows — three stacked photos
+                  would push the actual calendar below the fold. */}
+              <ScrollReveal>
+                <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  {[
+                    {
+                      src: "/training/training-classroom.jpg",
+                      alt:
+                        locale === "th"
+                          ? "การอบรมในห้องเรียน: วิทยากรอธิบายประเภทอินเวอร์เตอร์"
+                          : "Classroom session: instructor presenting inverter types",
+                      mobile: true,
+                    },
+                    {
+                      src: "/training/training-equipment-wall.jpg",
+                      alt:
+                        locale === "th"
+                          ? "ผู้เข้าอบรมศึกษาผนังสาธิตไมโครอินเวอร์เตอร์"
+                          : "Attendees at the micro-inverter demonstration wall",
+                      mobile: false,
+                    },
+                    {
+                      src: "/training/training-hands-on.jpg",
+                      alt:
+                        locale === "th"
+                          ? "ฝึกปฏิบัติจริงกับสายและขั้วต่อ MC4"
+                          : "Hands-on practice with MC4 connectors",
+                      mobile: false,
+                    },
+                  ].map((photo) => (
+                    <div
+                      key={photo.src}
+                      className={`overflow-hidden rounded-xl border border-mist-800/60 ${
+                        photo.mobile ? "" : "hidden sm:block"
+                      }`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={photo.src}
+                        alt={photo.alt}
+                        loading="lazy"
+                        className="aspect-[4/3] h-full w-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ScrollReveal>
+
               <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                 {trainingSessions.map((s, i) => (
                   <ScrollReveal key={s._id} delay={i * 0.05}>
