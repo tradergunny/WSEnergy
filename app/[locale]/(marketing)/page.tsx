@@ -35,18 +35,19 @@ import { Card } from "@/components/ui/Card";
 import { CountUp } from "@/components/ui/CountUp";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { MonoLabel } from "@/components/ui/MonoLabel";
+import { SectionGlow } from "@/components/ui/SectionGlow";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
 import { GsapBridge } from "@/components/marketing/GsapBridge";
 import { HeroAct } from "@/components/marketing/HeroAct";
 import { ProductSchematic } from "@/components/product/ProductSchematic";
+import { TracedBolt } from "@/components/marketing/TracedBolt";
 import type { SchematicVariant } from "@/components/product/schematic-variant";
 import { SafetyAct } from "@/components/marketing/SafetyAct";
 import {
   SolutionsTabs,
   type SolutionTab,
 } from "@/components/marketing/SolutionsTabs";
-import { TestimonialsMarquee } from "@/components/marketing/TestimonialsMarquee";
 import { ThailandCoverageMap } from "@/components/marketing/ThailandCoverageMap";
 
 /**
@@ -225,6 +226,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       ],
       href: withLocale(locale, "/solutions/residential"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
+      image: "/solutions/residential-hero.jpg",
     },
     {
       key: "ci",
@@ -243,6 +245,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       ],
       href: withLocale(locale, "/solutions/commercial-industrial"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
+      image: "/solutions/ci-hero.jpg",
     },
     {
       key: "solar-farm",
@@ -260,6 +263,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       ],
       href: withLocale(locale, "/solutions/solar-farm"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
+      image: "/solutions/solar-farm-hero.jpg",
     },
     {
       key: "scada",
@@ -329,11 +333,13 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         {/* Conviction before borrowed authority: this band states, in our
             own name, why the company exists. Partner logos follow it. */}
         <section className="bg-forest-950 relative overflow-hidden">
+          {/* The company's own mark signs its manifesto: the WS bolt as a
+              gold-traced engraving, not a product drawing. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 -right-24 hidden w-[560px] -translate-y-1/2 lg:block"
+            className="pointer-events-none absolute top-1/2 right-4 hidden w-[360px] -translate-y-1/2 lg:block xl:right-16"
           >
-            <ProductSchematic variant="switch" dim />
+            <TracedBolt />
           </div>
           <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
             <ScrollReveal>
@@ -370,26 +376,57 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   trust element on the page. The portrait's own white studio
                   background fills the disc; a hairline ring seats it on the
                   forest canvas. */}
-              <div className="mt-12 flex max-w-md items-center gap-5 border-t border-mist-800 pt-7">
-                <div className="bg-card-50 relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-1 ring-mist-800">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/team/sittiphol-ngamsangiam.png"
-                    alt="Sittiphol Ngamsangiam, Founder & Managing Director of WS Energy"
-                    className="absolute inset-0 h-full w-full scale-[1.15] object-cover object-top"
-                  />
+              {/* Letterhead footer: the person signs, the company stamps.
+                  Founder left; the lockup as a static seal right, at natural
+                  raster size (180x60 source — never upscale it). */}
+              <div className="mt-12 flex max-w-2xl flex-wrap items-center justify-between gap-x-10 gap-y-8 border-t border-mist-800 pt-7">
+                <div className="flex items-center gap-5">
+                  <div className="bg-card-50 relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-1 ring-mist-800">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/team/sittiphol-ngamsangiam.png"
+                      alt="Sittiphol Ngamsangiam, Founder & Managing Director of WS Energy"
+                      className="absolute inset-0 h-full w-full scale-[1.15] object-cover object-top"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-medium tracking-tight text-mist-50">
+                      {locale === "th"
+                        ? "คุณสิทธิพล งามเสงี่ยม"
+                        : "Sittiphol Ngamsangiam"}
+                    </p>
+                    <p className="text-caption mt-1 font-mono tracking-wider text-mist-400 uppercase">
+                      {locale === "th"
+                        ? "ผู้ก่อตั้งและกรรมการผู้จัดการ"
+                        : "Founder & Managing Director"}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium tracking-tight text-mist-50">
-                    {locale === "th"
-                      ? "คุณสิทธิพล งามเสงี่ยม"
-                      : "Sittiphol Ngamsangiam"}
-                  </p>
-                  <p className="text-caption mt-1 font-mono tracking-wider text-mist-400 uppercase">
-                    {locale === "th"
-                      ? "ผู้ก่อตั้งและกรรมการผู้จัดการ"
-                      : "Founder & Managing Director"}
-                  </p>
+                {/* Mirrors the founder block's grammar: mark where the
+                    portrait sits, two lines of identity beside it. */}
+                <div className="flex items-center gap-5">
+                  {/* Wider slot than the portrait disc once the blocks sit
+                      side by side — the wordmark needs horizontal room to
+                      carry the same optical weight. While they're stacked,
+                      it matches the disc so both text columns share a rail. */}
+                  <div className="flex h-16 w-16 shrink-0 items-center sm:w-28">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/WSLogo.png"
+                      alt="WS Energy"
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-medium tracking-tight text-mist-50">
+                      WS Energy Co., Ltd.
+                    </p>
+                    <p className="text-caption mt-1 font-mono tracking-wider text-mist-400 uppercase">
+                      {locale === "th"
+                        ? "สมุทรปราการ ประเทศไทย"
+                        : "Samut Prakan, Thailand"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
@@ -397,8 +434,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </section>
 
         {/* ── 2 · Business partners (editorial logo grid) ─────────── */}
-        <section className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
+        <section className="bg-forest-900 relative overflow-hidden">
+          <SectionGlow position="top-center" />
+          <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
             <ScrollReveal className="mb-12 flex flex-col items-center gap-3 text-center md:mb-14">
               <MonoLabel tone="mist">
                 {locale === "th" ? "พันธมิตรทางธุรกิจ" : "Business partners"}
@@ -511,8 +549,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         />
 
         {/* ── 4 · Flagship products ───────────────────────────────── */}
-        <section className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <section className="bg-forest-900 relative overflow-hidden">
+          <SectionGlow />
+          <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
             <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
               <div className="max-w-2xl">
                 <ScrollReveal>
@@ -623,8 +662,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         {/* The hero claim is the exclusive distributorship (a contractual
             fact); scale numbers sit in a deliberately quiet row below until
             audited figures replace the current estimates. */}
-        <section className="bg-forest-950">
-          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <section className="bg-forest-950 relative overflow-hidden">
+          <SectionGlow />
+          <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
             <div className="mb-12 max-w-4xl md:mb-14">
               <ScrollReveal>
                 <MonoLabel tone="gold">
@@ -768,6 +808,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             Hubs are real Sanity geography — HQ, project sites, installer
             provinces. This is our answer to WHA's world-map moment. */}
         <section className="bg-forest-900 relative overflow-hidden border-b border-mist-800/50">
+          {/* Backlights the map, which is this section's focal point. */}
+          <SectionGlow position="top-right" />
           <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
             <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
               {/* Copy + regional ledger */}
@@ -878,8 +920,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </section>
 
         {/* ── 6 · Solutions tabs ──────────────────────────────────── */}
-        <section className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <section className="bg-forest-900 relative overflow-hidden">
+          <SectionGlow />
+          <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
             <div className="mb-10 max-w-3xl">
               <ScrollReveal>
                 <MonoLabel tone="mist">
@@ -959,8 +1002,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
         {/* ── 7 · Recent projects ─────────────────────────────────── */}
         {projects.length > 0 ? (
-          <section className="bg-forest-950">
-            <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+          <section className="bg-forest-950 relative overflow-hidden">
+            <SectionGlow />
+            <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
               <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
                 <div>
                   <ScrollReveal>
@@ -1052,8 +1096,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
         {/* ── 8 · Upcoming training ───────────────────────────────── */}
         {trainingSessions.length > 0 ? (
-          <section className="bg-forest-900">
-            <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+          <section className="bg-forest-900 relative overflow-hidden">
+            <SectionGlow />
+            <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
               <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
                 <div>
                   <ScrollReveal>
@@ -1088,6 +1133,57 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   </Link>
                 </ScrollReveal>
               </div>
+
+              {/* Real session photography, cropped from the company's own
+                  event coverage: place → gear → hands, wide to close. The
+                  calendar below says "upcoming"; these prove "recurring".
+                  On mobile only the lead photo shows — three stacked photos
+                  would push the actual calendar below the fold. */}
+              <ScrollReveal>
+                <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  {[
+                    {
+                      src: "/training/training-classroom.jpg",
+                      alt:
+                        locale === "th"
+                          ? "การอบรมในห้องเรียน: วิทยากรอธิบายประเภทอินเวอร์เตอร์"
+                          : "Classroom session: instructor presenting inverter types",
+                      mobile: true,
+                    },
+                    {
+                      src: "/training/training-equipment-wall.jpg",
+                      alt:
+                        locale === "th"
+                          ? "ผู้เข้าอบรมศึกษาผนังสาธิตไมโครอินเวอร์เตอร์"
+                          : "Attendees at the micro-inverter demonstration wall",
+                      mobile: false,
+                    },
+                    {
+                      src: "/training/training-hands-on.jpg",
+                      alt:
+                        locale === "th"
+                          ? "ฝึกปฏิบัติจริงกับสายและขั้วต่อ MC4"
+                          : "Hands-on practice with MC4 connectors",
+                      mobile: false,
+                    },
+                  ].map((photo) => (
+                    <div
+                      key={photo.src}
+                      className={`overflow-hidden rounded-xl border border-mist-800/60 ${
+                        photo.mobile ? "" : "hidden sm:block"
+                      }`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={photo.src}
+                        alt={photo.alt}
+                        loading="lazy"
+                        className="aspect-[4/3] h-full w-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ScrollReveal>
 
               <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                 {trainingSessions.map((s, i) => (
@@ -1174,14 +1270,13 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </section>
         ) : null}
 
-        {/* ── 10 · Testimonials ───────────────────────────────────── */}
-        <TestimonialsMarquee locale={locale} />
-
-        {/* ── 11 · Latest articles ────────────────────────────────── */}
+        {/* ── 10 · Latest articles ────────────────────────────────── */}
         {/* Renders only when articles exist — a homepage must never show
             its own empty state. */}
+        {/* forest-950 keeps the tail alternating once articles exist: the
+            testimonials band that used to sit here carried that step. */}
         {articles.length > 0 ? (
-          <section className="bg-forest-900">
+          <section className="bg-forest-950">
             <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
               <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
                 <div>
@@ -1257,9 +1352,22 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </section>
         ) : null}
 
-        {/* ── 12 · Closing CTA ────────────────────────────────────── */}
+        {/* ── 11 · Closing CTA ────────────────────────────────────── */}
+        {/* Photographic bookend: the page opens over a rooftop and closes
+            over a solar field at the same hour. The scrim holds the section
+            at forest-950 top and bottom so the seams stay clean, and keeps
+            copy and buttons at full contrast over the image. */}
         <section className="bg-forest-950 relative overflow-hidden">
-          <div className="bg-grid-mist pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)] opacity-30" />
+          <div className="pointer-events-none absolute inset-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/solutions/solar-farm-hero.jpg"
+              alt=""
+              loading="lazy"
+              className="h-full w-full object-cover opacity-45"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-forest-950 via-forest-950/45 to-forest-950" />
+          </div>
           <div className="relative mx-auto max-w-6xl px-6 py-28 md:py-36">
             <div className="flex flex-col items-center text-center">
               <ScrollReveal>
