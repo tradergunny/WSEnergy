@@ -40,6 +40,7 @@ import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
 import { GsapBridge } from "@/components/marketing/GsapBridge";
 import { HeroAct } from "@/components/marketing/HeroAct";
 import { ProductSchematic } from "@/components/product/ProductSchematic";
+import { TracedBolt } from "@/components/marketing/TracedBolt";
 import type { SchematicVariant } from "@/components/product/schematic-variant";
 import { SafetyAct } from "@/components/marketing/SafetyAct";
 import {
@@ -329,11 +330,13 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         {/* Conviction before borrowed authority: this band states, in our
             own name, why the company exists. Partner logos follow it. */}
         <section className="bg-forest-950 relative overflow-hidden">
+          {/* The company's own mark signs its manifesto: the WS bolt as a
+              gold-traced engraving, not a product drawing. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 -right-24 hidden w-[560px] -translate-y-1/2 lg:block"
+            className="pointer-events-none absolute top-1/2 right-4 hidden w-[360px] -translate-y-1/2 lg:block xl:right-16"
           >
-            <ProductSchematic variant="switch" dim />
+            <TracedBolt />
           </div>
           <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
             <ScrollReveal>
@@ -370,26 +373,57 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   trust element on the page. The portrait's own white studio
                   background fills the disc; a hairline ring seats it on the
                   forest canvas. */}
-              <div className="mt-12 flex max-w-md items-center gap-5 border-t border-mist-800 pt-7">
-                <div className="bg-card-50 relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-1 ring-mist-800">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/team/sittiphol-ngamsangiam.png"
-                    alt="Sittiphol Ngamsangiam, Founder & Managing Director of WS Energy"
-                    className="absolute inset-0 h-full w-full scale-[1.15] object-cover object-top"
-                  />
+              {/* Letterhead footer: the person signs, the company stamps.
+                  Founder left; the lockup as a static seal right, at natural
+                  raster size (180x60 source — never upscale it). */}
+              <div className="mt-12 flex max-w-2xl flex-wrap items-center justify-between gap-x-10 gap-y-8 border-t border-mist-800 pt-7">
+                <div className="flex items-center gap-5">
+                  <div className="bg-card-50 relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-1 ring-mist-800">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/team/sittiphol-ngamsangiam.png"
+                      alt="Sittiphol Ngamsangiam, Founder & Managing Director of WS Energy"
+                      className="absolute inset-0 h-full w-full scale-[1.15] object-cover object-top"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-medium tracking-tight text-mist-50">
+                      {locale === "th"
+                        ? "คุณสิทธิพล งามเสงี่ยม"
+                        : "Sittiphol Ngamsangiam"}
+                    </p>
+                    <p className="text-caption mt-1 font-mono tracking-wider text-mist-400 uppercase">
+                      {locale === "th"
+                        ? "ผู้ก่อตั้งและกรรมการผู้จัดการ"
+                        : "Founder & Managing Director"}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium tracking-tight text-mist-50">
-                    {locale === "th"
-                      ? "คุณสิทธิพล งามเสงี่ยม"
-                      : "Sittiphol Ngamsangiam"}
-                  </p>
-                  <p className="text-caption mt-1 font-mono tracking-wider text-mist-400 uppercase">
-                    {locale === "th"
-                      ? "ผู้ก่อตั้งและกรรมการผู้จัดการ"
-                      : "Founder & Managing Director"}
-                  </p>
+                {/* Mirrors the founder block's grammar: mark where the
+                    portrait sits, two lines of identity beside it. */}
+                <div className="flex items-center gap-5">
+                  {/* Wider slot than the portrait disc once the blocks sit
+                      side by side — the wordmark needs horizontal room to
+                      carry the same optical weight. While they're stacked,
+                      it matches the disc so both text columns share a rail. */}
+                  <div className="flex h-16 w-16 shrink-0 items-center sm:w-28">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/WSLogo.png"
+                      alt="WS Energy"
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-medium tracking-tight text-mist-50">
+                      WS Energy Co., Ltd.
+                    </p>
+                    <p className="text-caption mt-1 font-mono tracking-wider text-mist-400 uppercase">
+                      {locale === "th"
+                        ? "สมุทรปราการ ประเทศไทย"
+                        : "Samut Prakan, Thailand"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
