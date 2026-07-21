@@ -19,6 +19,9 @@ export type SolutionTab = {
   bullets: string[];
   href: string;
   ctaLabel: string;
+  /** Real photograph for the panel; tabs without one (SCADA) keep the
+      schematic grid, since monitoring has no honest photo to show. */
+  image?: string;
 };
 
 const iconMap = {
@@ -99,7 +102,9 @@ export function SolutionsTabs({ tabs }: { tabs: SolutionTab[] }) {
           </motion.div>
         </AnimatePresence>
 
-        {/* Illustration panel */}
+        {/* Photo panel: switching tabs switches a place, not just copy.
+            The scrim anchors the bright sunset shot into the forest scene
+            and keeps the label chip readable over any exposure. */}
         <div className="relative overflow-hidden rounded-xl bg-forest-800 lg:col-span-7">
           <AnimatePresence mode="wait">
             <motion.div
@@ -108,32 +113,47 @@ export function SolutionsTabs({ tabs }: { tabs: SolutionTab[] }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-grid-mist relative flex aspect-[5/4] items-center justify-center lg:aspect-auto lg:h-full"
+              className={`relative flex aspect-[5/4] items-center justify-center lg:aspect-auto lg:h-full ${
+                current.image ? "" : "bg-grid-mist"
+              }`}
             >
-              {/* Decorative panel-grid suggestion */}
-              <svg
-                className="h-3/4 w-3/4 text-gold-500/30"
-                viewBox="0 0 200 160"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.75"
-                aria-hidden
-              >
-                <g>
-                  {Array.from({ length: 4 }).map((_, row) =>
-                    Array.from({ length: 5 }).map((_, col) => (
-                      <rect
-                        key={`${row}-${col}`}
-                        x={20 + col * 32}
-                        y={20 + row * 28}
-                        width={28}
-                        height={24}
-                        rx="2"
-                      />
-                    )),
-                  )}
-                </g>
-              </svg>
+              {current.image ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={current.image}
+                    alt=""
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-forest-950/85 via-forest-950/15 to-forest-950/30" />
+                </>
+              ) : (
+                /* Decorative panel-grid suggestion (SCADA) */
+                <svg
+                  className="h-3/4 w-3/4 text-gold-500/30"
+                  viewBox="0 0 200 160"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.75"
+                  aria-hidden
+                >
+                  <g>
+                    {Array.from({ length: 4 }).map((_, row) =>
+                      Array.from({ length: 5 }).map((_, col) => (
+                        <rect
+                          key={`${row}-${col}`}
+                          x={20 + col * 32}
+                          y={20 + row * 28}
+                          width={28}
+                          height={24}
+                          rx="2"
+                        />
+                      )),
+                    )}
+                  </g>
+                </svg>
+              )}
               <div className="absolute bottom-6 left-6 inline-flex items-center gap-2 rounded-full bg-forest-900/70 px-3 py-1.5 backdrop-blur">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold-500" />
                 <span className="text-caption font-mono uppercase tracking-wider text-mist-200">
