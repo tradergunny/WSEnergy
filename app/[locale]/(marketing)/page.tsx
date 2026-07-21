@@ -40,6 +40,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
 import { GsapBridge } from "@/components/marketing/GsapBridge";
 import { HeroAct } from "@/components/marketing/HeroAct";
+import { ServiceFlow } from "@/components/marketing/ServiceFlow";
 import { ProductSchematic } from "@/components/product/ProductSchematic";
 import { TracedBolt } from "@/components/marketing/TracedBolt";
 import type { SchematicVariant } from "@/components/product/schematic-variant";
@@ -411,11 +412,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                       it matches the disc so both text columns share a rail. */}
                   <div className="flex h-16 w-16 shrink-0 items-center sm:w-28">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/WSLogo.png"
-                      alt="WS Energy"
-                      className="w-full"
-                    />
+                    <img src="/WSLogo.png" alt="WS Energy" className="w-full" />
                   </div>
                   <div>
                     <p className="font-medium tracking-tight text-mist-50">
@@ -427,6 +424,113 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                         : "Samut Prakan, Thailand"}
                     </p>
                   </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* ── 1.6 · Service flow — the manifesto's method ─────────── */}
+        {/* An open full-width band like its neighbors — the shift to
+            forest-900 off the manifesto's 950 canvas marks the seam,
+            and the hairline below hands off to partners. Header sits
+            beside the rail so the section stays short; the looping
+            pulse is the show, not the section size. */}
+        <section className="bg-forest-900 relative overflow-hidden border-b border-mist-800/50">
+          {/* The design-review still anchors the band's left edge and
+              fades to solid forest before the rail begins, so the
+              pulse keeps a quiet stage. Same photo-under-scrim
+              technique as the closing CTA. Desktop only: on mobile
+              the photo would sit under the whole vertical timeline. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 hidden md:block"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/service/sld-review.jpg"
+              alt=""
+              loading="lazy"
+              className="h-full w-full object-cover object-left"
+            />
+            <div className="from-forest-900/70 via-forest-900/90 to-forest-900 absolute inset-0 bg-gradient-to-r via-45% to-70%" />
+          </div>
+          <div className="relative mx-auto max-w-6xl px-6 py-14 md:py-16">
+            <ScrollReveal>
+              <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
+                {/* Header rides beside the rail, not above it, so the
+                    whole section stays one horizontal strip. */}
+                <div className="lg:col-span-3">
+                  <MonoLabel tone="gold">
+                    {locale === "th" ? "ขั้นตอนบริการ" : "Service flow"}
+                  </MonoLabel>
+                  <h2
+                    className="mt-3 font-medium tracking-tight text-mist-50"
+                    style={{
+                      fontSize: "clamp(20px, 2vw, 24px)",
+                      lineHeight: 1.25,
+                      letterSpacing: "-0.015em",
+                    }}
+                  >
+                    {locale === "th"
+                      ? "ทีมเดียว ตั้งแต่แบบร่างจนถึงการดูแลระยะยาว"
+                      : "One team, from drawing to decades"}
+                  </h2>
+                  {/* mist-200, not 400: this line sits over the photo. */}
+                  <p className="text-caption mt-2 text-mist-200">
+                    {locale === "th"
+                      ? "ทุกออเดอร์ผ่านทีมเดิมครบทั้งห้าขั้นตอน ไม่ส่งต่องานให้ใครกลางทาง"
+                      : "Every order moves through the same five hands. No handoffs to strangers."}
+                  </p>
+                </div>
+                <div className="lg:col-span-9">
+                  <ServiceFlow
+                    steps={[
+                      {
+                        key: "design",
+                        title: locale === "th" ? "ตรวจแบบระบบ" : "Design check",
+                        detail:
+                          locale === "th"
+                            ? "ตรวจ SLD เลย์เอาต์ และแนะนำอุปกรณ์"
+                            : "SLD and layout review",
+                      },
+                      {
+                        key: "delivery",
+                        title: locale === "th" ? "จัดส่งสินค้า" : "Delivery",
+                        detail:
+                          locale === "th"
+                            ? "ส่งตรงจากคลังในไทย"
+                            : "From Thai warehouse stock",
+                      },
+                      {
+                        key: "install",
+                        title:
+                          locale === "th"
+                            ? "ซัพพอร์ตติดตั้ง"
+                            : "Install support",
+                        detail:
+                          locale === "th"
+                            ? "มีคู่มือและวิศวกรให้คำแนะนำ"
+                            : "Manuals and engineer guidance",
+                      },
+                      {
+                        key: "commissioning",
+                        title: locale === "th" ? "เปิดระบบ" : "Commissioning",
+                        detail:
+                          locale === "th"
+                            ? "คอมมิชชันนิงพร้อมอบรมทีม"
+                            : "System startup, team training",
+                      },
+                      {
+                        key: "aftersale",
+                        title: locale === "th" ? "หลังการขาย" : "After-sale",
+                        detail:
+                          locale === "th"
+                            ? "มอนิเตอร์และซ่อมบำรุง"
+                            : "Monitoring and maintenance",
+                      },
+                    ]}
+                  />
                 </div>
               </div>
             </ScrollReveal>
@@ -816,7 +920,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               <div className="lg:col-span-6">
                 <ScrollReveal>
                   <MonoLabel tone="gold">
-                    {locale === "th" ? "ขอบเขตการดำเนินงาน" : "National footprint"}
+                    {locale === "th"
+                      ? "ขอบเขตการดำเนินงาน"
+                      : "National footprint"}
                   </MonoLabel>
                 </ScrollReveal>
                 <SplitTextReveal
@@ -857,7 +963,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                     </div>
                     <div>
                       <dt className="text-caption font-mono tracking-wider text-mist-500 uppercase">
-                        {locale === "th" ? "ภูมิภาคที่ครอบคลุม" : "Regions covered"}
+                        {locale === "th"
+                          ? "ภูมิภาคที่ครอบคลุม"
+                          : "Regions covered"}
                       </dt>
                       <dd className="mt-1.5 font-mono text-[17px] text-mist-50">
                         {locale === "th"
@@ -896,7 +1004,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 <ScrollReveal delay={0.22}>
                   <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
                     <li className="text-caption flex items-center gap-2 text-mist-400">
-                      <span className="ring-gold-500 h-2.5 w-2.5 rounded-full bg-gold-500 ring-2 ring-offset-2 ring-offset-forest-900" />
+                      <span className="ring-gold-500 bg-gold-500 ring-offset-forest-900 h-2.5 w-2.5 rounded-full ring-2 ring-offset-2" />
                       {locale === "th" ? "สำนักงานใหญ่" : "Headquarters"}
                     </li>
                     <li className="text-caption flex items-center gap-2 text-mist-400">
@@ -905,7 +1013,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                     </li>
                     <li className="text-caption flex items-center gap-2 text-mist-400">
                       <span className="border-gold-500/60 h-2.5 w-2.5 rounded-full border bg-mist-50" />
-                      {locale === "th" ? "เครือข่ายช่างติดตั้ง" : "Installer network"}
+                      {locale === "th"
+                        ? "เครือข่ายช่างติดตั้ง"
+                        : "Installer network"}
                     </li>
                   </ul>
                 </ScrollReveal>
@@ -1366,7 +1476,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               loading="lazy"
               className="h-full w-full object-cover opacity-45"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-forest-950 via-forest-950/45 to-forest-950" />
+            <div className="from-forest-950 via-forest-950/45 to-forest-950 absolute inset-0 bg-gradient-to-b" />
           </div>
           <div className="relative mx-auto max-w-6xl px-6 py-28 md:py-36">
             <div className="flex flex-col items-center text-center">
