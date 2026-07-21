@@ -35,6 +35,7 @@ import { Card } from "@/components/ui/Card";
 import { CountUp } from "@/components/ui/CountUp";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { MonoLabel } from "@/components/ui/MonoLabel";
+import { SectionGlow } from "@/components/ui/SectionGlow";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
 import { GsapBridge } from "@/components/marketing/GsapBridge";
@@ -225,6 +226,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       ],
       href: withLocale(locale, "/solutions/residential"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
+      image: "/solutions/residential-hero.jpg",
     },
     {
       key: "ci",
@@ -243,6 +245,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       ],
       href: withLocale(locale, "/solutions/commercial-industrial"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
+      image: "/solutions/ci-hero.jpg",
     },
     {
       key: "solar-farm",
@@ -260,6 +263,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       ],
       href: withLocale(locale, "/solutions/solar-farm"),
       ctaLabel: locale === "th" ? "เรียนรู้เพิ่มเติม" : "Learn more",
+      image: "/solutions/solar-farm-hero.jpg",
     },
     {
       key: "scada",
@@ -430,8 +434,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </section>
 
         {/* ── 2 · Business partners (editorial logo grid) ─────────── */}
-        <section className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
+        <section className="bg-forest-900 relative overflow-hidden">
+          <SectionGlow position="top-center" />
+          <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
             <ScrollReveal className="mb-12 flex flex-col items-center gap-3 text-center md:mb-14">
               <MonoLabel tone="mist">
                 {locale === "th" ? "พันธมิตรทางธุรกิจ" : "Business partners"}
@@ -544,8 +549,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         />
 
         {/* ── 4 · Flagship products ───────────────────────────────── */}
-        <section className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <section className="bg-forest-900 relative overflow-hidden">
+          <SectionGlow />
+          <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
             <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
               <div className="max-w-2xl">
                 <ScrollReveal>
@@ -656,8 +662,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         {/* The hero claim is the exclusive distributorship (a contractual
             fact); scale numbers sit in a deliberately quiet row below until
             audited figures replace the current estimates. */}
-        <section className="bg-forest-950">
-          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <section className="bg-forest-950 relative overflow-hidden">
+          <SectionGlow />
+          <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
             <div className="mb-12 max-w-4xl md:mb-14">
               <ScrollReveal>
                 <MonoLabel tone="gold">
@@ -801,6 +808,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             Hubs are real Sanity geography — HQ, project sites, installer
             provinces. This is our answer to WHA's world-map moment. */}
         <section className="bg-forest-900 relative overflow-hidden border-b border-mist-800/50">
+          {/* Backlights the map, which is this section's focal point. */}
+          <SectionGlow position="top-right" />
           <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
             <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
               {/* Copy + regional ledger */}
@@ -911,8 +920,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </section>
 
         {/* ── 6 · Solutions tabs ──────────────────────────────────── */}
-        <section className="bg-forest-900">
-          <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <section className="bg-forest-900 relative overflow-hidden">
+          <SectionGlow />
+          <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
             <div className="mb-10 max-w-3xl">
               <ScrollReveal>
                 <MonoLabel tone="mist">
@@ -992,8 +1002,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
         {/* ── 7 · Recent projects ─────────────────────────────────── */}
         {projects.length > 0 ? (
-          <section className="bg-forest-950">
-            <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+          <section className="bg-forest-950 relative overflow-hidden">
+            <SectionGlow />
+            <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
               <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
                 <div>
                   <ScrollReveal>
@@ -1085,8 +1096,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
         {/* ── 8 · Upcoming training ───────────────────────────────── */}
         {trainingSessions.length > 0 ? (
-          <section className="bg-forest-900">
-            <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+          <section className="bg-forest-900 relative overflow-hidden">
+            <SectionGlow />
+            <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
               <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
                 <div>
                   <ScrollReveal>
@@ -1290,8 +1302,21 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         ) : null}
 
         {/* ── 11 · Closing CTA ────────────────────────────────────── */}
+        {/* Photographic bookend: the page opens over a rooftop and closes
+            over a solar field at the same hour. The scrim holds the section
+            at forest-950 top and bottom so the seams stay clean, and keeps
+            copy and buttons at full contrast over the image. */}
         <section className="bg-forest-950 relative overflow-hidden">
-          <div className="bg-grid-mist pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)] opacity-30" />
+          <div className="pointer-events-none absolute inset-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/solutions/solar-farm-hero.jpg"
+              alt=""
+              loading="lazy"
+              className="h-full w-full object-cover opacity-45"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-forest-950 via-forest-950/45 to-forest-950" />
+          </div>
           <div className="relative mx-auto max-w-6xl px-6 py-28 md:py-36">
             <div className="flex flex-col items-center text-center">
               <ScrollReveal>
