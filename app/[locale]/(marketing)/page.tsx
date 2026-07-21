@@ -47,7 +47,6 @@ import {
   SolutionsTabs,
   type SolutionTab,
 } from "@/components/marketing/SolutionsTabs";
-import { TestimonialsMarquee } from "@/components/marketing/TestimonialsMarquee";
 import { ThailandCoverageMap } from "@/components/marketing/ThailandCoverageMap";
 
 /**
@@ -1208,14 +1207,13 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </section>
         ) : null}
 
-        {/* ── 10 · Testimonials ───────────────────────────────────── */}
-        <TestimonialsMarquee locale={locale} />
-
-        {/* ── 11 · Latest articles ────────────────────────────────── */}
+        {/* ── 10 · Latest articles ────────────────────────────────── */}
         {/* Renders only when articles exist — a homepage must never show
             its own empty state. */}
+        {/* forest-950 keeps the tail alternating once articles exist: the
+            testimonials band that used to sit here carried that step. */}
         {articles.length > 0 ? (
-          <section className="bg-forest-900">
+          <section className="bg-forest-950">
             <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
               <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
                 <div>
@@ -1291,7 +1289,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </section>
         ) : null}
 
-        {/* ── 12 · Closing CTA ────────────────────────────────────── */}
+        {/* ── 11 · Closing CTA ────────────────────────────────────── */}
         <section className="bg-forest-950 relative overflow-hidden">
           <div className="bg-grid-mist pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)] opacity-30" />
           <div className="relative mx-auto max-w-6xl px-6 py-28 md:py-36">
