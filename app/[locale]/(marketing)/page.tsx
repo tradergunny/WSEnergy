@@ -1,16 +1,22 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
+  IconAdjustmentsBolt,
   IconArrowRight,
   IconArrowUpRight,
+  IconBatteryVertical2,
   IconBolt,
   IconCertificate,
+  IconChargingPile,
+  IconGridDots,
   IconMapPin,
+  IconPlug,
   IconPlus,
   IconSchool,
   IconShieldCheckered,
   IconSolarPanel,
   IconTools,
+  IconWaveSine,
 } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import { hasLocale } from "@/lib/i18n/config";
@@ -211,6 +217,34 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       href: withLocale(locale, "/products"),
     },
   ];
+
+  // Category rail — a one-row table of contents for the catalogue,
+  // mirroring the six category pages in the products nav. Labels come
+  // from dict.nav so the rail and the header menu never drift apart.
+  const categoryRail = [
+    { key: "inverters", icon: IconWaveSine, href: "/products/inverters" },
+    {
+      key: "batteryStorage",
+      icon: IconBatteryVertical2,
+      href: "/products/battery-storage",
+    },
+    {
+      key: "optimizers",
+      icon: IconAdjustmentsBolt,
+      href: "/products/optimizers",
+    },
+    {
+      key: "microInverters",
+      icon: IconGridDots,
+      href: "/products/micro-inverters",
+    },
+    {
+      key: "evChargers",
+      icon: IconChargingPile,
+      href: "/products/ev-chargers",
+    },
+    { key: "accessories", icon: IconPlug, href: "/products/accessories" },
+  ] as const;
 
   const solutionTabs: SolutionTab[] = [
     {
@@ -759,6 +793,53 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 </ScrollReveal>
               ))}
             </div>
+
+            {/* Category rail — the breadth signal the old site carried
+                with a product collage, reduced to a table of contents:
+                six wordless glyphs linking into the catalogue. Hairline
+                dividers only from md up; on mobile the 2-col wrap would
+                give row-start cells stray left borders. */}
+            <ScrollReveal delay={0.1}>
+              <nav
+                aria-label={
+                  locale === "th" ? "หมวดหมู่สินค้า" : "Product categories"
+                }
+                className="mt-14 border-t border-mist-800 pt-8"
+              >
+                <p className="text-caption font-mono tracking-wider text-mist-500 uppercase">
+                  {locale === "th"
+                    ? "_ครบทุกหมวด จากคลังเดียว"
+                    : "_The full range, one warehouse"}
+                </p>
+                <ul className="mt-7 grid grid-cols-2 gap-y-7 sm:grid-cols-3 md:grid-cols-6 md:divide-x md:divide-mist-800/60">
+                  {categoryRail.map((cat) => {
+                    const CatIcon = cat.icon;
+                    return (
+                      <li key={cat.key}>
+                        <Link
+                          href={withLocale(locale, cat.href)}
+                          className="group/rail flex flex-col items-center gap-2.5 px-2 text-center"
+                        >
+                          <CatIcon
+                            size={22}
+                            stroke={1.5}
+                            className="text-mist-400 transition-colors duration-200 group-hover/rail:text-gold-500"
+                          />
+                          <span className="text-caption inline-flex items-center gap-1 text-mist-300 transition-colors duration-200 group-hover/rail:text-gold-500">
+                            {dict.nav[cat.key]}
+                            <IconArrowUpRight
+                              size={12}
+                              stroke={2}
+                              className="opacity-0 transition-opacity duration-200 group-hover/rail:opacity-100"
+                            />
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+            </ScrollReveal>
           </div>
         </section>
 
