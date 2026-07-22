@@ -186,10 +186,22 @@ function HeroStage({
               letterSpacing: "-0.02em",
             }}
           >
-            <span className="text-gold-500">WS Energy:</span>{" "}
-            {locale === "th"
-              ? "โซลาร์ปลอดภัย เพื่อไทยทั้งประเทศ"
-              : "safe solar for all of Thailand."}
+            {/* Thai: the gold name gets its own line deterministically. The
+                Latin "WS Energy:" set beside Thai glyphs reflows the moment
+                Anuphan loads — as a block it can't share a line with the
+                clause, so there's no font-swap "pop". English reads as one
+                sentence, so it stays inline. */}
+            {locale === "th" ? (
+              <>
+                <span className="text-gold-500 block">WS Energy:</span>
+                โซลาร์ปลอดภัย เพื่อไทยทั้งประเทศ
+              </>
+            ) : (
+              <>
+                <span className="text-gold-500">WS Energy:</span>{" "}
+                safe solar for all of Thailand.
+              </>
+            )}
           </span>
         </SplitTextReveal>
 
